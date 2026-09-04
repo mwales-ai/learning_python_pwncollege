@@ -1,0 +1,42 @@
+#!/usr/bin/exec-suid -- /usr/local/bin/python3 -I
+
+import subprocess
+import sys
+
+if len(sys.argv) != 2:
+    print("You need to pass this program the full path to your python script")
+    sys.exit()
+
+# AI drivel cause we are lazy
+try:
+    # Execute the command and capture its output
+    # `capture_output=True` captures stdout and stderr
+    # `text=True` decodes the output as text using the default encoding
+    result = subprocess.run(['python3', sys.argv[1]], capture_output=True, text=True, check=True)
+
+    # Access the captured standard output
+    print("Python Program Output:")
+    print(result.stdout)
+
+    # Access the captured standard error (if any)
+    if result.stderr:
+        print("\nStandard Error:")
+        print(result.stderr)
+
+    if result.stdout.strip() == "Hello Hackers":
+        print("Congrats on writing your first python program! Here is your flag:")
+        flag = open("/flag","r").read()
+        print(flag)
+
+except subprocess.CalledProcessError as e:
+    print(f"Error executing command: {e}")
+    print(f"Command: {e.cmd}")
+    print(f"Return Code: {e.returncode}")
+    print(f"Output: {e.stdout}")
+    print(f"Error Output: {e.stderr}")
+except FileNotFoundError:
+    print("Error: Command not found. Please ensure the external program is in your system's PATH.")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
+
+

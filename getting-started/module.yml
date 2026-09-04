@@ -1,0 +1,5 @@
+name: Getting Started
+allow_privileged: true
+challenges:
+  - id: hello-hacker
+    name: Hello Hackers

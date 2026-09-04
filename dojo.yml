@@ -1,0 +1,8 @@
+id: westshore-learning-python
+name: Learning Python (High School)
+award:
+  emoji: 🐁
+image: mwales/pwncollege_base:beta05
+modules:
+  - id: getting-started
+
