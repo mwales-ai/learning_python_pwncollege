@@ -1,0 +1,32 @@
+Kevin Mitnick
+END_TEST_CASE
+jeff "DARK TANGENT" moss
+END_TEST_CASE
+charlie miller
+END_TEST_CASE
+george "GeoHot" Hotz
+END_TEST_CASE
+TAVIS ORMANDY
+END_TEST_CASE
+grace hopper
+END_TEST_CASE
+Linus torvalds
+END_TEST_CASE
+Guido van rossum
+END_TEST_CASE
+Steve "woz" wozniak
+END_TEST_CASE
+Margret Hamilton
+END_TEST_CASE
+Joe "kingpin" grand
+END_TEST_CASE
+john draper
+END_TEST_CASE
+alan turing
+END_TEST_CASE
+dan kaminsky
+END_TEST_CASE
+jerri ellsworth
+END_TEST_CASE
+gabe "the gaben" newell
+END_TEST_CASE
