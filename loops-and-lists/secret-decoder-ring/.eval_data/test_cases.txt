@@ -1,0 +1,36 @@
+aeiou
+43107
+3
+w1ldc4t c0mp7t3r sc13nc3 cl7b
+l33t sp34k 1s 4 s7bst1t7t10n c1ph3r
+v0w3ls 4r3 th3 0nly th1ng th4t ch4ng3d
+END_TEST_CASE
+abcdefghijklmnopqrstuvwxyz
+nopqrstuvwxyzabcdefghijklm
+3
+unpx gur cynarg
+gur pnxr vf n yvr
+nyy lbhe onfr ner orybat gb hf
+END_TEST_CASE
+abcdefghijklmnopqrstuvwxyz
+zyxwvutsrqponmlkjihgfedcba
+4
+nvvg nv zg gsv uozt klov zg mllm
+gsviv rh ml xolfw rg rh qfhg hlnvlmv vohvh xlnkfgvi
+pvvk blfi uirvmwh xolhv zmw blfi illgprg xolhvi
+gsv jfrxp yildm ulc qfnkh levi gsv ozab wlt
+END_TEST_CASE
+abcdefghijklmnopqrstuvwxyz.!
+qwertyuiopasdfghjklzxcvbnm!.
+3
+ftctk zkxlz xltk ofhxz!
+ktqr zit ykotfrsn dqfxqs.
+lxrg dqat dt q lqfrvoei!
+END_TEST_CASE
+0123456789
+9876543210
+3
+meet at 8799 hours
+the answer is 57
+port 1919 is open
+END_TEST_CASE

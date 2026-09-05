@@ -123,6 +123,17 @@ correctly you get the flag.
 * **Loop Over a List** - Walk a list to find the biggest item, the total,
   and the average.  Teaches: the accumulator pattern, `for item in list:`,
   `sum()`/`min()`/`max()`.
+* **Secret Decoder Ring** - You are handed the key to a substitution cipher -
+  one line of original characters, and underneath it what each was turned into
+  - followed by a pile of intercepted messages to decode.  Teaches: looping
+  over the characters of a string, `.index()` to find a position, guarding it
+  with `in` so an unmapped character does not crash you, and the accumulator
+  pattern building a string instead of a number.  The real lesson is that a
+  position in one line maps to the same position in the other.  Discussion:
+  substitution ciphers are genuinely ancient - Caesar used one - and this is
+  the first challenge whose output is something you would actually want to
+  read.  We come back to this problem in the dictionaries module, where it
+  gets much shorter.
 
 ## Module 5: Files
 
@@ -187,9 +198,13 @@ correctly you get the flag.
 
 ## Module 9: Dictionaries
 
-* **Lookup Tables** - Use a dictionary to translate codes to names (HTTP
-  status codes, port numbers, or a substitution cipher).  Teaches: keys and
-  values, `d[key]`, `.get()`, `in`, `KeyError`, looping with `.items()`.
+* **Lookup Tables** - Rewrite the Secret Decoder Ring using a dictionary
+  instead of two parallel strings and `.index()`.  Teaches: keys and values,
+  `d[key]`, `.get()`, `in`, `KeyError`, looping with `.items()`, and building
+  a dict from two sequences.  The point of the challenge is the comparison -
+  the same problem, most of the code gone, and no more searching for a
+  position.  (Other lookup tables worth mentioning: HTTP status codes, port
+  numbers.)
 * **Capstone: The Report** - Read a data file, count occurrences with a
   dictionary, sort the results, and write a formatted report - using argv for
   the filename, stderr for errors, stdout for the report, and functions to keep

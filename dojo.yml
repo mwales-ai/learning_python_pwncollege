@@ -5,4 +5,5 @@ award:
 image: mwales/pwncollege_base:beta05
 modules:
   - id: getting-started
+  - id: loops-and-lists
 

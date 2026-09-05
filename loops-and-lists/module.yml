@@ -1,0 +1,5 @@
+name: Loops and Lists
+allow_privileged: true
+challenges:
+  - id: secret-decoder-ring
+    name: Secret Decoder Ring
