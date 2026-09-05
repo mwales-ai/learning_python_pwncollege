@@ -3,3 +3,5 @@ allow_privileged: true
 challenges:
   - id: hello-hacker
     name: Hello Hackers
+  - id: birthday-banner
+    name: Birthday Banner

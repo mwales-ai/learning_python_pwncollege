@@ -42,6 +42,8 @@ README.md                     THE CURRICULUM PLAN - start here
         run                   the judge; suid, reads /flag
         .eval_data/           test_cases.txt + hashes.txt (multi-case judge only)
 chal_crafting/common/         reusable judge machinery, copied per challenge
+chal_crafting/learning_python_pwncollege_solutions/
+                              PRIVATE submodule: Python solutions / golden scripts
 ```
 
 Modules currently built: `getting-started` (`hello-hacker`, `birthday-banner`).
@@ -102,94 +104,105 @@ Judge behavior worth knowing when writing challenge instructions:
   any challenge using this judge must come after it, or the instructions must
   say to do both.
 
-### Known bugs in `multi-case-judge/run` (verified, not theoretical)
+### Judge bugs that were found and fixed
 
-These are copied into every challenge that uses the pattern, so fix them in
-`chal_crafting/common/multi-case-judge/run` *and* in each challenge's copy.
+Recorded so nobody reintroduces them.  All four were verified by test before
+being fixed, and the first two were confirmed fixed the same way.
 
-1. **Too little output crashes with a traceback instead of a nice message.**
-   If the student's correct lines are a prefix of the expected output but they
-   print fewer lines, `hashes_out[i]` raises `IndexError` and the student sees
-   a Python stack trace.  The guard `if len(hash_hex) < (i - 1)` compares the
-   wrong list; it should test `i >= len(hashes_out)`.
-2. **Extra output lines are accepted and the flag is given away.**  The check
-   `if len(test_data) > len(hash_hex)` compares the *input* length to the
-   expected-output length, which is meaningless.  It should compare
-   `len(hashes_out) > len(hash_hex)`.  Confirmed: a solution that prints the
-   correct three lines plus a garbage fourth line passes.
-3. `read_in_file` does `break` on an empty test case, so a stray blank section
-   silently truncates the rest of the file.  `continue` would be safer.
-4. `main` uses `zip(verify_hashes, test_data)`, which silently truncates if the
-   two files disagree on case count.  **Always regenerate `hashes.txt` after
-   touching `test_cases.txt`.**
+1. **Too little output raised `IndexError`** and showed the student a Python
+   traceback.  The guard compared the wrong list.  Now the judge compares the
+   lines that exist first (so a wrong line is reported before a missing one),
+   then reports counts.
+2. **Extra output lines were accepted and the flag handed over.**  The check
+   compared the *input* length to the expected-output length, which is
+   meaningless.  Now it compares actual output length.
+3. `read_in_file` did `break` on an empty section, silently discarding every
+   test case after a stray blank.  Now `continue`.  Note the consequence: a
+   test case whose input is genuinely empty is not expressible.
+4. `main` used `zip()` on the two `.eval_data` files, silently truncating - and
+   quietly making the challenge easier - if they disagreed.  Now it refuses to
+   run and says the challenge is misconfigured.
 
-Also inconsistent between challenges: `hello-hacker/run` hardcodes
-`/usr/local/bin/python3` while the multi-case judge uses `/usr/bin/env
-python3`.  Prefer `/usr/bin/env python3`.
+Also added while in there:
 
-## Golden scripts: DO NOT WRITE THEM IN PYTHON
+* A **10 second timeout** per test case (`TEST_CASE_TIMEOUT`).  A beginner's
+  runaway `while` loop should fail the challenge, not hang the judge.
+* Up front checks for "file does not exist", "is a directory", and "is not
+  executable", the last of which prints the `chmod +x` and shebang fix.  This
+  is the single most likely beginner mistake given that the judge executes the
+  script directly.
+* `clean_output_lines()`, shared by the judge and `gen_hashes.py`.  **These two
+  must strip and drop blank lines identically or generated hashes will not line
+  up with judged output.**  If you change one, change both.
 
-This repo is intended to become **public**.  The judging machinery came from
-dojos that lived in private repos, where it was fine to keep a "golden"
-reference implementation next to the challenge - you run it to generate the
-exact expected output, then hash that into `hashes.txt`.
+The judge lives in `chal_crafting/common/multi-case-judge/run` and is **copied**
+into each challenge directory.  There is no include mechanism, so a fix has to
+be propagated by hand to every challenge that uses it.
 
-In a public repo, a golden script written in Python is a ready-made answer key.
-A student looking for the solution to "write a FizzBuzz filter" would find a
-working Python FizzBuzz filter sitting in the repo.
+### Interpreter path in suid scripts
 
-**Policy:**
+`run` is suid via `exec-suid`.  Use an **absolute interpreter path**
+(`#!/usr/bin/exec-suid -- /usr/local/bin/python3 -I`), never `/usr/bin/env
+python3`: the student controls `PATH`, and `env` resolves through it, so an
+`env` shebang on a suid program invites the student to supply their own
+`python3`.  `-I` (isolated mode) blocks `PYTHONPATH` and the user site
+directory but does nothing about `PATH`.  Both challenges now use the absolute
+path.
 
-* **Never write a golden/reference solution in Python.**
-* **Never write one in C either.**  A C version of this dojo is planned, and
-  similar challenges will exist there; a C golden script would leak that
-  dojo's answers the same way.
-* **Write golden scripts in Perl.**  Rationale: `perl` is present on every
-  Ubuntu system and in the target image (`mwales/pwncollege_base`), needs no
-  compile step, is excellent at exactly the line-oriented text processing these
-  judges need, and is syntactically alien enough that a beginning student
-  cannot paste it into a `.py` file and have anything happen.
-* Acceptable alternates when they genuinely fit: **awk** for trivial
-  line filters, **dc** for a purely numeric challenge if you want the
-  stack-based-and-unreadable effect.  **Avoid C++** - it is close enough to C
-  to partially leak the future C dojo.
+## Solutions and golden scripts: the private submodule
 
-Verified working: a Perl golden script for `birthday-banner` reproduces all 16
-committed hashes in `.eval_data/hashes.txt` byte-for-byte through the existing
-`gen_hashes.py`, with no changes to the toolchain.  Skeleton:
+Solutions live in a **separate private repo**, included here as a git
+submodule at `chal_crafting/learning_python_pwncollege_solutions`
+(`git@github.com:mwales-ai/learning_python_pwncollege_solutions.git`).  This
+repo - the dojo - is intended to become public; the solutions repo must stay
+private.  Someone cloning the public dojo without access just gets an empty
+directory, which is the point.
 
-```perl
-#!/usr/bin/perl
-# GOLDEN SCRIPT - not Python on purpose, see CLAUDE.md
-use strict; use warnings;
+Each solution does two jobs:
 
-while (my $line = <STDIN>) {
-    chomp $line;
-    $line =~ s/^\s+|\s+$//g;
-    next if $line eq "";
-    # ... produce the exact expected output ...
-    print "...\n";
-}
+1. **A quick reference for educators**, so a club advisor can unstick a
+   student without re-deriving the challenge.
+2. **The golden script** that generates the challenge's expected output.  The
+   judge never stores an answer - only SHA-256 hashes of each expected output
+   line, produced by running the solution against `test_cases.txt`.
+
+Because of job 2, **a solution must produce byte-exact expected output**, not
+merely a correct answer.
+
+### Solutions are written in Python
+
+The structure mirrors the dojo exactly: a challenge at
+`<module-id>/<challenge-id>/` here has its solution at
+`<module-id>/<challenge-id>/solution.py` in the submodule.  Every solution has
+a `#!/usr/bin/env python3` shebang and is `chmod +x`, because the judge
+executes the student's script directly rather than passing it to `python3`.
+
+Write solutions the way we want a *student* to write them at that point in the
+curriculum - no language feature the dojo has not taught yet.  The solution
+doubles as the model answer an educator will put on a projector.
+
+**Never commit a solution into this (public) repo.**  The submodule is the only
+place they belong.  If a script must live in the public repo for some reason,
+write it in **Perl** and not in Python or C - Perl is on every Ubuntu system
+and in the target image, needs no compile step, is good at line-oriented text,
+and is alien enough to block copy-paste; Python would be a ready-made answer
+key, and C would leak the planned C version of this dojo.  This was the policy
+before the private submodule existed and remains the fallback.  (Verified: a
+Perl golden script for `birthday-banner` reproduces all 16 committed hashes
+byte-for-byte through `gen_hashes.py`.)
+
+### Regenerating hashes
+
+```
+chal_crafting/common/multi-case-judge/gen_hashes.py \
+    chal_crafting/learning_python_pwncollege_solutions/<module>/<chal>/solution.py \
+    <module>/<chal>/.eval_data/test_cases.txt \
+    <module>/<chal>/.eval_data/hashes.txt
 ```
 
-Handy Perl equivalents for things these challenges ask for:
-
-| Python | Perl |
-|--------|------|
-| `"*" * 80` | `"*" x 80` |
-| `s.strip()` | `$s =~ s/^\s+\|\s+$//g` |
-| `s.title()` | `$s =~ s/([a-zA-Z]+)/\u\L$1/g` |
-| `s.upper()` / `s.lower()` | `uc $s` / `lc $s` |
-| `int(s, 16)` | `hex($s)` |
-| `f"{n:02X}"` | `sprintf("%02X", $n)` |
-| `n % 3 == 0` | `$n % 3 == 0` |
-
-Residual risk to accept knowingly: a determined student can still *read* Perl.
-The real protection is that only hashes ship to the challenge VM, and
-`.eval_data` is mode 0600.  The language choice is there to stop casual
-copy-paste, not a motivated reverse engineer.  If a challenge ever needs a
-genuinely secret reference implementation, keep it out of this repo entirely
-rather than trying to obfuscate it.
+Always regenerate after editing `test_cases.txt`.  `gen_hashes.py` now refuses
+to write the file if the golden script exits nonzero or prints nothing, and
+the judge refuses to run if the two files disagree on test case count.
 
 ## Authoring a new challenge - checklist
 
@@ -198,26 +211,34 @@ rather than trying to obfuscate it.
 3. Write `DESCRIPTION.md`: teaching material, `# Further Reading` links into
    *A Byte of Python* / *Automate the Boring Stuff*, then `# Instructions`
    last.  Remember the "instruction" keyword trap above.
-4. Write the golden script **in Perl** (see policy above).  Keep it in
-   `chal_crafting/` or outside the repo - do not drop it in the challenge dir
-   where it would ship to the VM.
+4. Write the solution in the **private submodule** at
+   `chal_crafting/learning_python_pwncollege_solutions/<module>/<chal>/solution.py`,
+   in Python, with a shebang and `chmod +x`.  It is both the educator reference
+   and the golden script.  Never put it in the challenge directory, where it
+   would ship to the student's VM.
 5. Write `.eval_data/test_cases.txt`.  Make the cases fun - the existing
    birthday-banner cases are famous hackers and CS figures, which is the tone
    to match.  Include edge cases (odd/even lengths, mixed case, quotes).
-6. Run `gen_hashes.py <golden.pl> test_cases.txt .eval_data/hashes.txt`.
+6. Run `gen_hashes.py <solution.py> test_cases.txt .eval_data/hashes.txt`.
 7. Copy `.init` from `chal_crafting/common/multi-case-judge/init.sh` and `run`
    from the same folder.  `chmod +x` both.
 8. Add the challenge id + name to the module's `module.yml`.
-9. Solve it yourself in Python and confirm the judge passes it, then confirm a
-   deliberately wrong answer fails.
+9. Confirm the judge passes the solution, then confirm a deliberately wrong
+   answer fails - test a *wrong line*, a *missing line*, and an *extra line*
+   separately.  Those were three different bugs once.
+10. Commit the submodule first, then the dojo repo (which records the new
+    submodule commit).
 
 ## Housekeeping / open items
 
-* `getting-started/module.yml` lists only `hello-hacker`.  **`birthday-banner`
-  is built but not registered**, so it will not appear in the dojo.  Add it.
-* The judge bugs above are unfixed.
 * `README.md` has "LINK TBD" for this dojo's own URL.
 * Only 2 of 33 planned challenges exist.
+* The `judge_script/` single fixed output judge still has its expected-output
+  hashes baked into a base64 blob inside `craft_generic_judge.py`, which must
+  be kept in sync by hand with `judge_template.py`.  Nothing uses it yet.
+* `/usr/local/bin/python3` is used as the suid interpreter path based on what
+  `hello-hacker` shipped with.  Worth confirming against the actual image
+  (`mwales/pwncollege_base`) the first time a challenge is deployed.
 
 ## Conventions
 

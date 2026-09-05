@@ -4,6 +4,9 @@ import sys, hashlib, binascii, subprocess, os
 
 from typing import Dict, List, Tuple
 
+# Golden scripts should be fast; a hang here means the script is broken.
+TEST_CASE_TIMEOUT = 10
+
 def debug(msg:str):
     if(False):
         sys.stderr.write(msg + "\n")
@@ -46,7 +49,9 @@ def read_in_file(path:str) -> list[ list[str] ]:
         for test_case in file_data.split("END_TEST_CASE"):
             test_case = test_case.strip()
             if test_case == "":
-                break
+                # Tail after the final END_TEST_CASE, or a stray blank
+                # section.  Skip it rather than discarding every case after.
+                continue
             lines_of_tc = []
                 
             for single_line in test_case.split("\n"):
@@ -60,10 +65,24 @@ def convert_str_to_hash(text: str) -> str:
     hash_str = verifyHash.digest().hex()
     return hash_str
 
+def clean_output_lines(text: str) -> List[str]:
+    """
+    Split program output into the lines we actually judge: stripped, with
+    blank lines dropped.  This MUST match clean_output_lines() in the judge
+    `run` script or the generated hashes will not line up.
+    """
+    ret_val = []
+    for single_line in text.split("\n"):
+        single_line = single_line.strip()
+        if single_line == "":
+            continue
+        ret_val.append(single_line)
+    return ret_val
+
 def convert_strs_to_hashes(text: List[str]) -> List[str]:
     ret_val = []
     for single_line in text:
-        if (single_line == ""):
+        if (single_line.strip() == ""):
             continue
         ret_val.append(convert_str_to_hash(single_line))
     return ret_val
@@ -72,18 +91,30 @@ def execute_tc(test_data: List[str], hash_file, solution_script:str) -> bool:
     print(f"Going to execute your script {solution_script} with the following input:")
     print(test_data)
 
-    tc_out, tc_err, tc_code = run_cmd([solution_script], "\n".join(test_data))
-    hashes_out = convert_strs_to_hashes(tc_out.split("\n"))
+    tc_out, tc_err, tc_code = run_cmd([solution_script], "\n".join(test_data),
+                                      timeout=TEST_CASE_TIMEOUT)
+    output_lines = clean_output_lines(tc_out)
+    hashes_out = convert_strs_to_hashes(output_lines)
 
-    print("Your programs output:")
+    print("Golden script output:")
     print(tc_out)
 
     print("Hashes:")
     print(hashes_out)
 
     if tc_err:
-        print("Your programs stderr (ignored):")
+        print("Golden script stderr (ignored by the judge):")
         print(tc_err)
+
+    # A golden script that crashed or printed nothing would silently bake an
+    # empty expected output into hashes.txt, making the challenge unsolvable.
+    if tc_code != 0:
+        print(f"!! Golden script exited {tc_code} - refusing to write hashes")
+        return False
+
+    if len(output_lines) == 0:
+        print("!! Golden script produced no output - refusing to write hashes")
+        return False
 
     for single_line in hashes_out:
         hash_file.write(single_line + "\n")
@@ -112,9 +143,12 @@ def main(argv):
     for tc_text in test_data:
         print("Starting test case")
         if not execute_tc(tc_text, hash_file, good_script):
-            sys.exit()
+            hash_file.close()
+            os.unlink(hash_output_path)
+            print("Aborted, hashes.txt was NOT written")
+            sys.exit(1)
 
-    print("Done writing hashes")
+    print(f"Done writing {len(test_data)} test cases of hashes")
     hash_file.close()
 
 if __name__ == "__main__":

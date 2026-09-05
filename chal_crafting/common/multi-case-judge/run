@@ -1,8 +1,12 @@
-#!/usr/bin/exec-suid -- /usr/bin/env python3 -I
+#!/usr/bin/exec-suid -- /usr/local/bin/python3 -I
 
-import sys, hashlib, binascii, subprocess, os
+import sys, hashlib, subprocess, os
 
-from typing import Dict, List, Tuple
+from typing import List, Tuple
+
+# How long a single test case is allowed to run.  A beginner's while loop that
+# never exits should fail the challenge, not hang the judge forever.
+TEST_CASE_TIMEOUT = 10
 
 def debug(msg:str):
     if(False):
@@ -46,7 +50,10 @@ def read_in_file(path:str) -> list[ list[str] ]:
         for test_case in file_data.split("END_TEST_CASE"):
             test_case = test_case.strip()
             if test_case == "":
-                break
+                # An empty section is usually just the tail after the final
+                # END_TEST_CASE.  Skip it instead of breaking, so one stray
+                # blank section cannot silently discard every case after it.
+                continue
             lines_of_tc = []
                 
             for single_line in test_case.split("\n"):
@@ -60,23 +67,69 @@ def convert_str_to_hash(text: str) -> str:
     hash_str = verifyHash.digest().hex()
     return hash_str
 
+def clean_output_lines(text: str) -> List[str]:
+    """
+    Split program output into the lines we actually judge: stripped, with
+    blank lines dropped.  gen_hashes.py must do this identically or the
+    hashes will not line up.
+    """
+    ret_val = []
+    for single_line in text.split("\n"):
+        single_line = single_line.strip()
+        if single_line == "":
+            continue
+        ret_val.append(single_line)
+    return ret_val
+
 def convert_strs_to_hashes(text: List[str]) -> List[str]:
     ret_val = []
     for single_line in text:
-        if (single_line == ""):
+        if (single_line.strip() == ""):
             continue
         ret_val.append(convert_str_to_hash(single_line))
     return ret_val
-   
+
+def check_solution_script(solution_script: str) -> bool:
+    """Friendly up front errors instead of a traceback out of subprocess."""
+    if not os.path.exists(solution_script):
+        print(f"I cannot find a file named {solution_script}")
+        print("Check the path you passed to /challenge/run")
+        return False
+
+    if os.path.isdir(solution_script):
+        print(f"{solution_script} is a directory, not a program")
+        return False
+
+    if not os.access(solution_script, os.X_OK):
+        print(f"{solution_script} is not executable, so I cannot run it.")
+        print(f"Fix it with:  chmod +x {solution_script}")
+        print("Your script also needs this as its very first line:")
+        print("    #!/usr/bin/env python3")
+        return False
+
+    return True
+
 def execute_tc(test_data: List[str], hash_hex:List[str], solution_script:str) -> bool:
     print(f"Going to execute your script {solution_script} with the following input:")
     print(test_data)
 
-    tc_out, tc_err, tc_code = run_cmd([solution_script], "\n".join(test_data), "hacker")
-    hashes_out = convert_strs_to_hashes(tc_out.split("\n"))
+    try:
+        tc_out, tc_err, tc_code = run_cmd([solution_script], "\n".join(test_data),
+                                          "hacker", timeout=TEST_CASE_TIMEOUT)
+    except subprocess.TimeoutExpired:
+        print(f"Your program was still running after {TEST_CASE_TIMEOUT} seconds, so I stopped it.")
+        print("A loop that never finishes is the usual cause.")
+        return False
+    except OSError as e:
+        print(f"I could not run {solution_script}: {e}")
+        print("Check that the first line of your script is:")
+        print("    #!/usr/bin/env python3")
+        return False
+
+    output_lines = clean_output_lines(tc_out)
+    hashes_out = convert_strs_to_hashes(output_lines)
 
     print("Your programs output:")
-    output_lines = tc_out.strip().split("\n")
     for i in range(len(output_lines)):
         print(f"Line {i+1} = {output_lines[i]}")
 
@@ -84,21 +137,23 @@ def execute_tc(test_data: List[str], hash_hex:List[str], solution_script:str) ->
         print("Your programs stderr (ignored):")
         print(tc_err)
 
-
-    for i in range(len(hash_hex)):
-        # Make sure a line of output exists!
-        if len(hash_hex) < (i - 1):
-            print(f"Line {i+1} missing output")
-            return False
-
+    # Compare the lines that exist first, so the student is told about a wrong
+    # line before being told about a missing one.  That is the more useful
+    # error nearly every time.
+    for i in range(min(len(hashes_out), len(hash_hex))):
         if hashes_out[i] == hash_hex[i]:
             print(f"Line {i+1} is good")
         else:
             print(f"Line {i+1} output is incorrect")
             return False
 
-    if len(test_data) > len(hash_hex):
-        print(f"Too many lines of output!")
+    if len(hashes_out) < len(hash_hex):
+        print(f"Missing lines of output: I expected {len(hash_hex)} lines but got {len(hashes_out)}")
+        return False
+
+    if len(hashes_out) > len(hash_hex):
+        print(f"Too many lines of output: I expected {len(hash_hex)} lines but got {len(hashes_out)}")
+        print(f"The first extra line was: {output_lines[len(hash_hex)]}")
         return False
 
     print(f"!! TEST CASE PASSED !!")
@@ -110,14 +165,27 @@ def main(argv):
         print("You need to pass me the path of your script")
         return
 
+    solution_script = argv[1]
+    if not check_solution_script(solution_script):
+        sys.exit(1)
+
     verify_hashes = read_in_file("/challenge/.eval_data/hashes.txt")
     test_data = read_in_file("/challenge/.eval_data/test_cases.txt")
+
+    # zip() would silently drop the extra cases and quietly make the challenge
+    # easier, so refuse to run instead.  This is a challenge authoring bug, not
+    # anything the student did.
+    if len(verify_hashes) != len(test_data):
+        print("This challenge is misconfigured, please report it.")
+        print(f"hashes.txt has {len(verify_hashes)} test cases but "
+              f"test_cases.txt has {len(test_data)}")
+        sys.exit(1)
 
     tc = zip(verify_hashes, test_data)
     for hash_str, tc_text in tc:
         print("Starting test case")
-        if not execute_tc(tc_text, hash_str, argv[1]):
-            sys.exit()
+        if not execute_tc(tc_text, hash_str, solution_script):
+            sys.exit(1)
         
     # Display the flag
     flag = open("/flag","r").read()

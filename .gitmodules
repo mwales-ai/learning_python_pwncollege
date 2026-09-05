@@ -1,0 +1,3 @@
+[submodule "chal_crafting/learning_python_pwncollege_solutions"]
+	path = chal_crafting/learning_python_pwncollege_solutions
+	url = git@github.com:mwales-ai/learning_python_pwncollege_solutions.git
