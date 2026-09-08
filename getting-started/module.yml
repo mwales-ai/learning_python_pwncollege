@@ -3,5 +3,11 @@ allow_privileged: true
 challenges:
   - id: hello-hacker
     name: Hello Hackers
+  - id: run-it-yourself
+    name: Run It Yourself
+  - id: debug-me
+    name: Debug Me
+  - id: variables-and-fstrings
+    name: Variables and f-strings
   - id: birthday-banner
     name: Birthday Banner

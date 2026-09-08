@@ -5,6 +5,7 @@ award:
 image: mwales/pwncollege_base:beta05
 modules:
   - id: getting-started
+  - id: talking-to-the-terminal
+  - id: making-decisions
   - id: loops-and-lists
   - id: files
-

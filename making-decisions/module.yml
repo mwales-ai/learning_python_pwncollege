@@ -1,0 +1,11 @@
+name: Making Decisions
+allow_privileged: true
+challenges:
+  - id: if-and-else
+    name: If and Else
+  - id: elif-ladder
+    name: The elif Ladder
+  - id: true-and-false
+    name: True and False
+  - id: guessing-game
+    name: The Guessing Game

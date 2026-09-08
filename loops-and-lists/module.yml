@@ -1,5 +1,13 @@
 name: Loops and Lists
 allow_privileged: true
 challenges:
+  - id: counting-loops
+    name: Counting Loops
+  - id: fizzbuzz
+    name: FizzBuzz
+  - id: lists
+    name: Lists
+  - id: loop-over-a-list
+    name: Loop Over a List
   - id: secret-decoder-ring
     name: Secret Decoder Ring

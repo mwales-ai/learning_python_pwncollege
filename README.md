@@ -59,6 +59,10 @@ correctly you get the flag.
 * **Variables and f-strings** - Store values in variables and print a
   sentence built from them with an f-string.  Teaches: variables, strings vs
   numbers, `f"..."` formatting, `+`, `-`, `*`, `/`, `//`, `%`.
+* **Birthday Banner** - Centre a birthday message inside an 80 column banner
+  of `*` characters.  Teaches: string replication with `*`, `len()`, `//` and
+  `%` for splitting the leftover padding, `.title()`, and a first taste of
+  `input()` before the next module covers it properly.
 
 ## Module 2: Talking to the Terminal
 

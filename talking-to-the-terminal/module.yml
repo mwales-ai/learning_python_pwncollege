@@ -1,0 +1,15 @@
+name: Talking to the Terminal
+allow_privileged: true
+challenges:
+  - id: say-my-name
+    name: Say My Name
+  - id: number-cruncher
+    name: Number Cruncher
+  - id: hex-to-decimal
+    name: Hex to Decimal
+  - id: two-kinds-of-output
+    name: Two Kinds of Output
+  - id: exit-codes
+    name: Exit Codes
+  - id: command-line-arguments
+    name: Command Line Arguments

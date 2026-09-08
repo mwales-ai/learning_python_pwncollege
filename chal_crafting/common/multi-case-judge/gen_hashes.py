@@ -1,8 +1,23 @@
 #!/usr/bin/env python3
+"""
+Run a golden script over a challenge's test cases and write the hash files the
+judge compares against.
 
-import sys, hashlib, binascii, subprocess, os
+  gen_hashes.py <golden_script> <test_cases.txt> <hashes.txt> [options]
 
-from typing import Dict, List, Tuple
+    --args FILE            command line arguments per case, END_TEST_CASE
+                           delimited, one argument per line
+    --stderr-hashes FILE   also hash stderr, so the judge checks it
+    --exit-codes FILE      also record exit status, so the judge checks it
+
+Only stdout is judged unless you ask for more.  Whatever you generate here,
+the judge's .eval_data must contain the same set of files, with the same
+number of test cases in each.
+"""
+
+import sys, hashlib, subprocess, os
+
+from typing import List, Tuple
 
 # Golden scripts should be fast; a hang here means the script is broken.
 TEST_CASE_TIMEOUT = 10
@@ -18,52 +33,50 @@ def run_cmd(cmd: List[str], stdin_text:str ="", alt_user:str = None, timeout=Non
     """
 
     if alt_user:
-        run_cmd = ["runuser", "-u", alt_user]
+        run_cmd = ["runuser", "-u", alt_user, "--"]
         run_cmd.extend(cmd)
-
-        # runas requires real user be set to root as well
         os.setuid(0)
     else:
         run_cmd = cmd
 
     try:
         cp = subprocess.run(
-            run_cmd,                      # e.g. ["grep", "-n", "foo"]
-            input=stdin_text,         # text to send to stdin
-            capture_output=True,      # capture stdout and stderr
-            text=True,                # use str instead of bytes
-            timeout=timeout,          # optional: seconds
-            cwd=cwd, env=env,         # optional: working dir / env
-            check=False               # don't raise on nonzero exit
+            run_cmd,
+            input=stdin_text,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            cwd=cwd, env=env,
+            check=False
         )
-        
         return cp.stdout, cp.stderr, cp.returncode
     except subprocess.TimeoutExpired as e:
-        # e.stdout / e.stderr may contain partial output
-        raise 
+        raise
 
 def read_in_file(path:str) -> list[ list[str] ]:
+    """
+    END_TEST_CASE is a TERMINATOR, not a separator: a section with no lines in
+    it is a real test case, meaning "this program reads nothing from stdin".
+    Only the trailing text after the final terminator is discarded.  This must
+    match read_in_file() in the judge `run` script exactly.
+    """
     ret_val = []
     with open(path, "r") as f:
-        file_data = f.read().strip()
-        for test_case in file_data.split("END_TEST_CASE"):
-            test_case = test_case.strip()
-            if test_case == "":
-                # Tail after the final END_TEST_CASE, or a stray blank
-                # section.  Skip it rather than discarding every case after.
-                continue
-            lines_of_tc = []
-                
-            for single_line in test_case.split("\n"):
-                lines_of_tc.append(single_line.strip())
-            ret_val.append(lines_of_tc)
+        file_data = f.read()
+
+    for section in file_data.split("END_TEST_CASE")[:-1]:
+        lines_of_tc = []
+        for single_line in section.split("\n"):
+            single_line = single_line.strip()
+            if single_line != "":
+                lines_of_tc.append(single_line)
+        ret_val.append(lines_of_tc)
     return ret_val
 
 def convert_str_to_hash(text: str) -> str:
     verifyHash = hashlib.sha256()
     verifyHash.update(text.strip().encode("utf-8"))
-    hash_str = verifyHash.digest().hex()
-    return hash_str
+    return verifyHash.digest().hex()
 
 def clean_output_lines(text: str) -> List[str]:
     """
@@ -86,70 +99,99 @@ def convert_strs_to_hashes(text: List[str]) -> List[str]:
             continue
         ret_val.append(convert_str_to_hash(single_line))
     return ret_val
-   
-def execute_tc(test_data: List[str], hash_file, solution_script:str) -> bool:
-    print(f"Going to execute your script {solution_script} with the following input:")
-    print(test_data)
 
-    tc_out, tc_err, tc_code = run_cmd([solution_script], "\n".join(test_data),
-                                      timeout=TEST_CASE_TIMEOUT)
-    output_lines = clean_output_lines(tc_out)
-    hashes_out = convert_strs_to_hashes(output_lines)
-
-    print("Golden script output:")
-    print(tc_out)
-
-    print("Hashes:")
-    print(hashes_out)
-
-    if tc_err:
-        print("Golden script stderr (ignored by the judge):")
-        print(tc_err)
-
-    # A golden script that crashed or printed nothing would silently bake an
-    # empty expected output into hashes.txt, making the challenge unsolvable.
-    if tc_code != 0:
-        print(f"!! Golden script exited {tc_code} - refusing to write hashes")
-        return False
-
-    if len(output_lines) == 0:
-        print("!! Golden script produced no output - refusing to write hashes")
-        return False
-
-    for single_line in hashes_out:
-        hash_file.write(single_line + "\n")
-
-    hash_file.write("END_TEST_CASE\n")
-    return True
+def parse_args(argv):
+    opts = {"args": None, "stderr": None, "exit": None}
+    positional = []
+    i = 1
+    while i < len(argv):
+        a = argv[i]
+        if a == "--args":            opts["args"]   = argv[i+1]; i += 2
+        elif a == "--stderr-hashes": opts["stderr"] = argv[i+1]; i += 2
+        elif a == "--exit-codes":    opts["exit"]   = argv[i+1]; i += 2
+        elif a.startswith("--"):
+            print(f"unknown option {a}", file=sys.stderr); sys.exit(2)
+        else:
+            positional.append(a); i += 1
+    return opts, positional
 
 def main(argv):
-    if len(argv) != 4:
-        print("Creates hashes.txt file needed for evaluation script!")
-        print("")
-        print(" Arg 1: script.py (script that will generate desired output")
-        print(" Arg 2: test_cases.txt  (test cases delimited by END_TEST_CASE")
-        print(" Arg 3: path/to/hashes.txt (output file we will generate)")
-        return
+    opts, positional = parse_args(argv)
+    if len(positional) != 3:
+        print(__doc__.strip(), file=sys.stderr)
+        return 1
 
-    good_script = argv[1]
-    test_case_path = argv[2]
-    hash_output_path = argv[3]
+    good_script, test_case_path, hash_output_path = positional
 
-    #verify_hashes = read_in_file("/challenge/.eval_data/hashes.txt")
     test_data = read_in_file(test_case_path)
+    arg_data = read_in_file(opts["args"]) if opts["args"] else None
 
-    hash_file = open(hash_output_path, "w")
+    if arg_data is not None and len(arg_data) != len(test_data):
+        print(f"args file has {len(arg_data)} cases but test_cases has "
+              f"{len(test_data)}", file=sys.stderr)
+        return 1
 
-    for tc_text in test_data:
-        print("Starting test case")
-        if not execute_tc(tc_text, hash_file, good_script):
-            hash_file.close()
-            os.unlink(hash_output_path)
-            print("Aborted, hashes.txt was NOT written")
-            sys.exit(1)
+    out_hashes, err_hashes, codes = [], [], []
+
+    for i, tc_text in enumerate(test_data):
+        args = arg_data[i] if arg_data is not None else []
+        cmd = [good_script] + list(args)
+        print(f"Starting test case {i+1}: {' '.join(cmd)}")
+
+        try:
+            tc_out, tc_err, tc_code = run_cmd(cmd, "\n".join(tc_text),
+                                              timeout=TEST_CASE_TIMEOUT)
+        except subprocess.TimeoutExpired:
+            print(f"!! Golden script timed out after {TEST_CASE_TIMEOUT}s "
+                  f"- refusing to write hashes", file=sys.stderr)
+            return 1
+
+        out_lines = clean_output_lines(tc_out)
+        err_lines = clean_output_lines(tc_err)
+
+        print("Golden script stdout:")
+        print(tc_out)
+        if tc_err:
+            label = "stderr" if opts["stderr"] else "stderr (ignored by the judge)"
+            print(f"Golden script {label}:")
+            print(tc_err)
+        print(f"Exit status: {tc_code}")
+
+        # A golden script that crashed would silently bake an empty or partial
+        # expected output into the hashes, making the challenge unsolvable.
+        # An expected nonzero exit is legitimate, but only if we were asked to
+        # record exit codes on purpose.
+        if tc_code != 0 and opts["exit"] is None:
+            print(f"!! Golden script exited {tc_code} and --exit-codes was not "
+                  f"given - refusing to write hashes", file=sys.stderr)
+            return 1
+
+        if len(out_lines) == 0 and opts["stderr"] is None:
+            print("!! Golden script produced no stdout - refusing to write "
+                  "hashes", file=sys.stderr)
+            return 1
+
+        out_hashes.append(convert_strs_to_hashes(out_lines))
+        err_hashes.append(convert_strs_to_hashes(err_lines))
+        codes.append(tc_code)
+
+    def write_sections(path, sections):
+        with open(path, "w") as f:
+            for section in sections:
+                for h in section:
+                    f.write(h + "\n")
+                f.write("END_TEST_CASE\n")
+
+    write_sections(hash_output_path, out_hashes)
+    if opts["stderr"]:
+        write_sections(opts["stderr"], err_hashes)
+    if opts["exit"]:
+        with open(opts["exit"], "w") as f:
+            for c in codes:
+                f.write(f"{c}\n")
 
     print(f"Done writing {len(test_data)} test cases of hashes")
-    hash_file.close()
+    return 0
 
 if __name__ == "__main__":
-    main(sys.argv)
+    sys.exit(main(sys.argv))
