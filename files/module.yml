@@ -1,0 +1,5 @@
+name: Files
+allow_privileged: true
+challenges:
+  - id: hangman
+    name: Hangman

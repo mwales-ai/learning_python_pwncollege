@@ -145,6 +145,16 @@ correctly you get the flag.
 * **Line by Line** - Loop over a file one line at a time and process each
   one.  Teaches: `for line in f:`, why every line ends in `\n`, and
   `.strip()`.
+* **Hangman** - Build the actual game.  The secret word is pulled out of a
+  wordlist file by line number, you get six wrong guesses, and correct letters
+  fill in the blanks.  Teaches: reading a file line by line while counting,
+  `break` to stop early, and the newline-on-the-end bug in the place where it
+  really hurts - one stray `\n` and your board has an extra underscore.
+  Discussion: every Linux box ships a dictionary at `/usr/share/dict/words`,
+  a hundred thousand lines that are useless to open by hand and perfect to
+  open from a program.  Spell checkers read it; so do people cracking
+  passwords.  The wordlist path is an input, so students can point the
+  finished game at the system dictionary and play for real.
 * **Append and Transform** - Add to a log file with `"a"` mode, then read
   one file, change it, and write the result to a second file.  Teaches: file
   modes, reading and writing at the same time, not clobbering your input.
