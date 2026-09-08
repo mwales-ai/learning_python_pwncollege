@@ -154,7 +154,10 @@ correctly you get the flag.
   a hundred thousand lines that are useless to open by hand and perfect to
   open from a program.  Spell checkers read it; so do people cracking
   passwords.  The wordlist path is an input, so students can point the
-  finished game at the system dictionary and play for real.
+  finished game at the system dictionary and play for real.  The 500 word
+  list the challenge ships was itself mined out of computing articles and
+  the two recommended books by counting words - a preview of the capstone,
+  and the description walks through how it was done.
 * **Append and Transform** - Add to a log file with `"a"` mode, then read
   one file, change it, and write the result to a second file.  Teaches: file
   modes, reading and writing at the same time, not clobbering your input.

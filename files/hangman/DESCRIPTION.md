@@ -15,10 +15,27 @@ It is over a hundred thousand lines long, and it is exactly the sort of file
 that is useless to open by hand and wonderful to open from a program.  Spell
 checkers use it.  So do people cracking passwords.
 
-For this challenge we ship a smaller list at `/challenge/words.txt`.  Every
-word in it came out of `/usr/share/dict/words`, but the giant list is full of
-things like `abaci` and `zwieback` that make for a miserable game.  Ours is
-376 words that a person might actually guess.
+That list is also a terrible source of hangman words - it is full of things
+like `abaci` and `zwieback`.  So we built our own, and how we built it is
+worth a minute of your time, because it is the kind of thing you will be able
+to do yourself by the end of this dojo.
+
+We downloaded about 124 Wikipedia articles about computing and hacking, plus
+every chapter of both books recommended for this dojo.  That is roughly
+818,000 words.  Then we downloaded 87 more Wikipedia articles about
+everything *except* computing - cooking, sports, animals, history, music - as
+a comparison pile.  Then we counted every word in both piles and asked a
+simple question of each one: *how much more often does this word show up in
+the computing pile than in the ordinary pile?*
+
+Words like `which` and `other` are just as common in both, so they score
+about 1 and sink to the bottom.  Words like `kernel`, `malware` and `boolean`
+barely appear in the ordinary pile at all, so they rocket to the top.  The
+500 words in `/challenge/words.txt` are what came out, cleaned up a bit.
+
+That is counting words in files and looking things up - which is most of what
+this module and the dictionaries module are about.  You are three challenges
+away from being able to write it.
 
 ## Reading a file line by line, and counting as you go
 
@@ -36,7 +53,7 @@ with open("/challenge/words.txt", "r") as f:
 ```
 
 `break` leaves the loop immediately.  Without it you would keep reading the
-other 369 lines for no reason.
+other 493 lines for no reason.
 
 ## The bug you are about to hit
 
@@ -45,7 +62,7 @@ That newline is invisible when you print it, and it absolutely counts as a
 character:
 
 ```
->>> line = "igloo\n"
+>>> line = "hello\n"
 >>> len(line)
 6
 >>> len(line.strip())
@@ -86,7 +103,7 @@ Then, for each letter guessed, print exactly three lines:
 
 ```
 <letter> is in the word!        (or)   <letter> is not in the word.
-Word: i g l _ _
+Word: h e l l _
 Misses left: 4
 ```
 
@@ -99,13 +116,13 @@ The game ends the moment one of two things happens, and you print one last
 line and stop:
 
 ```
-You win! The word was igloo.
+You win! The word was hello.
 ```
 
 when every letter has been revealed, or:
 
 ```
-You lose! The word was igloo.
+You lose! The word was hello.
 ```
 
 when your misses reach 6.  Do not print anything after that line.
@@ -125,9 +142,9 @@ If your program is given this input:
 
 ```
 /challenge/words.txt
-134
-i
-g
+201
+h
+e
 l
 o
 ```
@@ -136,22 +153,22 @@ it must print exactly this:
 
 ```
 Word: _ _ _ _ _
-i is in the word!
-Word: i _ _ _ _
+h is in the word!
+Word: h _ _ _ _
 Misses left: 6
-g is in the word!
-Word: i g _ _ _
+e is in the word!
+Word: h e _ _ _
 Misses left: 6
 l is in the word!
-Word: i g l _ _
+Word: h e l l _
 Misses left: 6
 o is in the word!
-Word: i g l o o
+Word: h e l l o
 Misses left: 6
-You win! The word was igloo.
+You win! The word was hello.
 ```
 
-Try it yourself first - the wordlist is readable, so you can look up line 134
+Try it yourself first - the wordlist is readable, so you can look up line 201
 and check your work.
 
 Once it works, play it for real.  Nothing stops you from typing the guesses in

@@ -265,9 +265,17 @@ adds a `chmod 0644` for it.  Two things to know before copying the pattern:
 * **Do not judge against `/usr/share/dict/words`.**  It is a symlink to
   `/etc/dictionaries-common/words`, whose contents depend on which dictionary
   packages happen to be installed, so two machines can disagree and the hashes
-  become unreproducible.  The shipped `words.txt` is generated from it once, at
-  authoring time, by `make_test_cases.py`'s sibling `make_wordlist.py` in the
-  private submodule, which verifies every word really is a dictionary entry.
+  become unreproducible.  The same argument rules out scraping the web at run
+  time.  `words.txt` is 500 computing-flavored words mined once from a scraped
+  corpus and then **frozen** inside `make_wordlist.py` in the private
+  submodule, which emits it deterministically with no network access.  The
+  scrape-and-score pipeline is kept beside it in `wordlist_pipeline/` for
+  provenance and so the list can be extended deliberately - it scrapes ~124
+  computing Wikipedia articles plus both recommended books, scores every word
+  against a non-computing Wikipedia background corpus, and curates the top
+  500.  **If the wordlist changes, the test cases and hashes must be
+  regenerated**, and any word named in `DESCRIPTION.md` or in
+  `make_test_cases.py` has to still be present at the same line number.
 * **The wordlist path is an input line, not a constant in the program.**  That
   is what makes hashes generatable off the challenge VM: the shipped
   `test_cases.txt` names `/challenge/words.txt`, which does not exist on an
