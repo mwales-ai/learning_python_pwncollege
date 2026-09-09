@@ -1,0 +1,7 @@
+name: Working With Text
+allow_privileged: true
+challenges:
+  - id: slicing-strings-apart
+    name: Slicing Strings Apart
+  - id: your-own-cut
+    name: Your Own cut

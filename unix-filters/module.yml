@@ -1,0 +1,13 @@
+name: Unix Filters
+allow_privileged: true
+challenges:
+  - id: read-from-standard-input
+    name: Read From Standard Input
+  - id: write-your-own-grep
+    name: Write Your Own grep
+  - id: in-the-middle-of-a-pipeline
+    name: In the Middle of a Pipeline
+  - id: fizzbuzz-the-filter
+    name: FizzBuzz, The Filter
+  - id: count-and-total
+    name: Count and Total

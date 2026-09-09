@@ -9,3 +9,7 @@ modules:
   - id: making-decisions
   - id: loops-and-lists
   - id: files
+  - id: unix-filters
+  - id: working-with-text
+  - id: functions
+  - id: dictionaries

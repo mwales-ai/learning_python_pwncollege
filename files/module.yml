@@ -1,5 +1,13 @@
 name: Files
 allow_privileged: true
 challenges:
+  - id: read-a-file
+    name: Read a File
+  - id: write-a-file
+    name: Write a File
+  - id: line-by-line
+    name: Line by Line
   - id: hangman
     name: Hangman
+  - id: append-and-transform
+    name: Append and Transform

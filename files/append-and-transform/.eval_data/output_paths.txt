@@ -1,0 +1,6 @@
+/tmp/challenge_log.txt
+END_TEST_CASE
+/tmp/challenge_log.txt
+END_TEST_CASE
+/tmp/challenge_log.txt
+END_TEST_CASE

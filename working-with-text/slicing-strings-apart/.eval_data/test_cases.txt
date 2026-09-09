@@ -1,0 +1,12 @@
+   The Analytical Engine has no pretensions
+END_TEST_CASE
+hello world
+END_TEST_CASE
+   THE QUICK BROWN FOX
+END_TEST_CASE
+kernel
+END_TEST_CASE
+the cake is a lie
+END_TEST_CASE
+Grace Brewster Murray Hopper
+END_TEST_CASE

@@ -1,0 +1,3 @@
+user root logged in
+disk check started
+disk check finished

@@ -17,6 +17,9 @@ F_OUT    = f"{EVAL}/hashes.txt"          # expected stdout, hashed per line
 F_ARGS   = f"{EVAL}/args.txt"            # command line arguments per case
 F_ERR    = f"{EVAL}/stderr_hashes.txt"   # expected stderr, hashed per line
 F_EXIT   = f"{EVAL}/exit_codes.txt"      # expected exit status per case
+F_OPATH  = f"{EVAL}/output_paths.txt"    # a file the program is expected to WRITE
+F_OSEED  = f"{EVAL}/output_seeds.txt"    # content to put there BEFORE running
+F_OHASH  = f"{EVAL}/output_file_hashes.txt"  # expected contents of that file
 
 def debug(msg:str):
     if(False):
@@ -93,6 +96,30 @@ def read_exit_codes(path:str):
             if line != "":
                 codes.append(int(line))
     return codes
+
+def prepare_output_path(path: str, seed: List[str]) -> bool:
+    """
+    Get the file the student is supposed to write into a known state.
+
+    With a seed we write it and make it world writable, because the judge runs
+    as root while the student's program runs as `hacker` - a root owned 0644
+    file would be unwritable and the challenge would be impossible.  Without a
+    seed we simply remove it, so a leftover file from a previous run cannot
+    pass a program that writes nothing.
+    """
+    try:
+        if os.path.exists(path):
+            os.remove(path)
+        if seed is not None:
+            with open(path, "w") as f:
+                for line in seed:
+                    f.write(line + "\n")
+            os.chmod(path, 0o666)
+        return True
+    except OSError as e:
+        print(f"This challenge is misconfigured, please report it.")
+        print(f"Could not prepare {path}: {e}")
+        return False
 
 def convert_str_to_hash(text: str) -> str:
     verifyHash = hashlib.sha256()
@@ -183,8 +210,13 @@ def compare_stream(name: str, output_lines: List[str], hash_hex: List[str]) -> b
     return True
 
 def execute_tc(test_data: List[str], hash_hex: List[str], solution_script: str,
-               args: List[str], err_hex: List[str], want_code) -> bool:
+               args: List[str], err_hex: List[str], want_code,
+               out_path, out_seed, out_hex) -> bool:
     cmd = [solution_script] + list(args)
+
+    if out_path is not None:
+        if not prepare_output_path(out_path, out_seed):
+            return False
 
     if args:
         print(f"Going to run: {' '.join(cmd)}")
@@ -234,6 +266,25 @@ def execute_tc(test_data: List[str], hash_hex: List[str], solution_script: str,
         if not compare_stream("stderr", err_lines, err_hex):
             return False
 
+    if out_path is not None:
+        if not os.path.exists(out_path):
+            print(f"Your program was supposed to write {out_path}, but that "
+                  f"file does not exist afterwards.")
+            return False
+        try:
+            with open(out_path, "r") as f:
+                file_lines = clean_output_lines(f.read())
+        except OSError as e:
+            print(f"Could not read back {out_path}: {e}")
+            return False
+
+        print(f"The file {out_path} now contains:")
+        for i in range(len(file_lines)):
+            print(f"Line {i+1} = {file_lines[i]}")
+
+        if not compare_stream("file", file_lines, out_hex):
+            return False
+
     if want_code is not None:
         if tc_code != want_code:
             print(f"Wrong exit status: I expected {want_code} but your program "
@@ -260,6 +311,9 @@ def main(argv):
     arg_data      = read_optional(F_ARGS)
     err_hashes    = read_optional(F_ERR)
     exit_codes    = read_exit_codes(F_EXIT)
+    out_paths     = read_optional(F_OPATH)
+    out_seeds     = read_optional(F_OSEED)
+    out_hashes    = read_optional(F_OHASH)
 
     # zip() would silently drop the extra cases and quietly make the challenge
     # easier, so refuse to run instead.  This is a challenge authoring bug, not
@@ -271,6 +325,17 @@ def main(argv):
         counts["stderr_hashes.txt"] = len(err_hashes)
     if exit_codes is not None:
         counts["exit_codes.txt"] = len(exit_codes)
+    if out_paths is not None:
+        counts["output_paths.txt"] = len(out_paths)
+    if out_seeds is not None:
+        counts["output_seeds.txt"] = len(out_seeds)
+    if out_hashes is not None:
+        counts["output_file_hashes.txt"] = len(out_hashes)
+
+    if (out_paths is None) != (out_hashes is None):
+        print("This challenge is misconfigured, please report it.")
+        print("output_paths.txt and output_file_hashes.txt go together.")
+        sys.exit(1)
 
     if len(set(counts.values())) != 1:
         print("This challenge is misconfigured, please report it.")
@@ -283,7 +348,10 @@ def main(argv):
         ok = execute_tc(test_data[i], verify_hashes[i], solution_script,
                         arg_data[i] if arg_data is not None else [],
                         err_hashes[i] if err_hashes is not None else None,
-                        exit_codes[i] if exit_codes is not None else None)
+                        exit_codes[i] if exit_codes is not None else None,
+                        out_paths[i][0] if out_paths is not None else None,
+                        out_seeds[i] if out_seeds is not None else None,
+                        out_hashes[i] if out_hashes is not None else None)
         if not ok:
             sys.exit(1)
 

@@ -1,0 +1,7 @@
+name: Dictionaries
+allow_privileged: true
+challenges:
+  - id: lookup-tables
+    name: Lookup Tables
+  - id: capstone-the-report
+    name: Capstone - The Report

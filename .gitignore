@@ -1,2 +1,12 @@
 __pycache__/
 *.pyc
+
+# The solutions live in a SEPARATE PRIVATE REPO that used to be a submodule
+# here.  pwn.college clones this repo recursively and cannot authenticate to a
+# private submodule, so the link was removed.  Clone it into this path by hand
+# when authoring:
+#
+#   git clone git@github.com:mwales-ai/learning_python_pwncollege_solutions.git \
+#       chal_crafting/learning_python_pwncollege_solutions
+#
+chal_crafting/learning_python_pwncollege_solutions/

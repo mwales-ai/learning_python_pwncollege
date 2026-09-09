@@ -1,0 +1,31 @@
+10
+20
+30
+END_TEST_CASE
+5
+banana
+15
+not a number
+20
+END_TEST_CASE
+-5
+10
+-15
+END_TEST_CASE
+just words
+no numbers here
+at all
+END_TEST_CASE
+42
+END_TEST_CASE
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+END_TEST_CASE

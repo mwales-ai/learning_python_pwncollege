@@ -1,0 +1,9 @@
+=== EXISTING LOG HEADER ===
+this line was here before your program ran
+END_TEST_CASE
+=== EXISTING LOG HEADER ===
+this line was here before your program ran
+END_TEST_CASE
+=== EXISTING LOG HEADER ===
+this line was here before your program ran
+END_TEST_CASE

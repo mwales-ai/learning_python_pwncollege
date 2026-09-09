@@ -1,0 +1,9 @@
+/challenge/data/events.txt
+/tmp/challenge_log.txt
+END_TEST_CASE
+/challenge/data/names.txt
+/tmp/challenge_log.txt
+END_TEST_CASE
+/challenge/data/single.txt
+/tmp/challenge_log.txt
+END_TEST_CASE

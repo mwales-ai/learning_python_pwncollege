@@ -1,0 +1,10 @@
+/challenge/data/logins.txt
+END_TEST_CASE
+/challenge/data/small.txt
+END_TEST_CASE
+/challenge/data/tied.txt
+END_TEST_CASE
+/challenge/data/single.txt
+END_TEST_CASE
+/challenge/data/nope.txt
+END_TEST_CASE

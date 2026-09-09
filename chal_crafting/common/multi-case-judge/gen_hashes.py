@@ -9,6 +9,9 @@ judge compares against.
                            delimited, one argument per line
     --stderr-hashes FILE   also hash stderr, so the judge checks it
     --exit-codes FILE      also record exit status, so the judge checks it
+    --output-paths FILE    a file the program WRITES, one path per case
+    --output-seeds FILE    content to place there before each run
+    --output-file-hashes FILE   where to write that file's expected contents
 
 Only stdout is judged unless you ask for more.  Whatever you generate here,
 the judge's .eval_data must contain the same set of files, with the same
@@ -101,7 +104,8 @@ def convert_strs_to_hashes(text: List[str]) -> List[str]:
     return ret_val
 
 def parse_args(argv):
-    opts = {"args": None, "stderr": None, "exit": None}
+    opts = {"args": None, "stderr": None, "exit": None,
+            "opath": None, "oseed": None, "ohash": None}
     positional = []
     i = 1
     while i < len(argv):
@@ -109,6 +113,9 @@ def parse_args(argv):
         if a == "--args":            opts["args"]   = argv[i+1]; i += 2
         elif a == "--stderr-hashes": opts["stderr"] = argv[i+1]; i += 2
         elif a == "--exit-codes":    opts["exit"]   = argv[i+1]; i += 2
+        elif a == "--output-paths":  opts["opath"]  = argv[i+1]; i += 2
+        elif a == "--output-seeds":  opts["oseed"]  = argv[i+1]; i += 2
+        elif a == "--output-file-hashes": opts["ohash"] = argv[i+1]; i += 2
         elif a.startswith("--"):
             print(f"unknown option {a}", file=sys.stderr); sys.exit(2)
         else:
@@ -125,18 +132,36 @@ def main(argv):
 
     test_data = read_in_file(test_case_path)
     arg_data = read_in_file(opts["args"]) if opts["args"] else None
+    opath_data = read_in_file(opts["opath"]) if opts["opath"] else None
+    oseed_data = read_in_file(opts["oseed"]) if opts["oseed"] else None
+
+    if bool(opts["opath"]) != bool(opts["ohash"]):
+        print("--output-paths and --output-file-hashes go together",
+              file=sys.stderr)
+        return 1
 
     if arg_data is not None and len(arg_data) != len(test_data):
         print(f"args file has {len(arg_data)} cases but test_cases has "
               f"{len(test_data)}", file=sys.stderr)
         return 1
 
-    out_hashes, err_hashes, codes = [], [], []
+    out_hashes, err_hashes, codes, file_hashes = [], [], [], []
 
     for i, tc_text in enumerate(test_data):
         args = arg_data[i] if arg_data is not None else []
         cmd = [good_script] + list(args)
         print(f"Starting test case {i+1}: {' '.join(cmd)}")
+
+        # Put the file the golden script writes into the same state the judge
+        # will put it in, or we would be hashing whatever a previous run left.
+        opath = opath_data[i][0] if opath_data is not None else None
+        if opath is not None:
+            if os.path.exists(opath):
+                os.remove(opath)
+            if oseed_data is not None:
+                with open(opath, "w") as f:
+                    for line in oseed_data[i]:
+                        f.write(line + "\n")
 
         try:
             tc_out, tc_err, tc_code = run_cmd(cmd, "\n".join(tc_text),
@@ -166,14 +191,38 @@ def main(argv):
                   f"given - refusing to write hashes", file=sys.stderr)
             return 1
 
-        if len(out_lines) == 0 and opts["stderr"] is None:
-            print("!! Golden script produced no stdout - refusing to write "
-                  "hashes", file=sys.stderr)
+        # Refuse only when this case checks NOTHING at all - that means the
+        # golden script silently did nothing and would bake an unsolvable
+        # (or trivially solvable) case into the hashes.  Empty stdout is
+        # perfectly legitimate when something else is being judged: a grep
+        # that found no matches prints nothing and exits 1, and that is the
+        # correct answer, not a failure.
+        nothing_checked = (
+            len(out_lines) == 0
+            and (opts["stderr"] is None or len(err_lines) == 0)
+            and opts["exit"] is None
+            and opts["ohash"] is None
+        )
+        if nothing_checked:
+            print("!! Golden script produced no output at all and nothing "
+                  "else is being checked - refusing to write hashes",
+                  file=sys.stderr)
             return 1
 
         out_hashes.append(convert_strs_to_hashes(out_lines))
         err_hashes.append(convert_strs_to_hashes(err_lines))
         codes.append(tc_code)
+
+        if opath is not None:
+            if not os.path.exists(opath):
+                print(f"!! Golden script did not write {opath} - refusing to "
+                      f"write hashes", file=sys.stderr)
+                return 1
+            with open(opath, "r") as f:
+                fl = clean_output_lines(f.read())
+            print(f"Golden script wrote {opath}:")
+            print("\n".join(fl))
+            file_hashes.append(convert_strs_to_hashes(fl))
 
     def write_sections(path, sections):
         with open(path, "w") as f:
@@ -189,6 +238,8 @@ def main(argv):
         with open(opts["exit"], "w") as f:
             for c in codes:
                 f.write(f"{c}\n")
+    if opts["ohash"]:
+        write_sections(opts["ohash"], file_hashes)
 
     print(f"Done writing {len(test_data)} test cases of hashes")
     return 0

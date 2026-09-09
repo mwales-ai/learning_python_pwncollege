@@ -1,0 +1,7 @@
+name: Functions
+allow_privileged: true
+challenges:
+  - id: define-and-call
+    name: Define and Call
+  - id: build-a-toolbox
+    name: Build a Toolbox

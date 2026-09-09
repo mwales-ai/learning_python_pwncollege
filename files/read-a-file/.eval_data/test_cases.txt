@@ -1,0 +1,8 @@
+/challenge/data/lovelace.txt
+END_TEST_CASE
+/challenge/data/ports.txt
+END_TEST_CASE
+/challenge/data/hosts.txt
+END_TEST_CASE
+/challenge/data/motd.txt
+END_TEST_CASE

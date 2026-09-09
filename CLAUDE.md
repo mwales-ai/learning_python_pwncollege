@@ -54,10 +54,15 @@ Modules currently built:
 | 2 | `talking-to-the-terminal` | say-my-name, number-cruncher, hex-to-decimal, two-kinds-of-output, exit-codes, command-line-arguments |
 | 3 | `making-decisions` | if-and-else, elif-ladder, true-and-false, guessing-game |
 | 4 | `loops-and-lists` | counting-loops, fizzbuzz, lists, loop-over-a-list, secret-decoder-ring |
-| 5 | `files` | hangman |
+| 5 | `files` | read-a-file, write-a-file, line-by-line, hangman, append-and-transform |
+| 6 | `unix-filters` | read-from-standard-input, write-your-own-grep, in-the-middle-of-a-pipeline, fizzbuzz-the-filter, count-and-total |
+| 7 | `working-with-text` | slicing-strings-apart, your-own-cut |
+| 8 | `functions` | define-and-call, build-a-toolbox |
+| 9 | `dictionaries` | lookup-tables, capstone-the-report |
 
-README modules 1 to 4 are complete.  Module 5 has only its first game; modules
-6 to 9 do not exist yet.  Add them to `dojo.yml` in README order.
+**All nine README modules are built** - 36 challenges.  There is also a
+dojo-level `DESCRIPTION.md` beside `dojo.yml`, which is what pwn.college shows
+on the dojo's front page.
 
 **The curriculum order is a hard constraint on challenge design.**  A challenge
 may only need language features the README has already introduced, and that
@@ -128,6 +133,17 @@ run.
 | `args.txt` | command line arguments per case, one argument per line | `--args` |
 | `stderr_hashes.txt` | stderr is judged too, not ignored | `--stderr-hashes` |
 | `exit_codes.txt` | exit status is judged, one integer per line | `--exit-codes` |
+| `output_paths.txt` | a file the program must WRITE, one path per case | `--output-paths` |
+| `output_seeds.txt` | content placed at that path before the run | `--output-seeds` |
+| `output_file_hashes.txt` | expected final contents of that file | `--output-file-hashes` |
+
+The output-file trio is how the file-writing challenges are judged.  Without a
+seed the judge **deletes** the path before running, so a leftover file cannot
+pass a program that writes nothing.  With a seed it writes that content and
+chmods it 0666 - the judge runs as root and the student's program as `hacker`,
+so a root-owned 0644 file would be unwritable.  A seed is also what proves the
+difference between `"a"` and `"w"`: `append-and-transform` seeds a header and
+checks it survives.
 
 `END_TEST_CASE` is a **terminator, not a separator**: a section with no lines
 in it is a real test case meaning "this program reads nothing from stdin".
@@ -143,6 +159,17 @@ Two traps that cost real time:
 * **Never make output depend on a path, a clock, or randomness** for the same
   reason.  `hangman` takes the wordlist path as input precisely so the path
   can differ between the two runs without reaching the output.
+
+  This bites in a subtle place.  Several challenges name `/challenge/data/...`
+  in their shipped `test_cases.txt`, which does not exist on an authoring
+  machine, so the solutions repo carries a `local_cases.txt` (or
+  `local_args.txt`) naming a local path, and hashes are generated from that.
+  **That only works while the differing path never reaches judged output.**
+  The capstone originally printed `cannot read {path}` on stderr for its
+  missing-file case, which broke it - fixed by using the same non-existent
+  `/challenge/data/nope.txt` in both files, since it is absent either way.
+  There is a check for this class of bug: run each golden script with local
+  paths and grep its stdout and stderr for the authoring path prefix.
 
 Judge behavior worth knowing when writing challenge instructions:
 
@@ -206,12 +233,26 @@ path.
 
 ## Solutions and golden scripts: the private submodule
 
-Solutions live in a **separate private repo**, included here as a git
-submodule at `chal_crafting/learning_python_pwncollege_solutions`
-(`git@github.com:mwales-ai/learning_python_pwncollege_solutions.git`).  This
-repo - the dojo - is intended to become public; the solutions repo must stay
-private.  Someone cloning the public dojo without access just gets an empty
-directory, which is the point.
+Solutions live in a **separate private repo**,
+`git@github.com:mwales-ai/learning_python_pwncollege_solutions.git`.  This repo
+- the dojo - is intended to become public; the solutions repo must stay
+private.
+
+It **used to be a git submodule** here and no longer is.  pwn.college clones
+the dojo recursively and cannot authenticate to a private submodule, so the
+link was removed.  The two repos are now independent, and
+`chal_crafting/learning_python_pwncollege_solutions/` is in `.gitignore`.
+
+Clone it into that same path by hand when authoring - all the tooling expects
+it there:
+
+```
+git clone git@github.com:mwales-ai/learning_python_pwncollege_solutions.git \
+    chal_crafting/learning_python_pwncollege_solutions
+```
+
+**Commit and push the two repos separately.**  Nothing links them any more, so
+nothing will remind you.
 
 Each solution does two jobs:
 
@@ -287,7 +328,9 @@ the judge refuses to run if the two files disagree on test case count.
 ## Housekeeping / open items
 
 * `README.md` has "LINK TBD" for this dojo's own URL.
-* 21 of 35 planned challenges exist (README modules 1-4 done, plus hangman).
+* All 36 challenges exist.  Anything further is new material, not
+  catching up - and any new challenge still has to obey the curriculum order
+  constraint above.
 * `secret-decoder-ring`'s test cases are generated by `make_test_cases.py`,
   which lives beside its solution in the private submodule.  It asserts that
   every message survives a clean encode/decode round trip - without that

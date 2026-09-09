@@ -1,0 +1,5 @@
+boot: kernel loaded
+boot: mounting filesystems
+warn: disk nearly full
+boot: starting network
+info: ready
