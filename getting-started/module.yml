@@ -1,13 +1,21 @@
 name: Getting Started
 allow_privileged: true
 challenges:
+  - id: running-interpreter
+    name: Running the Interpreter
+  - id: string-concatenation
+    name: String Concatenation
   - id: hello-hacker
     name: Hello Hackers
   - id: run-it-yourself
     name: Run It Yourself
-  - id: debug-me
-    name: Debug Me
+  - id: tippy-tipper
+    name: Tippy Tipper
   - id: variables-and-fstrings
     name: Variables and f-strings
+  - id: why-are-we-yelling
+    name: Why Are We Yelling?
   - id: birthday-banner
     name: Birthday Banner
+  - id: debug-me
+    name: Debug Me

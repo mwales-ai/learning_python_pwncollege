@@ -1,0 +1,20 @@
+Always shut the database service before swapping hardware.
+Seat the HSM carefully; never force a card into the PCIe slot.
+Red teamers sometimes duck into groups to tailgate through secure doors.
+During an incident, split your terminal into panes for logs and shells.
+Butch from ops verified every endpoint for default creds during the audit.
+Count failed SSH attempts and auto-ban abusive IPs.
+Use a feature branch before you fork the main repo for experiments.
+Lock the cabinet so nobody can plug a rogue device into the dock.
+Schedule the nightly ETL as a batch job with least-privilege creds.
+Don’t botch the TLS config—validate the chain and hostnames.
+Take a snapshot before major upgrades so you can roll back quickly.
+Make sure the certificate’s SAN matches the production domain.
+If a phishing email urges a click, don’t even flick the cursor toward it.
+Patch internet-facing services immediately when a critical CVE drops.
+Keep command logs in separate sheets so audits are straightforward.
+A clutch of noisy alerts beats silence during an active breach.
+Plan a clean shutdown before patching the hypervisor.
+Use a fork of the exploit to test mitigations safely in a lab.
+Bolt the dock to the desk to prevent quick grab-and-go theft.
+If the SOC must count blocked requests, export that metric hourly.

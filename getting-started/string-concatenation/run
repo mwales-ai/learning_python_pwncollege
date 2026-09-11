@@ -1,0 +1,42 @@
+#!/usr/bin/exec-suid -- /usr/local/bin/python3 -I -i
+
+import sys
+
+flag  = "Well done coder!  " + open("/flag","r").read().strip()
+#flag = "wildcat{super_long_piece_of_text_without_newlines_what_the_heck_when_will_this_end}"
+
+# Print a fake header like it was the real python
+print("Python 3.12.11 (main, Jun  3 2025, 15:41:47) [GCC 14.2.1 20250322] on linux")
+print('Type "help", "copyright", "credits" or "license" for more information.')
+
+def secret_encoder(pt):
+    ret_val = ""
+    for i,c in enumerate(pt):
+        cur_char_val = ord(c) - 0x20
+        cur_char_val += 2 * i
+        cur_char_val = cur_char_val % 0x5f
+        ret_val += chr(cur_char_val + 0x20)
+    return ret_val
+
+def secret_decoder(ct):
+    ret_val = ""
+    for i,c in enumerate(ct):
+        cur_char_val = ord(c) - 0x20 + (0x5f * len(ct))
+        cur_char_val -= 2 * i
+        cur_char_val = cur_char_val % 0x5f
+        ret_val += chr(cur_char_val + 0x20)
+    return ret_val
+
+
+
+
+ct = secret_encoder(flag)
+middle_index = len(ct) // 2
+
+ct1 = ct[:middle_index]
+ct2 = ct[middle_index:]
+
+ct = None
+flag = None
+        
+

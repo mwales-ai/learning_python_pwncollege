@@ -1,0 +1,100 @@
+#!/usr/bin/exec-suid -- /usr/bin/env python3 -I
+
+import sys, hashlib, binascii, subprocess, os
+
+from typing import Dict, List, Tuple
+
+def debug(msg:str):
+    if(False):
+        sys.stderr.write(msg + "\n")
+
+def run_cmd(cmd: List[str], stdin_text:str ="", alt_user:str = None, timeout=None, cwd=None, env=None) -> Tuple[str, str, int]:
+    """
+    Run an external process, feed it text on stdin, block until it finishes,
+    and return (stdout, stderr, returncode). Raises on timeout if specified.
+    """
+
+    if alt_user:
+        run_cmd = ["runuser", "-u", alt_user]
+        run_cmd.extend(cmd)
+
+        # runas requires real user be set to root as well
+        os.setuid(0)
+    else:
+        run_cmd = cmd
+
+    try:
+        cp = subprocess.run(
+            run_cmd,                      # e.g. ["grep", "-n", "foo"]
+            input=stdin_text,         # text to send to stdin
+            capture_output=True,      # capture stdout and stderr
+            text=True,                # use str instead of bytes
+            timeout=timeout,          # optional: seconds
+            cwd=cwd, env=env,         # optional: working dir / env
+            check=False               # don't raise on nonzero exit
+        )
+        
+        return cp.stdout, cp.stderr, cp.returncode
+    except subprocess.TimeoutExpired as e:
+        # e.stdout / e.stderr may contain partial output
+        raise 
+
+def read_in_file(path:str) -> list[str]:
+    ret_val = []
+    with open(path, "r") as f:
+        file_data = f.read().strip()
+        for single_line in file_data.split("\n"):
+            ret_val.append(single_line.strip())
+    return ret_val
+
+def convertStrToHash(text:str) -> str:
+    verifyHash = hashlib.sha256()
+    verifyHash.update(text.strip().encode("utf-8"))
+    hash_str = verifyHash.digest().hex()
+    return hash_str
+
+   
+def execute_tc(test_data:str, hash_hex:str, solution_script:str) -> bool:
+    print(f"Going to execute your script {solution_script} with the following input:")
+    print(test_data)
+
+    tc_out, tc_err, tc_code = run_cmd([solution_script], test_data, "hacker")
+    hash_out = convertStrToHash(tc_out)
+
+    print("Your programs output:")
+    print(tc_out)
+
+    if tc_err:
+        print("Your programs stderr:")
+        print(tc_err)
+
+    if hash_out == hash_hex:
+        print("Output verifed as correct")
+        return True
+    else:
+        print("Output incorrect")
+        return False
+
+
+def main(argv):
+    if len(argv) != 2:
+        print("You need to pass me the path of your script")
+        return
+
+    verify_hashes = read_in_file("/challenge/.eval_data/hashes.txt")
+    test_data = read_in_file("/challenge/.eval_data/test_cases.txt")
+
+    tc = zip(verify_hashes, test_data)
+    for hash_str, tc_text in tc:
+        print("Starting test case")
+        if not execute_tc(tc_text, hash_str, argv[1]):
+            sys.exit()
+        
+    # Display the flag
+    flag = open("/flag","r").read()
+    
+    print("Congrats!")
+    print(flag)
+
+if __name__ == "__main__":
+    main(sys.argv)

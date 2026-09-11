@@ -1,0 +1,102 @@
+#!/usr/bin/exec-suid -- /usr/bin/env python3 -I
+
+from pwn import *
+import sys
+import random
+import pwd, grp, subprocess
+
+# need to demote user script back to hacker user priv using this sweet AI code
+def demote(username: str):
+    pw = pwd.getpwnam(username)
+    uid, gid = pw.pw_uid, pw.pw_gid
+    name = pw.pw_name
+    def _preexec():
+        os.umask(0o022)
+        os.setgid(gid)
+        os.initgroups(name, gid)
+        os.setuid(uid)
+    return _preexec
+
+
+def check_line(key, expected_value, user_line):
+    text = user_line.replace(b" ",b"")
+    line_parts = user_line.split(b"=")
+    if len(line_parts) != 2:
+        print(f"Error processing the line: {user_line}")
+        sys.exit(0)
+
+    if key not in line_parts[0].decode("utf-8"):
+        print(f"[FAIL] {user_line}")
+        print("Prompt is wrong")
+        sys.exit(0)
+    user_value = float(line_parts[1])
+
+    diff = abs(expected_value - user_value)
+
+    if (diff > 0.01):
+        print(f"Your {key} value is incorrect!")
+        sys.exit(0)
+
+    print(f"[OK] {user_line}")
+
+def verify_application(script_path):
+    print("Starting new test case")
+
+    p = process(["/usr/bin/env", "python3", script_path ], preexec_fn=demote("hacker"))
+
+    prompt1 = p.recvline().decode("utf-8")
+
+    if "What is the subtotal amount?" not in prompt1:
+        print(f"Error when prompting for the subtotal amount: {prompt1}")
+        sys.exit(1)
+    print(f"[OK] {prompt1}")
+
+    subtotal = round(random.uniform(10,1000), 2)
+    print(f"Setting subtotal as {subtotal}")
+    p.sendline(str(subtotal).encode("utf-8"))
+
+    prompt2 = p.recvline().decode("utf-8")
+    if "What is the tax amount?" not in prompt2:
+        print(f"Error when prompting for the tax amount: {prompt2}")
+        sys.exit(1)
+    print(f"[OK] {prompt2}")
+    
+    tax = round(random.uniform(0 ,30), 2)
+    print(f"Setting tax as {tax}")
+    p.sendline(str(tax).encode("utf-8"))
+
+    prompt3 = p.recvline().decode("utf-8")
+    if "What is the tip amount?" not in prompt3:
+        print(f"Error when prompting for the tip amount: {prompt3}")
+        sys.exit(1)
+    print(f"[OK] {prompt3}")
+
+    tip = round(random.uniform(0 ,30), 2)
+    print(f"Setting tip as {tip}")
+    p.sendline(str(tip).encode("utf-8"))
+
+    subtotal_output = p.recvline()
+    tax_output = p.recvline()
+    tip_output = p.recvline()
+    total_output = p.recvline()
+
+    check_line("SUBTOTAL", subtotal, subtotal_output)
+    check_line("TAX", (tax / 100.0) * subtotal, tax_output)
+    check_line("TIP", (tip / 100.0) * subtotal, tip_output)
+    check_line("TOTAL", subtotal * (1 + (tax + tip) / 100.0) , total_output)
+
+    print("Test case passed!\n")
+
+
+if len(sys.argv) != 2:
+    print("You must pass the path to your python script to this program as an argument")
+    sys.exit(1)
+
+verify_application(sys.argv[1])
+verify_application(sys.argv[1])
+verify_application(sys.argv[1])
+
+print("Looks good, here is your flag!")
+flag = open("/flag", "r").read()
+print(flag)
+

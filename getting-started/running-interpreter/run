@@ -1,0 +1,9 @@
+#!/usr/bin/exec-suid -- /usr/local/bin/python3 -I -i
+
+flag4me  = open("/flag","r").read().strip()
+
+# Print a fake header like it was the real python
+print("Python 3.12.11 (main, Jun  3 2025, 15:41:47) [GCC 14.2.1 20250322] on linux")
+print('Type "help", "copyright", "credits" or "license" for more information.')
+
+
