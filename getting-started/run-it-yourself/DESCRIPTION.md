@@ -21,7 +21,7 @@ The very first line of your file needs to be this, and it has to be the
 
 That is called a **shabang**, **shebang**, or **hash bang** (feel free to look
 at a person funny if the call it hash bang....). It's named from "sharp" `#`
-and "bang" `!`).  When Linux is asked to run a file, it peeks at the first two
+and "bang" `!`.  When Linux is asked to run a file, it peeks at the first two
 bytes.  If they are `#!`, it reads the rest of that line and uses it as the
 program to run your file with.
 
