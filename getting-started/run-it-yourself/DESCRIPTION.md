@@ -19,9 +19,11 @@ The very first line of your file needs to be this, and it has to be the
 #!/usr/bin/env python3
 ```
 
-That is called a **shebang** (from "hash" `#` and "bang" `!`).  When Linux is
-asked to run a file, it peeks at the first two bytes.  If they are `#!`, it
-reads the rest of that line and uses it as the program to run your file with.
+That is called a **shabang**, **shebang**, or **hash bang** (feel free to look
+at a person funny if the call it hash bang....). It's named from "sharp" `#`
+and "bang" `!`).  When Linux is asked to run a file, it peeks at the first two
+bytes.  If they are `#!`, it reads the rest of that line and uses it as the
+program to run your file with.
 
 `/usr/bin/env python3` means "go find whichever python3 is on the PATH".  You
 will also see people write `#!/usr/bin/python3`, which names one exact
