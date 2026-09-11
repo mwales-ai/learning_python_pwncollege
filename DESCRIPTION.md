@@ -1,7 +1,7 @@
 # Learning Python
 
 Welcome.  This dojo teaches you Python - not as a list of language features to
-memorise, but as a **tool you will actually reach for**.
+memorize, but as a **tool you will actually reach for** to solve problems.
 
 It was built for the
 [Westshore Wildcat Computer Science Club](https://github.com/westshorecsclub/WildcatCSClub/tree/main),
@@ -12,47 +12,39 @@ challenges run in a Linux machine in your browser.
 ## What makes this dojo different
 
 Most Python books spend a hundred pages inside the language before your
-program ever talks to anything outside itself.  We do it backwards on purpose:
+program ever talks to anything outside itself. This dojo won't focus on the
+terminology, or advanced python topics. It aims to teach some basic concepts,
+let your practice writing problems, and give you enough tools that you can
+apply python programs to real world problems. Getting your hands on keyboard
+and practicing is one of the best ways to really learn.
 
-* By the **second module** you are handling standard input, standard output,
-  standard error, exit codes, and command line arguments.  That is the
-  vocabulary every Linux program speaks.
-* By the **fifth module** you are reading and writing files.
-* By the **sixth** you are writing Unix filters - programs that sit in the
-  middle of a pipeline, and you will rebuild `grep` and `wc` yourself.
+Many high school curiculums will use online / web-based python systems because
+setting up a computer lab and maintaining it with the proper development tools
+is difficult and expensive.  The pwn.college platform hosts virtual machines
+that more closely show how you would use Python on a real computer, and also
+gives you a chance to learn Linux and how to use command line tools.
 
-Classes and decorators and comprehensions can wait.  Being able to point a
-program at a pile of data and get an answer out cannot.
+Using a command line environment may be new to a student that has only used
+tablets and mobile phones for a home computer. Learning how interactive
+programs work on the command line is important for:
 
-The idea is that if you stop halfway through this dojo, you still walk away
-able to do something real.
+* Many future CS classes will require it
+* While difficult to learn at first, it is often more efficient to use
+* Many programming contest like [Lockheed Code Quest](https://www.lockheedmartin.com/en-us/who-we-are/communities/codequest.html)
+ require basic CLI style input / ouput features
+* It's quicker and faster tool for when an engineer needs to apply Python
+  to a real world problem / data table.
 
-## Who this is useful for
+##  Pre-requisites for this Dojo
 
-* **Future computer science students.**  Most college programs expect you to
-  pick up a language on your own, in a lab that meets an hour a week.  Arriving
-  already comfortable is an enormous head start.
-* **Anybody interested in cyber security.**  Every tool you will use is a
-  command line program that reads input and writes output.  Understanding that
-  model is most of the battle, and several challenges here are built around
-  security ideas - ciphers, password rules, hex dumps, hashing.
-* **Everyone else.**  The single most useful thing in this dojo might be
-  challenge 26, where you pull columns out of a spreadsheet export from the
-  command line.  That skill outlives any particular job.
-
-## What you should do first
-
-If you have not already, go and do these:
+If you have not already, go and do these dojos first:
 
 1. **Start Here** - teaches you how the pwn.college platform itself works.
-2. **Linux Luminarium** - teaches you the Linux shell.
+2. **Linux Luminarium** - teaches you the Linux shell. Not required to complete
+   but will help you to complete first 6 modules, Perceiving Permissions, and
+   Terminal Muxing modules.
 
-That second one matters more than you would think.  This dojo leans on the
-shell constantly - pipes, redirection, `chmod`, `$?`, `&&` - and it is much
-more fun when those are already familiar.  You can work through Linux
-Luminarium and this dojo side by side.
-
-## How the challenges work
+## How most challenges work
 
 Each challenge gives you something to read and then something to write.  You
 write a Python program in your home directory, make it executable, and hand it
@@ -96,7 +88,15 @@ Individual challenges link to the relevant chapter.
 
 Read the error message.  Read it again, from the bottom up - the last line
 says what went wrong, and modern Python often suggests the fix.  The **Debug
-Me** challenge in the first module is entirely about this, because it is the
-skill that separates people who can program from people who cannot.
+Me** challenge in the first module is entirely about this. The help menu at
+the top of the pwn.college page will give you access to an AI chatbot that
+understands how the challenges work and should be able to give you guidance
+and not spoil the challenges.
 
-And then ask somebody in the club.  That is what it is for.
+Do not use more powerful AI systems like Claude, Chat GPT, and Gemini. While
+being extremely helpful, they are way to often and eager to offer you a full
+solution, and giving you the answer without getting to do the work yourself
+isn't going to make the material stick.
+
+And if you have questions, bring them to our CS club meetings! I can't wait
+to help you, or ask somebody in the club.  That is what it is for.
