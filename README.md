@@ -32,7 +32,7 @@ online Python reference books that I would suggest for new students:
 
 # Challenges and Concepts
 
-The dojo is 30+ challenges, grouped into 9 modules.  The challenges are
+The dojo is 40 challenges, grouped into 9 modules.  The challenges are
 deliberately *not* numbered - we expect to insert new ones between existing
 ones as the material gets refined - but the order within and between modules is
 meaningful.  That order gets to *useful* things (talking to the terminal,
@@ -46,23 +46,43 @@ correctly you get the flag.
 
 ## Module 1: Getting Started
 
-* **Hello, Hacker** - Create `hello.py` with a single `print()` call and run
+* **Running the Interpreter** - Start the Python interpreter, evaluate an
+  expression, make a variable, and print one that has already been set for
+  you.  Teaches: the interactive prompt as a place to try things out, the
+  rules for variable names, `=` as assignment, and `exit()`.  Nothing is
+  written to a file yet - this is the "type something and see what happens"
+  challenge.
+* **String Concatenation** - Join two ciphertext variables with `+`, then
+  pass the result to a `secret_decoder()` function to reveal the flag.
+  Teaches: strings as a kind of value, `+` as concatenation, `len()`, and
+  calling a function with an argument.  Still entirely in the interpreter.
+* **Hello Hackers** - Create `hello.py` with a single `print()` call and run
   it with `python hello.py`.  Teaches: the editor, saving a file, running the
   interpreter, and that a program is just a text file.
 * **Run It Yourself** - Add a `#!/usr/bin/env python3` shebang, `chmod +x`
   your script, and run it as `./hello.py`.  Teaches: a Python script is a
   regular Linux program; ties directly back to the Linux Luminarium dojo.
-* **Debug Me** - You are given a program that will not run (missing colon,
-  bad indentation, unbalanced quote, typo'd name).  Fix it until it runs.
-  Teaches: reading a traceback, `SyntaxError` vs `NameError`, line numbers are
-  your friend.
+* **Tippy Tipper** - Turn a tip calculator with hard-coded numbers into one
+  that asks for the subtotal and the tax and tip *percentages*, then reports
+  each as an amount plus the total.  Teaches: `input()`, `float()`, why
+  `"5" * 5` is `"55555"` and not `25`, `round()`, and hard-coding as
+  something you grow out of.  The judge runs it three times with random
+  subtotals, so echoing the percentages back will not pass.
 * **Variables and f-strings** - Store values in variables and print a
   sentence built from them with an f-string.  Teaches: variables, strings vs
   numbers, `f"..."` formatting, `+`, `-`, `*`, `/`, `//`, `%`.
+* **Why Are We Yelling?** - Read a line of text and shout it back with the
+  vowels censored out: `* S*W * D*CK **T*NG * C*K*`.  Teaches: `.upper()`,
+  `.replace()`, and string *immutability* - every string method hands back a
+  copy, so a method call you do not keep the result of does nothing at all.
+  Also the student's first program that reads standard input from a pipe.
 * **Birthday Banner** - Centre a birthday message inside an 80 column banner
   of `*` characters.  Teaches: string replication with `*`, `len()`, `//` and
-  `%` for splitting the leftover padding, `.title()`, and a first taste of
-  `input()` before the next module covers it properly.
+  `%` for splitting the leftover padding, and `.title()`.
+* **Debug Me** - You are given a program that will not run (bad indentation,
+  unbalanced quote, typo'd name, wrong capitalization).  Fix it until it
+  runs.  Teaches: reading a traceback, `SyntaxError` vs `NameError`, and that
+  Python reports errors one at a time so you fix the top one and rerun.
 
 ## Module 2: Talking to the Terminal
 
