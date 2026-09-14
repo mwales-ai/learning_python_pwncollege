@@ -1,15 +1,18 @@
 # Tippy Tipper
 
-So you made this cool program to help you calculate tips in the shebang
-challenge.  But it seems kind of a pain in the butt to have to edit your script
-each time you have to adust the amount of the bill you have to use your
-program.  Wouldn't it be more useful if you could ask the user to give you
-the data when you run the program.  Having values like that build into the
-source code of a program is called hard-coding or having hard-coded constants.
+Anyone who has split a restaurant bill has done this math: take the subtotal,
+work out the tax, work out the tip, and add it all up.  It is a good first
+`input()` program, because the numbers are familiar and you can check your
+program's answers with a calculator.
 
-Lets change that program up a little bit so that we can have the user give us
-some information about the subtotal, and then we can have a more useful
-interactive application
+If you wrote this as a program with the subtotal typed directly into the
+source code - `subtotal = 45.20` sitting right there in the script - that
+value is called **hard-coded**.  It works fine once, but the moment somebody
+wants to check a different bill they have to go edit your source code, which
+defeats the point of writing a program at all.
+
+Let's write a version that asks the user for the numbers instead of having
+them hard-coded.
 
 # Knowledge Upgrade
 
@@ -75,34 +78,47 @@ The following is a list of some other useful python functions:
 
 # Instructions
 
-Update your program from the shebang challenge for calculating tips.  Now
-prompt the user for the different values that we had hardcoded for subtotal,
-tax rate, and tip percentage.  Then using the same output format, calculate
-what the total bill.
+Write an interactive tip calculator.
 
-Your prompts need to look exactly like the following (and in this order).
+Ask the user for the subtotal of a bill, then for the tax rate and the tip
+rate - **both given as percentages**, like `10` meaning 10%.  Your prompts
+need to look exactly like the following, and in this order:
 
 ```
 What is the subtotal amount?
-100.0
+80.0
 What is the tax amount?
 10.0
 What is the tip amount?
 20.0
 ```
 
-Then output the results (including repeating the values that the user just
-gave you.)
+Then print a four line breakdown:
 
 ```
-SUBTOTAL = 100.0
-TAX      = 10.0
-TIP      = 20.0
-TOTAL    = 130.00
+SUBTOTAL = 80.0
+TAX      = 8.0
+TIP      = 16.0
+TOTAL    = 104.00
 ```
 
-Test your result by executing the evaluation script and pass it your program
-that you wrote.
+Look closely at where those numbers come from, because this is the part
+people get wrong: **`TAX` and `TIP` are dollar amounts, not the percentages
+you were just given.**
+
+* `TAX` is the subtotal times the tax percentage, divided by 100.  10% tax
+  on an $80.00 subtotal is $8.00.
+* `TIP` is the subtotal times the tip percentage, divided by 100.  20% tip
+  on $80.00 is $16.00.
+* `TOTAL` is the subtotal plus `TAX` plus `TIP`.
+
+Printing the tax and tip numbers back unchanged will look correct by
+accident when the subtotal happens to be `100.0` - `10%` of `100` is `10` -
+but it is wrong for every other subtotal, which is exactly what the judge
+will test.
+
+Try your program by hand first and check the math yourself.  Then hand it to
+the judge, which runs it three times with different random amounts:
 
 ```console
 /challenge/run ./my_solution.py
