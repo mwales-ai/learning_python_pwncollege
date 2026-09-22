@@ -5,6 +5,8 @@ challenges:
     name: If and Else
   - id: elif-ladder
     name: The elif Ladder
+  - id: quadratic-formula
+    name: The Quadratic Formula
   - id: true-and-false
     name: True and False
   - id: guessing-game

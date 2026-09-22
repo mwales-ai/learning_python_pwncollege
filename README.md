@@ -120,6 +120,11 @@ correctly you get the flag.
 * **The elif Ladder** - Turn a number into a letter grade (or a password
   strength, or a D&D damage tier).
   * **Skills:** `elif` chains, first match wins, branch order
+* **The Quadratic Formula** - Solve `ax^2 + bx + c = 0` for real, branching on
+  the sign of the discriminant to print two roots, one vertex root, or
+  `NO ROOTS`.
+  * **Skills:** `elif` on a computed value, `**0.5`, combining `sys.argv` with
+                branching, checking argument count
 * **True and False** - Combine conditions with `and`, `or`, and `not` to
   validate input.
   * **Skills:** booleans, comparison operators, `and`/`or`/`not`, `in`,
