@@ -16,6 +16,103 @@ purpose and need real content before this ships:
 
 # Game Genie ROM Patcher
 
+# Background Information
+
+I like old 8-bit and 16-bit video games. One of my favorite systems was the
+Nintendo Entertainment System (NES).  If you have ever heard a video game
+called "Nintendo Hard", it means the game is very difficult, much like NES
+games were in the 1980s and 1990s.  The games were hard because memory was
+very expensive, so devs were limited on how large of a game they could make,
+so they made the games hard so players wouldn't complete them too fast.
+
+The NES games were often brutally hard. Some game companies would help out
+gamers by having cheat codes (this is where the Konami code got invented).
+But if a game didn't have any cheat codes, there was still a way to get
+help.  We had a device we could stick on the end of our cartridges called
+a Game Genie.
+
+![Picture of game genie attached to NES game](url of image)
+
+The Game Genie came with a [100+ page booklet](https://archive.org/details/game-genie-1992-nes/NES-Game-Genie-codes/page/n19/mode/2up)
+of secret codes for games, and a description of what each code would do.
+We could pick up to 3 codes to use for the game, so we had to choose
+our effects wisely.
+
+# How does a Game Genie actually work?
+
+We will focus on the 6 character codes for this discussion (there were 8
+character codes, but we will ignore for now).  The code was essentially a two
+byte address, and a 1-byte value. The program instructions for each game
+were stored in ROM chips inside of the cartridge.  The Game Genie would watch
+which addresses were being fetched by the NES, and if the address for your
+cheat code was seen, instead of the memory from the ROM being returned, the
+value in your cheat code would be returned.
+
+One of ways we would typically use it it to change the op-code for an NES CPU
+instruction.  For instance, for the following instruction:
+
+```
+dec $052d        ; decrements the memory at address 0x052d
+lda #$01         ; loads reg A with (immediate) value 0x01
+```
+
+The decrement instruction (mnemonic dec) is going to decrement the value stored
+in a memory location of the NES which happens to be the number of hit points
+our character has.  If we can change that op-code to something benign, then
+our character won't lose any HP when he gets hit by an enemy.  Since the next
+instruction is trying to load register A with the value 0x01, we can change the
+decrement instruction opcode to an LDA instruction as well, and it will be
+benign because the very next instruction will overwrites register A anyways.
+
+If you are a little bit more advanced, you might be wondering why we don't use
+a NOP (no operation) instruction instead.  Because that is what we do a lot of
+times when trying to patch our unwanted code in other binaries.  For this
+case, the instruction we are trying to invalidate is 3 bytes.  The NES CPU (MOS
+6502) has a 1-byte NOP instruction, and we could NOP all 3 bytes, but then that
+would need 3 Game Genie codes to be entered by the user. The game genie code we
+will be using will instead change 1 byte, the instructions will become:
+
+```
+lda $052d        ; loads reg A with value in memory at address 0x052d
+lda #$01         ; loads reg A with (immediate) value 0x01
+```
+
+The game we are going to be hacking is called
+[Cat Mercs](https://team-disposable.itch.io/catmercs-1). It looks really fun,
+but it is extremely challenging.  I have a couple of Game Genie codes that
+we can use to make it easier.
+
+```
+SZYONU            No damage from enemies walking into Miaya
+SZYPKK            No damage from bullets hitting Miaya
+```
+
+You can try this out using the FCEUX emulator in our pwn.college VM.  You must
+use the Desktop mode.  Try the game first without any cheats to see how
+difficult it is. Starts FCEUX and then load the ROM from
+/challenge/cat_mercs_1.1.nes
+
+Keyboard Controls by default with FCEUX:
+
+tbd
+
+Now try it with our cheat codes!  You must load the Game Genie rom file:
+/challenge/gg.nes by clicking menubar Emulation->Load Game Genie Rom and then
+enabling Game Genie on the same drop down.  Once you do that, hard reset
+the emulator, and you will be presented with the Game Genie code entry
+screen
+
+tbd. picture of emulator configuraiton
+
+tbd. picture of the emulator with game genie codes entered
+
+# The challenge
+
+For this challenge we will patch the NES ROM files with game genie codes.
+By patching the ROM file, we don't have any limit to how many codes we
+can apply to a NES game.
+
+
 Every ROM hacking tool you have used so far - the sprite editor, BlastEm's
 capture tools - works by reading and writing raw bytes in a file that was
 never meant to be read as text.  This challenge is your introduction to
