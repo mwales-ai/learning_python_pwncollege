@@ -94,15 +94,27 @@ difficult it is. Starts FCEUX and then load the ROM from
 
 Keyboard Controls by default with FCEUX:
 
-tbd
+| NES    | Emulator    |
+|--------|-------------|
+| Up     | Up arrow    |
+| Down   | Down Arrow  |
+| Left   | Left Arrow  |
+| Right  | Right Arrow |
+| Start  | Return      |
+| Select | S           |
+| A      | F           |
+| B      | D           |
+
 
 Now try it with our cheat codes!  You must load the Game Genie rom file:
-/challenge/gg.nes by clicking menubar Emulation->Load Game Genie Rom and then
+/challenge/gg.rom by clicking menubar Emulation->Load Game Genie Rom and then
 enabling Game Genie on the same drop down.  Once you do that, hard reset
 the emulator, and you will be presented with the Game Genie code entry
 screen
 
 tbd. picture of emulator configuraiton
+
+![Stack layout diagram](https://raw.githubusercontent.com/mwales-ai/learning_python_pwncollege/files/game-genie-patcher/.images/test.jpg)
 
 tbd. picture of the emulator with game genie codes entered
 
