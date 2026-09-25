@@ -106,31 +106,51 @@ Keyboard Controls by default with FCEUX:
 | B      | D           |
 
 
-Now try it with our cheat codes!  You must load the Game Genie rom file:
-/challenge/gg.rom by clicking menubar Emulation->Load Game Genie Rom and then
-enabling Game Genie on the same drop down.  Once you do that, hard reset
-the emulator, and you will be presented with the Game Genie code entry
-screen
+Now try it with our cheat codes!  You must load the Game Genie rom file by
+clicking Emulation->Load Game Genie Rom and then navigating to the game genie
+rom:
 
-tbd. picture of emulator configuraiton
+```
+/challenge/gg.rom 
+```
 
-![Stack layout diagram](https://raw.githubusercontent.com/mwales-ai/learning_python_pwncollege/files/game-genie-patcher/.images/test.jpg)
+![Loading Game Genie ROM](https://raw.githubusercontent.com/mwales-ai/learning_python_pwncollege/refs/heads/main/files/game-genie-patcher/.images/loading_gg_rom.jpg)
 
-tbd. picture of the emulator with game genie codes entered
+In that same drop down menu, click the check box that enables Game Genie.
+
+![Enabling Game Genie](https://raw.githubusercontent.com/mwales-ai/learning_python_pwncollege/refs/heads/main/files/game-genie-patcher/.images/enabled_option.jpg)
+
+Once you do that, hard reset the emulator, and you will be presented with the Game Genie code entry
+screen.  Enter our two cheat codes
+
+```
+SZYONU
+SZYPKK
+```
+
+![Entering game genie code](https://raw.githubusercontent.com/mwales-ai/learning_python_pwncollege/refs/heads/main/files/game-genie-patcher/.images/code_entered.jpg)
 
 # The challenge
 
 For this challenge we will patch the NES ROM files with game genie codes.
 By patching the ROM file, we don't have any limit to how many codes we
-can apply to a NES game.
+can apply to a NES game, and we don't ever have to enter in the codes
+ever again!
 
+The program you are about to write will load the original Cat Mercs game
+ROM, and then change the instruction bytes, and save a new copy of the game
+with a different filename.  You can even play this game (if you are OK with
+cheating!)
 
 Every ROM hacking tool you have used so far - the sprite editor, BlastEm's
 capture tools - works by reading and writing raw bytes in a file that was
-never meant to be read as text.  This challenge is your introduction to
-that: opening a file in **binary mode** and editing it byte by byte.
+never meant to be read as text.  
 
 ## Binary files are not text files
+
+This challenge is your introduction to reading and writing files that are
+not just text.  We will be opening the file in binary mode, and editing it
+byte by byte.
 
 Every file you have opened so far in this dojo has been a text file, opened
 with `"r"`, `"w"`, or `"a"`.  A ROM is not text - it is machine code and raw
@@ -154,9 +174,10 @@ one-character string.
 255
 ```
 
-That number is one byte's value, `0` to `255` - exactly the range
-`sys.exit()` warned you about back in Exit Codes. Every byte in the file is
-one number in that range.
+That number is one byte's value, `0` to `255`. Text files could also be
+opened up as binary too, their values would range from `0` to `127` (with
+most printable characters above `32`), because that is the range that
+ASCII characters use of a byte of data.
 
 ## bytes vs. bytearray
 
@@ -196,8 +217,8 @@ prg_rom = rom_data[0x10:]
 ## From file offset to NES address
 
 The NES's CPU does not see the file the way you do. Its addresses start
-counting from `$8000`, and the very first byte of PRG-ROM data (file offset
-`0x10`) is what the CPU sees as address `$8000`. The mapping is a constant
+counting from `0x8000`, and the very first byte of PRG-ROM data (file offset
+`0x10`) is what the CPU sees as address `0x8000`. The mapping is a constant
 offset:
 
 ```
@@ -209,36 +230,35 @@ That second formula is the one you need: a patch tells you the NES address
 it wants to change, and you have to turn that into the right position in
 the file.
 
-**Why this challenge uses UNROM specifically:** many NES cartridges use a
-memory *mapper* that swaps different chunks of ROM in and out of the CPU's
-address space while the game is running, so the same address can mean a
-different file offset depending on what already happened. UNROM
-(mapper 2) keeps things simple enough for a first patching challenge -
-[PLACEHOLDER: explain exactly how UNROM's bank switching does or does not
-affect this challenge's ROM once the real ROM is built].
+**Note: Only about 32KB of NES games can fit into program memory at a time.
+There are games with more program code than this, but they have to include
+some special mapper logic on the cartridge to work for a NES (we call . We
+don't need to worry about any of that for this challenge **
 
-## Game Genie codes
+## Game Genie Codes
 
-[PLACEHOLDER: this section needs a real explanation of what a Game Genie
-device did, why "6-letter" and "8-letter" codes exist and what the
-difference is, and how the 6 letters encode a NES address and a replacement
-byte. Fill in before this challenge ships.]
+How does the game genie code convert all the letters into an address and a
+value?  Well, we have 16 different possible letters that a game genie code
+can use, so that means the codes are kinda like 3 hexadecimal bytes, which
+is perfect for 1-byte value and a 2-byte address.
 
-You are given a decoder function - you do not need to work out the letter
-encoding yourself:
+Unfortunately, the developers of the game genie didn't make the codes a
+simple address and value pair.  They deliberately scrambed many of the bits
+of the game genie codes up to make it mysterious or magical.
 
-```python
-def decode_game_genie_code(code):
-    """
-    Decode a 6-character NES Game Genie code into the (address, value) pair
-    it patches.
+Since it's kinda complicated what they did, and it's a mess to explain, the
+code for converting the game genie code to an address and valeu pair will
+be provided for you.  In the challenge folder their will be a decoder.py
+script you can copy and modify.
 
-    PLACEHOLDER: this does not actually decode anything yet.  The real
-    6-letter decoding algorithm needs to go here before this challenge
-    ships.
-    """
-    raise NotImplementedError("game genie decoding is not implemented yet")
-```
+That program will give you the NES address location, but you will have to
+remember how to convert that NES address into the offset of the byte in
+the file (see the section above).
+
+**Note: You may have noticed that Game Genie codes can be 8 letters long too.
+Those codes are a little bit different because they are designed to work on
+those larger NES games that don't fit within 32KB.  We don't have to worry
+about that for this challenge.**
 
 ## Further Reading
 
@@ -246,8 +266,6 @@ def decode_game_genie_code(code):
   reference once this challenge is finalized]
 
 # Instructions
-
-[PLACEHOLDER - DRAFT, NOT YET JUDGED]
 
 Write a program that patches a ROM using one or more Game Genie codes.
 
@@ -259,10 +277,26 @@ The overall shape of the task, once the ROM and codes exist:
    address to a file offset, and change that byte.
 3. Write the patched bytes to a new ROM file.
 
+The 2 game genie codes you need to patch your ROM with are:
+
+```
+SZYONU
+SZYPKK
+```
+
 You will be able to load the patched ROM straight into the emulator
 included in this pwn.college environment and see your change take effect in
 the running game.
 
-This section still needs: the actual command line / input shape the judge
-will use, the ROM path(s) provided to the student, the specific Game Genie
-codes involved, and the exact output filename expected.
+To get the pwn.college flag just the the judge program the name of your new
+patched ROM file.  This judge program is just going to read the contents of
+your file and verify that it's the same as the original except for the two
+bytes you patch. There is not a challenge where we are reading input and
+checking the output of your program.
+
+```
+/challenge/judge.py /home/hacker/cat_mercs_patched.nes
+```
+
+Learning to cheat at video games is great practice and training for a career
+in cybersecurity!
