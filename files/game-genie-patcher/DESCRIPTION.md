@@ -1,22 +1,40 @@
 <!--
-STATUS: DRAFT / WORK IN PROGRESS.
+STATUS: DRAFT, feature-complete but NOT DEPLOYED.
 
-This challenge is not deployed yet - it has no .init, no run script, no
-.eval_data, and it is deliberately left out of module.yml until the ROM,
-the real Game Genie codes, and the judge all exist.  See CLAUDE.md's note
-about not adding incomplete challenges to the pwn.college module list.
+.init and judge.py now exist and both work: judge.py sha256-hashes the
+submitted ROM and compares it to the hash of a correctly patched ROM
+(computed by chal_crafting/learning_python_pwncollege_solutions/files/
+game-genie-patcher/solution.py in the private solutions repo). Verified
+against a correctly patched ROM (passes), an unpatched ROM (fails with a
+clear message), a missing path, and no arguments.
 
-Sections marked PLACEHOLDER below are drafted with filler content on
-purpose and need real content before this ships:
-  * the Game Genie discussion (how the 6-letter code encodes address+value)
-  * decode_game_genie_code(), which currently does not actually decode
-  * the ROM file itself (a small homebrew UNROM/mapper-2 ROM) and the real
-    codes it ships with
+Still deliberately left out of module.yml/README - see CLAUDE.md's note
+about not adding incomplete challenges to the pwn.college module list -
+because two open questions need a human decision first, not just more
+writing:
+
+  1. LICENSING: Cat Mercs (cat_mercs_1.1.nes) is free to download from
+     itch.io but its page states no redistribution/sharing terms, so
+     shipping the ROM in this public repo is uncleared copyright exposure
+     until the developer confirms it is OK. The Game Genie BIOS image
+     (gg.nes) needed for the FCEUX "play it live" section is very likely
+     itself a copyrighted dump of the real Game Genie device firmware -
+     same concern, independently.
+  2. FLOW: this is the only challenge in the dojo invoked as
+     `/challenge/judge.py <output file>` instead of `/challenge/run
+     <your script>`, because the deliverable is a file the student's
+     script already produced rather than something to run and check the
+     stdout of. That's a deliberate, reasonable shape for this task, but
+     flagging it since every other challenge is consistent about this.
+
+One remaining PLACEHOLDER: a live link for the Game Genie code-encoding
+reference - the old nesdev.com/nesgg.txt cited in minimal_gg_decoder.py's
+comment no longer resolves.
 -->
 
 # Game Genie ROM Patcher
 
-# Background Information
+## Background Information
 
 I like old 8-bit and 16-bit video games. One of my favorite systems was the
 Nintendo Entertainment System (NES).  If you have ever heard a video game
@@ -31,14 +49,12 @@ But if a game didn't have any cheat codes, there was still a way to get
 help.  We had a device we could stick on the end of our cartridges called
 a Game Genie.
 
-![Picture of game genie attached to NES game](url of image)
-
 The Game Genie came with a [100+ page booklet](https://archive.org/details/game-genie-1992-nes/NES-Game-Genie-codes/page/n19/mode/2up)
 of secret codes for games, and a description of what each code would do.
 We could pick up to 3 codes to use for the game, so we had to choose
 our effects wisely.
 
-# How does a Game Genie actually work?
+## How does a Game Genie actually work?
 
 We will focus on the 6 character codes for this discussion (there were 8
 character codes, but we will ignore for now).  The code was essentially a two
@@ -48,7 +64,7 @@ which addresses were being fetched by the NES, and if the address for your
 cheat code was seen, instead of the memory from the ROM being returned, the
 value in your cheat code would be returned.
 
-One of ways we would typically use it it to change the op-code for an NES CPU
+One of the ways we would typically use it is to change the op-code for an NES CPU
 instruction.  For instance, for the following instruction:
 
 ```
@@ -62,7 +78,7 @@ our character has.  If we can change that op-code to something benign, then
 our character won't lose any HP when he gets hit by an enemy.  Since the next
 instruction is trying to load register A with the value 0x01, we can change the
 decrement instruction opcode to an LDA instruction as well, and it will be
-benign because the very next instruction will overwrites register A anyways.
+benign because the very next instruction will overwrite register A anyway.
 
 If you are a little bit more advanced, you might be wondering why we don't use
 a NOP (no operation) instruction instead.  Because that is what we do a lot of
@@ -89,7 +105,7 @@ SZYPKK            No damage from bullets hitting Miaya
 
 You can try this out using the FCEUX emulator in our pwn.college VM.  You must
 use the Desktop mode.  Try the game first without any cheats to see how
-difficult it is. Starts FCEUX and then load the ROM from
+difficult it is. Start FCEUX and then load the ROM from
 /challenge/cat_mercs_1.1.nes
 
 Keyboard Controls by default with FCEUX:
@@ -111,7 +127,7 @@ clicking Emulation->Load Game Genie Rom and then navigating to the game genie
 rom:
 
 ```
-/challenge/gg.rom 
+/challenge/gg.nes
 ```
 
 ![Loading Game Genie ROM](https://raw.githubusercontent.com/mwales-ai/learning_python_pwncollege/refs/heads/main/files/game-genie-patcher/.images/loading_gg_rom.jpg)
@@ -130,7 +146,7 @@ SZYPKK
 
 ![Entering game genie code](https://raw.githubusercontent.com/mwales-ai/learning_python_pwncollege/refs/heads/main/files/game-genie-patcher/.images/code_entered.jpg)
 
-# The challenge
+## The challenge
 
 For this challenge we will patch the NES ROM files with game genie codes.
 By patching the ROM file, we don't have any limit to how many codes we
@@ -230,10 +246,13 @@ That second formula is the one you need: a patch tells you the NES address
 it wants to change, and you have to turn that into the right position in
 the file.
 
-**Note: Only about 32KB of NES games can fit into program memory at a time.
-There are games with more program code than this, but they have to include
-some special mapper logic on the cartridge to work for a NES (we call . We
-don't need to worry about any of that for this challenge **
+**Note: Only about 32KB of program code can fit into the NES's CPU address
+space at a time.  Games with more code than that need a mapper chip on the
+cartridge that swaps different chunks of ROM in and out while the game
+runs - a trick called bank switching.  Cat Mercs actually does this (it has
+128KB of program code), but the two bytes we are patching happen to live in
+the bank that is always resident, so you can ignore bank switching entirely
+for this challenge.**
 
 ## Game Genie Codes
 
@@ -243,13 +262,13 @@ can use, so that means the codes are kinda like 3 hexadecimal bytes, which
 is perfect for 1-byte value and a 2-byte address.
 
 Unfortunately, the developers of the game genie didn't make the codes a
-simple address and value pair.  They deliberately scrambed many of the bits
+simple address and value pair.  They deliberately scrambled many of the bits
 of the game genie codes up to make it mysterious or magical.
 
 Since it's kinda complicated what they did, and it's a mess to explain, the
-code for converting the game genie code to an address and valeu pair will
-be provided for you.  In the challenge folder their will be a decoder.py
-script you can copy and modify.
+code for converting the game genie code to an address and value pair will
+be provided for you.  In the challenge folder there will be a
+`minimal_gg_decoder.py` script you can copy and modify.
 
 That program will give you the NES address location, but you will have to
 remember how to convert that NES address into the offset of the byte in
@@ -262,14 +281,16 @@ about that for this challenge.**
 
 ## Further Reading
 
-* [PLACEHOLDER: link to an iNES format reference and a Game Genie encoding
-  reference once this challenge is finalized]
+* [NESdev Wiki: the iNES file format](https://www.nesdev.org/wiki/INES)
+* [PLACEHOLDER: a Game Genie encoding reference. The old nesdev.com/nesgg.txt
+  cited inside minimal_gg_decoder.py's comment no longer resolves - find a
+  live replacement before this ships.]
 
 # Instructions
 
 Write a program that patches a ROM using one or more Game Genie codes.
 
-The overall shape of the task, once the ROM and codes exist:
+The overall shape of the task:
 
 1. Read the original ROM file, in binary mode.
 2. For each Game Genie code you are given, call `decode_game_genie_code()`
@@ -277,26 +298,37 @@ The overall shape of the task, once the ROM and codes exist:
    address to a file offset, and change that byte.
 3. Write the patched bytes to a new ROM file.
 
-The 2 game genie codes you need to patch your ROM with are:
+The two Game Genie codes you need to patch your ROM with are:
 
 ```
 SZYONU
 SZYPKK
 ```
 
+Unlike every other challenge so far, nothing here runs your script for you -
+just run it yourself, however you like:
+
+```
+python3 patch_rom.py
+```
+
 You will be able to load the patched ROM straight into the emulator
 included in this pwn.college environment and see your change take effect in
 the running game.
 
-To get the pwn.college flag just the the judge program the name of your new
-patched ROM file.  This judge program is just going to read the contents of
-your file and verify that it's the same as the original except for the two
-bytes you patch. There is not a challenge where we are reading input and
-checking the output of your program.
+Once you have a patched ROM file, get the pwn.college flag by giving the
+judge program its path:
 
 ```
 /challenge/judge.py /home/hacker/cat_mercs_patched.nes
 ```
+
+Note that unlike every other challenge in this dojo, `judge.py` does not run
+your script and check what it prints - you already ran your own script
+yourself and it already wrote the patched ROM to disk.  `judge.py` just
+hashes that file and compares it to the hash of a correctly patched ROM,
+which amounts to checking that your file matches the original byte-for-byte
+except for the two bytes you were supposed to patch.
 
 Learning to cheat at video games is great practice and training for a career
 in cybersecurity!
