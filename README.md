@@ -32,7 +32,7 @@ online Python reference books that I would suggest for new students:
 
 # Challenges and Concepts
 
-The dojo is 40 challenges, grouped into 9 modules.  The challenges are
+The dojo is 41 challenges, grouped into 9 modules.  The challenges are
 deliberately *not* numbered - we expect to insert new ones between existing
 ones as the material gets refined - but the order within and between modules is
 meaningful.  That order gets to *useful* things (talking to the terminal,
@@ -193,6 +193,16 @@ correctly you get the flag.
   file, change it, and write the result to a second file.
   * **Skills:** `"a"` mode, reading one file while writing another, not
                 clobbering your input
+* **Game Genie ROM Patcher** - Patch an NES ROM's raw bytes with two real
+  Game Genie codes, so a cheat that used to mean typing codes in on every
+  power-on is now baked permanently into the file.
+  * **Skills:** binary file mode (`"rb"`/`"wb"`), `bytes` vs `bytearray`,
+                converting a CPU address to a file offset
+  * **Discussion:** The iNES header and the Game Genie's bit-scrambled
+    letter codes are both real, documented formats - the decoder handed to
+    students is a real NES Game Genie decoder, and the two codes really do
+    turn off damage in the shipped homebrew game, checkable in the FCEUX
+    emulator included in this pwn.college environment.
 
 ## Module 6: Unix Filters
 

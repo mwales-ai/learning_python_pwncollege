@@ -11,3 +11,5 @@ challenges:
     name: Hangman
   - id: append-and-transform
     name: Append and Transform
+  - id: game-genie-patcher
+    name: Game Genie ROM Patcher

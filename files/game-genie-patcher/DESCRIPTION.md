@@ -15,7 +15,7 @@ But if a game didn't have any cheat codes, there was still a way to get
 help.  We had a device we could stick on the end of our cartridges called
 a Game Genie.
 
-![Game Geneie Attached to SMB3](https://raw.githubusercontent.com/mwales-ai/learning_python_pwncollege/refs/heads/main/files/game-genie-patcher/.images/game_genie_block_diagram.jpg)
+![Game Genie Attached to SMB3](https://raw.githubusercontent.com/mwales-ai/learning_python_pwncollege/refs/heads/main/files/game-genie-patcher/.images/game_genie_block_diagram.png)
 
 The Game Genie came with a [100+ page booklet](https://archive.org/details/game-genie-1992-nes/NES-Game-Genie-codes/page/n19/mode/2up)
 of secret codes for games, and a description of what each code would do.
@@ -250,9 +250,6 @@ about that for this challenge.**
 ## Further Reading
 
 * [NESdev Wiki: the iNES file format](https://www.nesdev.org/wiki/INES)
-* [PLACEHOLDER: a Game Genie encoding reference. The old nesdev.com/nesgg.txt
-  cited inside minimal_gg_decoder.py's comment no longer resolves - find a
-  live replacement before this ships.]
 
 # Instructions
 
