@@ -1,20 +1,16 @@
 <!--
-STATUS: DRAFT / WORK IN PROGRESS.
+STATUS: feature-complete, held out of module.yml/README for one reason:
+sequencing. This challenge's text assumes the student already met
+subprocess.run() in "Cracking a WPS PIN" (functions/wps-pin-cracker), which
+is not deployed yet either. Deploy that challenge first (or at the same
+time, in order ahead of this one) - do not add this to module.yml/README
+on its own.
 
-Not deployed: no .init, no run script, no .eval_data, and deliberately left
-out of module.yml. The price server itself now exists and works: st_server
-is a small C program (source and build files in the solutions repo, built
-against mwales/pwncollege_base:beta05 via podman so it links the same
-libraries the challenge VM has) answering GET /price?ticker=SYM&date=DATE
-as a plain-text price. The compiled binary lives right next to this file.
-A golden solution.py (curl + subprocess, in the solutions repo) has been
-run against it for all three seeded tickers and produces sensible buy/sell
-picks.
-
-Still needed before this is judgeable:
-  * .init to start st_server in the background before the student's script
-    runs, and run/.eval_data for the actual judge
-  * the Instructions section's exact input/output contract and test data
+.init starts st_server in the background and the standard multi-case
+judge (run + .eval_data, 5 cases across all three tickers, some full-month
+and some short windows) is wired up and verified: the golden solution
+passes all 5, and a deliberately wrong "buy first day, sell last day"
+script fails all 5.
 -->
 
 # Stock Tracker
@@ -64,9 +60,9 @@ and it answers with exactly one line of plain text - just the price, like
 yet, and a plain number keeps this challenge about subprocess and
 functions, not about a new file format.
 
-[PLACEHOLDER: the real ticker list is `PWNC`, `HACK`, and `FLAG`, covering
-2024-01-01 through 2024-01-31 - confirm these are the ones the finished
-challenge should actually quiz the student on before this ships.]
+The server knows three tickers - `PWNC`, `HACK`, and `FLAG` - with prices
+for every date from `2024-01-01` through `2024-01-31`. A date outside that
+range just gets clamped to whichever end is closer, rather than erroring.
 
 ## One function, one job
 
@@ -126,27 +122,56 @@ before the sell day.
 
 ## Further Reading
 
-* [PLACEHOLDER: link to how the "best time to buy and sell stock" problem
-  is normally described, once this challenge is finalized]
+* Automate the Boring Stuff with Python
+  * [Chapter 3 - Functions](https://automatetheboringstuff.com/3e/chapter3.html)
+* A Byte of Python
+  * [Functions](https://python.swaroopch.com/functions.html)
 
 # Instructions
 
-[PLACEHOLDER - DRAFT, NOT YET JUDGED]
+Your program reads:
 
-You will be given one or more stock tickers, each with a range of trading
-dates. For each ticker, query the price server once per date in its range,
-using `get_price()`, and work out the single best day to buy and single
-best (later) day to sell.
+```
+line 1       a ticker symbol
+line 2       N, how many trading dates follow
+next N       one YYYY-MM-DD date per line, in chronological order
+```
 
-The overall shape of the task, once the server and real data exist:
+Query `get_price(ticker, date)` once for each of the N dates, in order, and
+find the single best day to buy and single best (later) day to sell, using
+the running-minimum approach above. Print exactly one line:
 
-1. Read a ticker symbol and its list of trading dates.
-2. Call `get_price(ticker, date)` for each date in order.
-3. Track the best buy day / sell day pair using the running-minimum
-   approach above.
-4. Print the ticker, the buy date, the sell date, and the profit.
+```
+<ticker> buy <buy date> at <buy price> sell <sell date> at <sell price> profit <profit>
+```
 
-This section still needs: the exact input format (dates given directly, or
-a count-and-then-dates shape like Build a Toolbox's rectangles), whether
-multiple tickers appear in one run, the precise output line format, and
-what happens if the best "profit" would be zero or negative (never sell).
+with every price and the profit rounded to 2 decimal places. So given:
+
+```
+PWNC
+5
+2024-01-08
+2024-01-09
+2024-01-10
+2024-01-11
+2024-01-12
+```
+
+your program prints exactly:
+
+```
+PWNC buy 2024-01-10 at 28.34 sell 2024-01-12 at 36.96 profit 8.62
+```
+
+If prices never go up across the whole range - there is no day you could
+have sold for more than you bought - print the first date as both the buy
+and sell date, with a profit of `0.00`. This falls out naturally if you
+initialize `buy_date`, `sell_date`, and `best_profit` to the first day and
+`0` before the loop, exactly like the walkthrough above.
+
+Do not hardcode the ticker, the dates, or the prices - this challenge asks
+the price server, through `get_price()`, every time.
+
+```
+/challenge/run ./stock.py
+```
