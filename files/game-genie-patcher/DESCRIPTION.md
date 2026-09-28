@@ -1,37 +1,3 @@
-<!--
-STATUS: DRAFT, feature-complete but NOT DEPLOYED.
-
-.init and judge.py now exist and both work: judge.py sha256-hashes the
-submitted ROM and compares it to the hash of a correctly patched ROM
-(computed by chal_crafting/learning_python_pwncollege_solutions/files/
-game-genie-patcher/solution.py in the private solutions repo). Verified
-against a correctly patched ROM (passes), an unpatched ROM (fails with a
-clear message), a missing path, and no arguments.
-
-Still deliberately left out of module.yml/README - see CLAUDE.md's note
-about not adding incomplete challenges to the pwn.college module list -
-because two open questions need a human decision first, not just more
-writing:
-
-  1. LICENSING: Cat Mercs (cat_mercs_1.1.nes) is free to download from
-     itch.io but its page states no redistribution/sharing terms, so
-     shipping the ROM in this public repo is uncleared copyright exposure
-     until the developer confirms it is OK. The Game Genie BIOS image
-     (gg.nes) needed for the FCEUX "play it live" section is very likely
-     itself a copyrighted dump of the real Game Genie device firmware -
-     same concern, independently.
-  2. FLOW: this is the only challenge in the dojo invoked as
-     `/challenge/judge.py <output file>` instead of `/challenge/run
-     <your script>`, because the deliverable is a file the student's
-     script already produced rather than something to run and check the
-     stdout of. That's a deliberate, reasonable shape for this task, but
-     flagging it since every other challenge is consistent about this.
-
-One remaining PLACEHOLDER: a live link for the Game Genie code-encoding
-reference - the old nesdev.com/nesgg.txt cited in minimal_gg_decoder.py's
-comment no longer resolves.
--->
-
 # Game Genie ROM Patcher
 
 ## Background Information
@@ -48,6 +14,8 @@ gamers by having cheat codes (this is where the Konami code got invented).
 But if a game didn't have any cheat codes, there was still a way to get
 help.  We had a device we could stick on the end of our cartridges called
 a Game Genie.
+
+![Game Geneie Attached to SMB3](https://raw.githubusercontent.com/mwales-ai/learning_python_pwncollege/refs/heads/main/files/game-genie-patcher/.images/game_genie_block_diagram.jpg)
 
 The Game Genie came with a [100+ page booklet](https://archive.org/details/game-genie-1992-nes/NES-Game-Genie-codes/page/n19/mode/2up)
 of secret codes for games, and a description of what each code would do.
