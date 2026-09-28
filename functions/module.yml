@@ -5,3 +5,7 @@ challenges:
     name: Define and Call
   - id: build-a-toolbox
     name: Build a Toolbox
+  - id: wps-pin-cracker
+    name: Cracking a WPS PIN
+  - id: stock-tracker
+    name: Stock Tracker

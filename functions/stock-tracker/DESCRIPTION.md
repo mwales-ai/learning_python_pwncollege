@@ -1,18 +1,3 @@
-<!--
-STATUS: feature-complete, held out of module.yml/README for one reason:
-sequencing. This challenge's text assumes the student already met
-subprocess.run() in "Cracking a WPS PIN" (functions/wps-pin-cracker), which
-is not deployed yet either. Deploy that challenge first (or at the same
-time, in order ahead of this one) - do not add this to module.yml/README
-on its own.
-
-.init starts st_server in the background and the standard multi-case
-judge (run + .eval_data, 5 cases across all three tickers, some full-month
-and some short windows) is wired up and verified: the golden solution
-passes all 5, and a deliberately wrong "buy first day, sell last day"
-script fails all 5.
--->
-
 # Stock Tracker
 
 You just learned how to make a Python program ask another *program* a

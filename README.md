@@ -32,7 +32,7 @@ online Python reference books that I would suggest for new students:
 
 # Challenges and Concepts
 
-The dojo is 41 challenges, grouped into 9 modules.  The challenges are
+The dojo is 43 challenges, grouped into 9 modules.  The challenges are
 deliberately *not* numbered - we expect to insert new ones between existing
 ones as the material gets refined - but the order within and between modules is
 meaningful.  That order gets to *useful* things (talking to the terminal,
@@ -251,6 +251,26 @@ correctly you get the flag.
   * **Discussion:** A good one to do to your FizzBuzz filter: a `fizzbuzz(n)`
     function that returns a string, and a loop that does nothing but read,
     call, and print.
+* **Cracking a WPS PIN** - Brute-force an 8-digit PIN behind a provided
+  oracle program in under 11,000 guesses instead of 100,000,000, by
+  exploiting the same two-stage validation leak and checksum shortcut that
+  broke real Wi-Fi Protected Setup routers.
+  * **Skills:** `subprocess.run()`, wrapping an external call in a function
+                that returns a value, reading `.returncode` and `.stdout`
+  * **Discussion:** This is a real, disclosed vulnerability
+    (Stefan Viehböck, December 2011), not a toy example - the provided
+    `pin_verify` oracle leaks "which half was wrong" exactly the way a
+    real WPS-vulnerable access point did, and the checksum formula that
+    removes the 8th digit from the search is the real published one.
+* **Stock Tracker** - Query a localhost price server with `curl`, one day
+  at a time, to find the single best day to buy and single best day to
+  sell a stock.
+  * **Skills:** calling `curl` instead of a Python HTTP library, the
+                running-minimum accumulator pattern for a "best pair" search
+  * **Discussion:** The classic "best time to buy and sell stock" problem,
+    but the twist is where the data comes from - every price is fetched
+    live from a running server via `curl`, the same tool introduced for
+    `pin_verify`, rather than sitting in a file or a list already in memory.
 
 ## Module 9: Dictionaries
 

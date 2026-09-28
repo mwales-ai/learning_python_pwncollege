@@ -1,19 +1,3 @@
-<!--
-STATUS: DRAFT / WORK IN PROGRESS.
-
-Not deployed: no .init, no run script, no .eval_data, and deliberately left
-out of module.yml until pin_verify.c is actually built into a suid binary.
-That build step is being ported over from another dojo (a different,
-already-working pattern for compiling and secret-injecting a binary at
-deploy time) rather than reinvented here - see pin_verify.c in this same
-directory for the verification logic itself, which IS real and does work
-standalone (tested with gcc on the author's machine).
-
-Sections marked PLACEHOLDER need real content once the build lands:
-  * the exact secret-injection mechanism (currently a #define default)
-  * the Instructions section's I/O contract and test data
--->
-
 # Cracking a WPS PIN
 
 Every function you have written so far has been code you can read. This
@@ -138,33 +122,47 @@ def wps_checksum(seven_digit_pin):
     return (10 - (accum % 10)) % 10
 ```
 
-`wps_checksum(1337246)` returns `0`, so the full valid PIN built from that
-prefix is `13372460`. Once you have confirmed digits 1-4 and are searching
-digits 5-7, compute digit 8 with this instead of guessing it - that is
-where the 10,000-guess second stage turns into 1,000.
+`wps_checksum(1234567)` returns `0`, so `12345670` is a valid checksum PIN
+built from that prefix (this is just an example - it is not the PIN you are
+looking for). Once you have confirmed digits 1-4 and are searching digits
+5-7, compute digit 8 with this instead of guessing it - that is where the
+10,000-guess second stage turns into 1,000.
 
 ## Further Reading
 
-* [PLACEHOLDER: link to the CVE-2011-5053 writeup and a WPS PIN reference
-  once this challenge is finalized]
+* [Wikipedia: Wi-Fi Protected Setup, "Security" section](https://en.wikipedia.org/wiki/Wi-Fi_Protected_Setup) -
+  the real vulnerability this challenge reproduces, disclosed by Stefan
+  Viehböck in December 2011
+* Automate the Boring Stuff with Python
+  * [Chapter 3 - Functions](https://automatetheboringstuff.com/3e/chapter3.html)
 
 # Instructions
 
-[PLACEHOLDER - DRAFT, NOT YET JUDGED]
-
-Write a Python program that recovers the secret PIN behind
-`/challenge/pin_verify` and reports it, using no more than 11,000 calls to
-the oracle:
+Write a Python program that recovers the secret 8-digit PIN behind
+`/challenge/pin_verify`, using no more than 11,000 calls to the oracle:
 
 1. Brute force the first four digits, trying `try_pin()` until you stop
    getting exit status `1`.
-2. Brute force digits 5-7 (not digit 8 - compute that one), trying each
-   candidate until you get exit status `0`.
-3. Print the full 8-digit PIN you found, and/or the flag the oracle handed
-   you.
+2. Brute force digits 5-7 (not digit 8 - compute that one with
+   `wps_checksum()`), trying each candidate until you get exit status `0`.
+3. Print the flag.
 
-This section still needs: how the flag actually reaches the judge (the
-oracle prints it on success - do we grade on that appearing in your
-program's own output, or on the PIN string itself?), the exact number of
-calls the judge is willing to tolerate, and whether a wrong-format guess
-(not 8 digits) needs handling.
+There is no separate judge for this challenge - `pin_verify` is the judge.
+The moment you call it with the correct 8-digit PIN, it reads `/flag`
+itself and prints it to its own stdout, exactly like a real attacker
+getting into the network. `try_pin()` as written above only hands you back
+the exit status, so once you find the PIN that scores a `0`, call
+`subprocess.run()` on it one more time yourself to see what it printed:
+
+```python
+result = subprocess.run(["/challenge/pin_verify", full_pin],
+                         capture_output=True, text=True)
+print(result.stdout)
+```
+
+Remember `capture_output=True` hides a program's output from your screen
+unless you print it yourself - this is the payoff for learning that.
+
+```
+python3 crack_pin.py
+```
