@@ -67,7 +67,27 @@ The following is a list of some other useful python functions:
 * `str(value)`: for converting numerical values to strings
 * `int(value)`: for converting strings to integers
 * `float(value)`: for converting strings to non-whole floating point numbers
+* `round(value, num_decimal_places)`: for rounding floating point numbers
 * `abs(value)`: for getting the absolute value of a number
+
+## Python's rounding is not the rounding you learned in school
+
+Most math classes teach that a `.5` always rounds up: `2.5` becomes `3`,
+`3.5` becomes `4`.  Python's `round()` does not always agree:
+
+```
+>>> round(2.5)
+2
+>>> round(3.5)
+4
+```
+
+Python rounds a `.5` to whichever neighbor is **even** - `2.5` is exactly
+between `2` and `3`, and `2` is the even one, so that wins. This only
+matters when the value is *exactly* halfway; `round(2.51)` is `3` and
+`round(2.49)` is `2`, same as you would expect. You do not need this for
+today's challenge, but it will surprise you eventually if nobody warns you
+first.
 
 ## Further Reading
 
