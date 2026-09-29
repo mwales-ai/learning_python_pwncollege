@@ -12,7 +12,8 @@ wants to check a different bill they have to go edit your source code, which
 defeats the point of writing a program at all.
 
 Let's write a version that asks the user for the numbers instead of having
-them hard-coded.
+them hard-coded - and put the variables and f-strings you just learned to
+work doing it.
 
 # Knowledge Upgrade
 
@@ -66,7 +67,6 @@ The following is a list of some other useful python functions:
 * `str(value)`: for converting numerical values to strings
 * `int(value)`: for converting strings to integers
 * `float(value)`: for converting strings to non-whole floating point numbers
-* `round(value, num_decimal_places)`: for rounding floating point numbers
 * `abs(value)`: for getting the absolute value of a number
 
 ## Further Reading

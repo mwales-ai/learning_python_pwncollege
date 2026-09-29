@@ -64,15 +64,15 @@ correctly you get the flag.
 * **Run It Yourself** - Add a `#!/usr/bin/env python3` shebang, `chmod +x` your
   script, and run it as `./hello.py`.
   * **Skills:** the shebang line, `chmod +x`, running `./script.py`
+* **Variables and f-strings** - Store values in variables and print a sentence
+  built from them with an f-string.
+  * **Skills:** variables, strings vs. numbers, f-strings, `+ - * / // %`
 * **Tippy Tipper** - Turn a tip calculator with hard-coded numbers into one
   that asks for the subtotal and the tax and tip *percentages*, then reports
   each as an amount plus the total.  The judge runs it three times with random
   subtotals, so echoing the percentages back will not pass.
-  * **Skills:** `input()`, `float()`, string vs. numeric `*`, `round()`,
-                hard-coding
-* **Variables and f-strings** - Store values in variables and print a sentence
-  built from them with an f-string.
-  * **Skills:** variables, strings vs. numbers, f-strings, `+ - * / // %`
+  * **Skills:** `input()`, `float()`, string vs. numeric `*`, applying
+                variables and f-strings to a real calculation, hard-coding
 * **Why Are We Yelling?** - Read a line of text and shout it back with the
   vowels censored out: `* S*W * D*CK **T*NG * C*K*`.
   * **Skills:** `.upper()`, `.replace()`, string immutability, reading piped

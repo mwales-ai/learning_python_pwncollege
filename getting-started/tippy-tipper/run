@@ -39,6 +39,42 @@ def check_line(key, expected_value, user_line):
 
     print(f"[OK] {user_line}")
 
+def is_clean(value, max_decimals=2):
+    """True if str(value) has at most max_decimals digits after the point.
+
+    Even a whole-dollar subtotal times a whole-percent rate can come out of
+    binary floating point as something like 85.05000000000001. Nobody has
+    been taught round() at this point in the dojo, so instead of relying on
+    the student to clean that up, we only ever hand out test amounts that
+    are already clean under the exact formula the challenge teaches.
+    """
+    text = str(value)
+    if "." not in text:
+        return True
+    return len(text.split(".")[1]) <= max_decimals
+
+def generate_clean_amounts():
+    """
+    Pick a whole-dollar subtotal and whole-percent tax/tip such that
+    TAX, TIP, and TOTAL - computed exactly the way DESCRIPTION.md teaches
+    (subtotal * pct / 100, then SUBTOTAL + TAX + TIP) - all print with at
+    most 2 decimal places. About half of random combinations already
+    qualify, so this almost never has to retry more than a few times.
+    """
+    for _ in range(1000):
+        subtotal = float(random.randint(10, 1000))
+        tax = float(random.randint(0, 30))
+        tip = float(random.randint(0, 30))
+
+        tax_amt = subtotal * (tax / 100.0)
+        tip_amt = subtotal * (tip / 100.0)
+        total = subtotal + tip_amt + tax_amt
+
+        if is_clean(tax_amt) and is_clean(tip_amt) and is_clean(total):
+            return subtotal, tax, tip, tax_amt, tip_amt, total
+
+    raise RuntimeError("could not find a clean test case after 1000 tries")
+
 def verify_application(script_path):
     print("Starting new test case")
 
@@ -51,7 +87,8 @@ def verify_application(script_path):
         sys.exit(1)
     print(f"[OK] {prompt1}")
 
-    subtotal = round(random.uniform(10,1000), 2)
+    subtotal, tax, tip, tax_amt, tip_amt, total = generate_clean_amounts()
+
     print(f"Setting subtotal as {subtotal}")
     p.sendline(str(subtotal).encode("utf-8"))
 
@@ -60,8 +97,7 @@ def verify_application(script_path):
         print(f"Error when prompting for the tax amount: {prompt2}")
         sys.exit(1)
     print(f"[OK] {prompt2}")
-    
-    tax = round(random.uniform(0 ,30), 2)
+
     print(f"Setting tax as {tax}")
     p.sendline(str(tax).encode("utf-8"))
 
@@ -71,7 +107,6 @@ def verify_application(script_path):
         sys.exit(1)
     print(f"[OK] {prompt3}")
 
-    tip = round(random.uniform(0 ,30), 2)
     print(f"Setting tip as {tip}")
     p.sendline(str(tip).encode("utf-8"))
 
@@ -81,9 +116,9 @@ def verify_application(script_path):
     total_output = p.recvline()
 
     check_line("SUBTOTAL", subtotal, subtotal_output)
-    check_line("TAX", (tax / 100.0) * subtotal, tax_output)
-    check_line("TIP", (tip / 100.0) * subtotal, tip_output)
-    check_line("TOTAL", subtotal * (1 + (tax + tip) / 100.0) , total_output)
+    check_line("TAX", tax_amt, tax_output)
+    check_line("TIP", tip_amt, tip_output)
+    check_line("TOTAL", total, total_output)
 
     print("Test case passed!\n")
 

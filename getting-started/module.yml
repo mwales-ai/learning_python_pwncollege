@@ -9,10 +9,10 @@ challenges:
     name: Hello Hackers
   - id: run-it-yourself
     name: Run It Yourself
-  - id: tippy-tipper
-    name: Tippy Tipper
   - id: variables-and-fstrings
     name: Variables and f-strings
+  - id: tippy-tipper
+    name: Tippy Tipper
   - id: why-are-we-yelling
     name: Why Are We Yelling?
   - id: birthday-banner
