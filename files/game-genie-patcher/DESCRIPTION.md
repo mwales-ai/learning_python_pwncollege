@@ -15,7 +15,7 @@ But if a game didn't have any cheat codes, there was still a way to get
 help.  We had a device we could stick on the end of our cartridges called
 a Game Genie.
 
-![Game Genie Attached to SMB3](https://raw.githubusercontent.com/mwales-ai/learning_python_pwncollege/refs/heads/main/files/game-genie-patcher/.images/game_genie_block_diagram.png)
+![Game Genie Attached to SMB3](https://raw.githubusercontent.com/mwales-ai/learning_python_pwncollege/refs/heads/main/files/game-genie-patcher/.images/nes_game_genie.jpg)
 
 The Game Genie came with a [100+ page booklet](https://archive.org/details/game-genie-1992-nes/NES-Game-Genie-codes/page/n19/mode/2up)
 of secret codes for games, and a description of what each code would do.
@@ -31,6 +31,8 @@ were stored in ROM chips inside of the cartridge.  The Game Genie would watch
 which addresses were being fetched by the NES, and if the address for your
 cheat code was seen, instead of the memory from the ROM being returned, the
 value in your cheat code would be returned.
+
+![Game Genie Block Diagram](https://raw.githubusercontent.com/mwales-ai/learning_python_pwncollege/refs/heads/main/files/game-genie-patcher/.images/game_genie_block_diagram.png)
 
 One of the ways we would typically use it is to change the op-code for an NES CPU
 instruction.  For instance, for the following instruction:
@@ -214,13 +216,13 @@ That second formula is the one you need: a patch tells you the NES address
 it wants to change, and you have to turn that into the right position in
 the file.
 
-**Note: Only about 32KB of program code can fit into the NES's CPU address
+_Note: Only about 32KB of program code can fit into the NES's CPU address
 space at a time.  Games with more code than that need a mapper chip on the
 cartridge that swaps different chunks of ROM in and out while the game
 runs - a trick called bank switching.  Cat Mercs actually does this (it has
 128KB of program code), but the two bytes we are patching happen to live in
 the bank that is always resident, so you can ignore bank switching entirely
-for this challenge.**
+for this challenge._
 
 ## Game Genie Codes
 
@@ -242,10 +244,10 @@ That program will give you the NES address location, but you will have to
 remember how to convert that NES address into the offset of the byte in
 the file (see the section above).
 
-**Note: You may have noticed that Game Genie codes can be 8 letters long too.
+_Note: You may have noticed that Game Genie codes can be 8 letters long too.
 Those codes are a little bit different because they are designed to work on
 those larger NES games that don't fit within 32KB.  We don't have to worry
-about that for this challenge.**
+about that for this challenge._
 
 ## Further Reading
 
