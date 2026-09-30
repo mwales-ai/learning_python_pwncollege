@@ -73,7 +73,7 @@ A few things worth knowing before you start:
 * Your home directory `/home/hacker` keeps its contents between challenges, so
   your earlier programs are still there when you want to look at them.
 
-## Books
+## Free Books
 
 You do not need one, but a reference helps.  Both of these are free to read
 online:
@@ -100,3 +100,10 @@ isn't going to make the material stick.
 
 And if you have questions, bring them to our CS club meetings! I can't wait
 to help you, or ask somebody in the club.  That is what it is for.
+
+## A.I. Disclaimer
+
+This dojo has A.I. generated content.  Many of the challenges are human
+designed to hopefully make them fun and interesting for students.  But AI has
+been used to develop descriptions, solutions, check / proofread content.
+
