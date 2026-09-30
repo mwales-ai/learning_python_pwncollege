@@ -5,6 +5,10 @@ challenges:
     name: Say My Name
   - id: number-cruncher
     name: Number Cruncher
+  - id: tippy-tipper
+    name: Tippy Tipper
+  - id: birthday-banner
+    name: Birthday Banner
   - id: hex-to-decimal
     name: Hex to Decimal
   - id: two-kinds-of-output

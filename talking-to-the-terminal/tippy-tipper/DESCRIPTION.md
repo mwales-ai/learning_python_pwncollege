@@ -12,8 +12,8 @@ wants to check a different bill they have to go edit your source code, which
 defeats the point of writing a program at all.
 
 Let's write a version that asks the user for the numbers instead of having
-them hard-coded - and put the variables and f-strings you just learned to
-work doing it.
+them hard-coded - and put the variables and f-strings from Module 1 to work
+doing it.
 
 # Knowledge Upgrade
 

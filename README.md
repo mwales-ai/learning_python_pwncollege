@@ -32,7 +32,7 @@ online Python reference books that I would suggest for new students:
 
 # Challenges and Concepts
 
-The dojo is 43 challenges, grouped into 9 modules.  The challenges are
+The dojo is 44 challenges, grouped into 9 modules.  The challenges are
 deliberately *not* numbered - we expect to insert new ones between existing
 ones as the material gets refined - but the order within and between modules is
 meaningful.  That order gets to *useful* things (talking to the terminal,
@@ -67,19 +67,10 @@ correctly you get the flag.
 * **Variables and f-strings** - Store values in variables and print a sentence
   built from them with an f-string.
   * **Skills:** variables, strings vs. numbers, f-strings, `+ - * / // %`
-* **Tippy Tipper** - Turn a tip calculator with hard-coded numbers into one
-  that asks for the subtotal and the tax and tip *percentages*, then reports
-  each as an amount plus the total.  The judge runs it three times with random
-  subtotals, so echoing the percentages back will not pass.
-  * **Skills:** `input()`, `float()`, string vs. numeric `*`, applying
-                variables and f-strings to a real calculation, hard-coding
 * **Why Are We Yelling?** - Read a line of text and shout it back with the
   vowels censored out: `* S*W * D*CK **T*NG * C*K*`.
   * **Skills:** `.upper()`, `.replace()`, string immutability, reading piped
                 stdin
-* **Birthday Banner** - Centre a birthday message inside an 80 column banner of
-  `*` characters.
-  * **Skills:** string replication with `*`, `len()`, `//` and `%`, `.title()`
 * **Debug Me** - You are given a program that will not run (bad indentation,
   unbalanced quote, typo'd name, wrong capitalization).  Fix it until it runs.
   * **Skills:** reading tracebacks, `SyntaxError` vs `NameError`, fixing one
@@ -92,6 +83,15 @@ correctly you get the flag.
 * **Number Cruncher** - Read two numbers from the user, convert them with
   `int()`, and print the results of some math.
   * **Skills:** `int()`, why `"3" + "4"` is `"34"`
+* **Tippy Tipper** - Turn a tip calculator with hard-coded numbers into one
+  that asks for the subtotal and the tax and tip *percentages*, then reports
+  each as an amount plus the total.  The judge runs it three times with random
+  subtotals, so echoing the percentages back will not pass.
+  * **Skills:** `input()`, `float()`, string vs. numeric `*`, applying
+                variables and f-strings to a real calculation, hard-coding
+* **Birthday Banner** - Centre a birthday message inside an 80 column banner of
+  `*` characters.
+  * **Skills:** string replication with `*`, `len()`, `//` and `%`, `.title()`
 * **Hex to Decimal** - Read a hexadecimal number like `1f`, `0xDEAD`, or `ff00`
   and print its decimal value, then go the other way with `hex()`.
   * **Skills:** `int(text, 16)`, hex digits and `0x` prefixes, `f"{n:02X}"`,
