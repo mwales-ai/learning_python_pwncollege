@@ -112,8 +112,7 @@ Where the numbers come from:
 
 Yes, you can see the answers above, and yes, you could just print those six
 lines and pass.  Do not.  Every number after the first line should come out of
-a calculation on those four variables - that is the entire point, and the next
-challenge is much harder if you skip it.
+a calculation on those four variables.
 
 Make it executable and hand it in:
 

@@ -123,7 +123,7 @@ TOTAL    = 104.00
 ```
 
 Look closely at where those numbers come from, because this is the part
-people get wrong: **`TAX` and `TIP` are dollar amounts, not the percentages
+people get wrong: **`TAX` and `TIP` are dollar amounts, not the percentages 
 you were just given.**
 
 * `TAX` is the subtotal times the tax percentage, divided by 100.  10% tax
