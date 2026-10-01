@@ -70,6 +70,23 @@ The following is a list of some other useful python functions:
 * `round(value, num_decimal_places)`: for rounding floating point numbers
 * `abs(value)`: for getting the absolute value of a number
 
+## Convert once, right after you read it
+
+```python
+subtotal = float(input())
+```
+
+Do the conversion the moment the value comes in, and give the result a
+name.  Now `subtotal` is a number everywhere else in your program.  If you
+sprinkle `float()` around later instead of doing it right here, you end up
+with half your program working on text and the other half on numbers,
+which is a miserable bug to track down.
+
+Worth knowing even though this challenge sticks to `float()`: `int()` is
+fussy on purpose.  `int("12.5")` and `int("banana")` both raise a
+`ValueError` rather than guessing at what you meant - `float()` is the one
+that handles `"12.5"`.
+
 ## Python's rounding is not the rounding you learned in school
 
 Most math classes teach that a `.5` always rounds up: `2.5` becomes `3`,

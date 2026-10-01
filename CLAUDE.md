@@ -51,7 +51,7 @@ Modules currently built:
 | Module | Directory | Challenges |
 |--------|-----------|------------|
 | 1 | `getting-started` | running-interpreter, string-concatenation, hello-hacker, run-it-yourself, variables-and-fstrings, why-are-we-yelling, debug-me |
-| 2 | `talking-to-the-terminal` | say-my-name, number-cruncher, tippy-tipper, birthday-banner, hex-to-decimal, two-kinds-of-output, exit-codes, command-line-arguments |
+| 2 | `talking-to-the-terminal` | tippy-tipper, birthday-banner, hex-to-decimal, two-kinds-of-output, exit-codes, command-line-arguments |
 | 3 | `making-decisions` | if-and-else, elif-ladder, quadratic-formula, true-and-false, guessing-game |
 | 4 | `loops-and-lists` | counting-loops, fizzbuzz, lists, loop-over-a-list, secret-decoder-ring |
 | 5 | `files` | read-a-file, write-a-file, line-by-line, hangman, append-and-transform, game-genie-patcher |
@@ -60,26 +60,25 @@ Modules currently built:
 | 8 | `functions` | define-and-call, build-a-toolbox, wps-pin-cracker, stock-tracker |
 | 9 | `dictionaries` | lookup-tables, capstone-the-report |
 
-**All nine README modules are built** - 44 challenges as of the last
-reshuffle (see git log for the running history of additions/moves; do not
-trust this count blindly, recompute from each module.yml if it matters).
-There is also a dojo-level `DESCRIPTION.md` beside `dojo.yml`, which is what
-pwn.college shows on the dojo's front page.
+**All nine README modules are built** - 42 challenges as of the last
+reshuffle (see git log for the running history of additions/moves/removals;
+do not trust this count blindly, recompute from each module.yml if it
+matters). There is also a dojo-level `DESCRIPTION.md` beside `dojo.yml`,
+which is what pwn.college shows on the dojo's front page.
 
 Tippy Tipper and Birthday Banner were moved from Getting Started into
-Talking to the Terminal (2026-09-30): their skills (interactive `input()`,
-type conversion, string formatting) were assessed as redundant with Say My
-Name and Number Cruncher, which currently still exist alongside them. Say My
-Name and Number Cruncher are candidates for removal, but have not been
-deleted - most of what they introduce is retaught elsewhere (the module's
-own `DESCRIPTION.md` already states the "never give input() a prompt" rule,
-and unix-filters/read-from-standard-input re-teaches "input can come from a
-pipe or a file" in more depth), except for two narrower things that would
-have no other home if both challenges are deleted: Number Cruncher's
-explicit int()-raises-ValueError-but-float()-doesn't contrast, and its
-"convert once, up front, name it" advice. Fold those into Tippy Tipper's
-Conversion Functions section if/when Say My Name and Number Cruncher are
-actually removed.
+Talking to the Terminal, and Say My Name and Number Cruncher were deleted
+outright (2026-09-30/10-01): their skills all overlapped (interactive
+`input()`, string/number conversion, string formatting), and what was
+unique to Say My Name and Number Cruncher turned out to already be
+retaught elsewhere - the module's own `DESCRIPTION.md` already states the
+"never give input() a prompt" rule, and unix-filters/read-from-standard-input
+re-teaches "input can come from a pipe or a file" in more depth - except for
+two narrower things that had no other home: Number Cruncher's explicit
+int()-raises-ValueError-but-float()-doesn't contrast, and its "convert
+once, up front, name it" advice. Both were folded into Tippy Tipper's new
+"Convert once, right after you read it" subsection before the two
+challenges were deleted.
 
 **The curriculum order is a hard constraint on challenge design.**  A challenge
 may only need language features the README has already introduced, and that

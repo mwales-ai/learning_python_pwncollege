@@ -32,7 +32,7 @@ online Python reference books that I would suggest for new students:
 
 # Challenges and Concepts
 
-The dojo is 44 challenges, grouped into 9 modules.  The challenges are
+The dojo is 42 challenges, grouped into 9 modules.  The challenges are
 deliberately *not* numbered - we expect to insert new ones between existing
 ones as the material gets refined - but the order within and between modules is
 meaningful.  That order gets to *useful* things (talking to the terminal,
@@ -78,16 +78,12 @@ correctly you get the flag.
 
 ## Module 2: Talking to the Terminal
 
-* **Say My Name** - Use `input()` to read a name and greet the user.
-  * **Skills:** interactive programs, `input()` always returns a string
-* **Number Cruncher** - Read two numbers from the user, convert them with
-  `int()`, and print the results of some math.
-  * **Skills:** `int()`, why `"3" + "4"` is `"34"`
 * **Tippy Tipper** - Turn a tip calculator with hard-coded numbers into one
   that asks for the subtotal and the tax and tip *percentages*, then reports
   each as an amount plus the total.  The judge runs it three times with random
   subtotals, so echoing the percentages back will not pass.
-  * **Skills:** `input()`, `float()`, string vs. numeric `*`, applying
+  * **Skills:** interactive programs, `input()` always returns a string,
+                `float()` vs `int()`, why `"3" + "4"` is `"34"`, applying
                 variables and f-strings to a real calculation, hard-coding
 * **Birthday Banner** - Centre a birthday message inside an 80 column banner of
   `*` characters.

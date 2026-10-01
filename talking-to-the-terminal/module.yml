@@ -1,10 +1,6 @@
 name: Talking to the Terminal
 allow_privileged: true
 challenges:
-  - id: say-my-name
-    name: Say My Name
-  - id: number-cruncher
-    name: Number Cruncher
   - id: tippy-tipper
     name: Tippy Tipper
   - id: birthday-banner
