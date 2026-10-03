@@ -67,10 +67,6 @@ correctly you get the flag.
 * **Variables and f-strings** - Store values in variables and print a sentence
   built from them with an f-string.
   * **Skills:** variables, strings vs. numbers, f-strings, `+ - * / // %`
-* **Why Are We Yelling?** - Read a line of text and shout it back with the
-  vowels censored out: `* S*W * D*CK **T*NG * C*K*`.
-  * **Skills:** `.upper()`, `.replace()`, string immutability, reading piped
-                stdin
 * **Debug Me** - You are given a program that will not run (bad indentation,
   unbalanced quote, typo'd name, wrong capitalization).  Fix it until it runs.
   * **Skills:** reading tracebacks, `SyntaxError` vs `NameError`, fixing one
@@ -85,6 +81,10 @@ correctly you get the flag.
   * **Skills:** interactive programs, `input()` always returns a string,
                 `float()` vs `int()`, why `"3" + "4"` is `"34"`, applying
                 variables and f-strings to a real calculation, hard-coding
+* **Why Are We Yelling?** - Read a line of text and shout it back with the
+  vowels censored out: `* S*W * D*CK **T*NG * C*K*`.
+  * **Skills:** `.upper()`, `.replace()`, string immutability, reading piped
+                stdin
 * **Birthday Banner** - Centre a birthday message inside an 80 column banner of
   `*` characters.
   * **Skills:** string replication with `*`, `len()`, `//` and `%`, `.title()`

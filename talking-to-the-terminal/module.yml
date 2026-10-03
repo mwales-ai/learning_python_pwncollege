@@ -3,6 +3,8 @@ allow_privileged: true
 challenges:
   - id: tippy-tipper
     name: Tippy Tipper
+  - id: why-are-we-yelling
+    name: Why Are We Yelling?
   - id: birthday-banner
     name: Birthday Banner
   - id: hex-to-decimal

@@ -36,8 +36,8 @@ Example:
 >>> 
 ```
 
-Unlike most of the string methods we showed you in the last module, this is a
-function, notice the way you call it will be a little different:
+Unlike most of the string methods we showed you in Why Are We Yelling, this
+is a function, notice the way you call it will be a little different:
 
 ```
 >>> test.length()

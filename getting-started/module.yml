@@ -11,7 +11,5 @@ challenges:
     name: Run It Yourself
   - id: variables-and-fstrings
     name: Variables and f-strings
-  - id: why-are-we-yelling
-    name: Why Are We Yelling?
   - id: debug-me
     name: Debug Me

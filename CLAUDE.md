@@ -50,8 +50,8 @@ Modules currently built:
 
 | Module | Directory | Challenges |
 |--------|-----------|------------|
-| 1 | `getting-started` | running-interpreter, string-concatenation, hello-hacker, run-it-yourself, variables-and-fstrings, why-are-we-yelling, debug-me |
-| 2 | `talking-to-the-terminal` | tippy-tipper, birthday-banner, hex-to-decimal, two-kinds-of-output, exit-codes, command-line-arguments |
+| 1 | `getting-started` | running-interpreter, string-concatenation, hello-hacker, run-it-yourself, variables-and-fstrings, debug-me |
+| 2 | `talking-to-the-terminal` | tippy-tipper, why-are-we-yelling, birthday-banner, hex-to-decimal, two-kinds-of-output, exit-codes, command-line-arguments |
 | 3 | `making-decisions` | if-and-else, elif-ladder, quadratic-formula, true-and-false, guessing-game |
 | 4 | `loops-and-lists` | counting-loops, fizzbuzz, lists, loop-over-a-list, secret-decoder-ring |
 | 5 | `files` | read-a-file, write-a-file, line-by-line, hangman, append-and-transform, game-genie-patcher |
@@ -66,19 +66,30 @@ do not trust this count blindly, recompute from each module.yml if it
 matters). There is also a dojo-level `DESCRIPTION.md` beside `dojo.yml`,
 which is what pwn.college shows on the dojo's front page.
 
-Tippy Tipper and Birthday Banner were moved from Getting Started into
-Talking to the Terminal, and Say My Name and Number Cruncher were deleted
-outright (2026-09-30/10-01): their skills all overlapped (interactive
-`input()`, string/number conversion, string formatting), and what was
-unique to Say My Name and Number Cruncher turned out to already be
-retaught elsewhere - the module's own `DESCRIPTION.md` already states the
-"never give input() a prompt" rule, and unix-filters/read-from-standard-input
-re-teaches "input can come from a pipe or a file" in more depth - except for
-two narrower things that had no other home: Number Cruncher's explicit
-int()-raises-ValueError-but-float()-doesn't contrast, and its "convert
-once, up front, name it" advice. Both were folded into Tippy Tipper's new
-"Convert once, right after you read it" subsection before the two
-challenges were deleted.
+Tippy Tipper, Why Are We Yelling, and Birthday Banner were moved from
+Getting Started into Talking to the Terminal, and Say My Name and Number
+Cruncher were deleted outright (2026-09-30/10-03): their skills all
+overlapped (interactive `input()`, string/number conversion, string
+formatting), and what was unique to Say My Name and Number Cruncher turned
+out to already be retaught elsewhere - the module's own `DESCRIPTION.md`
+already states the "never give input() a prompt" rule, and
+unix-filters/read-from-standard-input re-teaches "input can come from a
+pipe or a file" in more depth - except for two narrower things that had no
+other home: Number Cruncher's explicit int()-raises-ValueError-but-
+float()-doesn't contrast, and its "convert once, up front, name it"
+advice. Both were folded into Tippy Tipper's new "Convert once, right
+after you read it" subsection before the two challenges were deleted.
+
+Why Are We Yelling moved second, after noticing it was the only Getting
+Started challenge that reads stdin at all, and it never actually names
+`input()` - it used to come after Tippy Tipper (which does teach `input()`)
+in the original Getting Started order, and lost that when Tippy Tipper
+moved out from in front of it. Placed right after Tippy Tipper in Talking
+to the Terminal (restoring that same ordering, one module over) and before
+Birthday Banner, which depends on the `.center()`/`.title()` string
+methods Why Are We Yelling introduces. Fixed Birthday Banner's "the string
+methods we showed you in the last module" to name Why Are We Yelling
+directly, since it is now in the same module rather than the previous one.
 
 **The curriculum order is a hard constraint on challenge design.**  A challenge
 may only need language features the README has already introduced, and that
