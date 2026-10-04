@@ -20,24 +20,6 @@ they are the ones that turn your programs into things that can be used *by
 other programs*.  That is the whole idea behind Unix: little tools that each
 do one thing, wired together.
 
-## One rule for this whole dojo
-
-**Never give `input()` a prompt.**
-
-```
-name = input("What is your name? ")     # NO
-name = input()                          # yes
-```
-
-The prompt text goes to standard output, mixed in with your actual answer.
-The judge is reading standard output, so a prompt makes your very first line
-wrong before you have done anything else.
-
-This is not the judge being fussy.  It is the same reason `ls | wc -l` works:
-if `ls` chattered at you on standard output, `wc` would count the chatter.
-Once you have done the Two Kinds of Output challenge you will know where a
-prompt is supposed to go.
-
 ## Further Reading
 
 * Automate the Boring Stuff with Python
