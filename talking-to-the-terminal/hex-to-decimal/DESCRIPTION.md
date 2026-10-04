@@ -53,11 +53,14 @@ either case:
 
 So you do not have to strip anything off.  Just pass the text and the base.
 
-While you are here, base 2 works the same way:
+The base does not have to be 16.  `int()` accepts any base from `2` up to
+`36`, so the same function reads binary, octal, or anything else:
 
 ```
 >>> int("11011110", 2)
 222
+>>> int("755", 8)
+493
 ```
 
 ## Number to text: hex() and format specifiers
@@ -96,6 +99,23 @@ single byte always show as two digits:
 
 It does not truncate.  `4096` needs four digits, so it gets four.
 
+## Octal, the same way
+
+Octal (base 8) works exactly like hex, just with three bits per digit
+instead of four.  `oct()` converts to text, prefix and all; `o` in an
+f-string drops the prefix:
+
+```
+>>> oct(493)
+'0o755'
+>>> f"{493:o}"
+'755'
+```
+
+You will recognize `755` - Linux file permissions are octal for exactly
+this reason: three bits per digit line up perfectly with the three
+read/write/execute permission bits.
+
 ## Further Reading
 
 * Automate the Boring Stuff with Python
@@ -107,37 +127,37 @@ It does not truncate.  `4096` needs four digits, so it gets four.
 Read two lines:
 
 ```
-line 1     a hexadecimal number (it may have an 0x prefix, either case)
-line 2     an ordinary decimal number
+line 1     the base the second line is written in (2 through 36)
+line 2     a number, written as text in that base (0x prefix allowed for hex)
 ```
 
-and print exactly three lines:
+Convert it, and print exactly three lines:
 
 ```
-<line 1> in decimal is <that value in decimal>
-<line 2> in hexadecimal is <that value from hex()>
-<line 2> as hex digits is <that value as capital hex, at least 2 digits>
+OCTAL   = <the value in octal, no 0o prefix>
+DECIMAL = <the value in decimal>
+HEX     = <the value in hex, capital letters, no 0x prefix>
 ```
 
-So for input `1f` and `255`:
+So for input `16` and `deadbeef`:
 
 ```
-1f in decimal is 31
-255 in hexadecimal is 0xff
-255 as hex digits is FF
+OCTAL   = 33653337357
+DECIMAL = 3735928559
+HEX     = DEADBEEF
 ```
 
-And for `0xDEAD` and `4096`:
+And for `8` and `755`:
 
 ```
-0xDEAD in decimal is 57005
-4096 in hexadecimal is 0x1000
-4096 as hex digits is 1000
+OCTAL   = 755
+DECIMAL = 493
+HEX     = 1ED
 ```
 
-Echo the input back exactly as you were given it - do not upper case it, do
-not strip the `0x`.  The second line keeps the `0x` because that is what
-`hex()` produces; the third line has no prefix and uses capital letters.
+That second example is not a coincidence - `755` is already valid octal, so
+converting it to octal is the identity.  A good way to catch yourself
+reading the base argument backwards.
 
 ```
 /challenge/run ./hex.py
