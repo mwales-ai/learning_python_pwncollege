@@ -3,9 +3,57 @@
 This is the most useful habit in this entire dojo, and almost no beginner book
 teaches it early enough.
 
-## A program has two output pipes
+## A worked example
 
-Every program on Linux gets three streams, not two:
+Here is a program that adds two numbers, reporting what it is doing as it
+goes:
+
+```python
+import sys
+
+a = int(input())
+print(f"first number: {a}", file=sys.stderr)
+
+b = int(input())
+print(f"second number: {b}", file=sys.stderr)
+
+print("adding them now", file=sys.stderr)
+
+print(a + b)
+```
+
+Run it and you would never notice anything odd - everything lands on your
+screen, in order:
+
+```
+$ echo "12
+30" | ./add.py
+first number: 12
+second number: 30
+adding them now
+42
+```
+
+Now redirect just the answer to a file:
+
+```
+$ echo "12
+30" | ./add.py > answer.txt
+first number: 12
+second number: 30
+adding them now
+$ cat answer.txt
+42
+```
+
+The three progress lines still showed up on your screen immediately.  The
+`42` did not - it went straight into `answer.txt` instead, and never touched
+your screen at all.  `>` only ever redirects **standard output**.  The
+progress lines are on an entirely different stream, called **standard
+error**, and `>` leaves it alone.  That is the whole trick, and you just
+watched it happen.
+
+## A program has three streams, not two
 
 | Stream | Number | What it is for |
 |--------|--------|----------------|
@@ -16,17 +64,11 @@ Every program on Linux gets three streams, not two:
 Progress messages, warnings, complaints, "reading file 3 of 10", "that file
 does not exist" - none of that is the answer.  It goes to standard error.
 
+`print()` writes to standard output by default.  Pass `file=sys.stderr` to
+send a line to the other stream instead - that is the entire mechanism
+`add.py` used above, and it is the entire mechanism, full stop.
+
 ## Why anyone cares
-
-Because of this:
-
-```
-./myprogram > answer.txt
-```
-
-That redirects **standard output only**.  The answer lands in the file.  The
-progress messages still come to your screen, where you can see them.  Both
-things happen at once, and neither gets in the other's way.
 
 The same reason makes pipelines work:
 
@@ -35,42 +77,43 @@ ls | wc -l
 ```
 
 If `ls` printed "now listing directory..." on standard output, `wc` would
-count it as a line.  Every Unix tool keeps them separate, which is exactly why
-you can wire any tool into any other.  You have been relying on this since
+count it as a line.  Keeping chatter off of standard output is what lets you
+wire any Unix tool into any other - you have been relying on this since
 Linux Luminarium without being told.
 
-You can prove it to yourself.  `2>` redirects standard error:
+You can prove the split yourself.  `2>` redirects standard error instead:
 
 ```
-./myprogram > /dev/null      <- you see ONLY the chatter
-./myprogram 2> /dev/null     <- you see ONLY the answer
+echo "12
+30" | ./add.py 2>/dev/null     <- you see ONLY the answer
+echo "12
+30" | ./add.py >/dev/null      <- you see ONLY the chatter
 ```
 
-## How to do it in Python
+## tee: seeing a stream and saving it at the same time
 
-`print()` writes to standard output.  To pick the other stream, pass
-`file=sys.stderr`, and `import sys` at the top of your program:
-
-```
-import sys
-
-print("the answer")                              # standard output
-print("still working...", file=sys.stderr)       # standard error
-```
-
-That is the whole technique.
-
-## Now you know where prompts belong
-
-Remember the rule about never giving `input()` a prompt?  A prompt is chatter.
-If you want one, this is how you do it properly:
+A quick reminder, since you will reach for this constantly: `tee` sits in the
+middle of a pipeline, copies whatever flows through it into a file, and lets
+it keep going too - so you see it on screen *and* keep a copy, instead of
+having to pick one.
 
 ```
-print("Name: ", file=sys.stderr)
-name = input()
+$ echo "12
+30" | ./add.py | tee answer.txt
+first number: 12
+second number: 30
+adding them now
+42
+$ cat answer.txt
+42
 ```
 
-Now the human sees the prompt, and the answer stays clean.
+Notice the progress lines still showed up immediately, exactly like before.
+`tee` only ever sees **standard output** - that is the one stream the pipe
+`|` carries from `add.py` into `tee`.  Standard error skips the pipe
+entirely and goes straight to your screen.  That is why this gives you both
+the live chatter and a saved copy of just the answer, with nothing extra
+leaking into `answer.txt`.
 
 ## Further Reading
 
