@@ -13,25 +13,6 @@ next.
 * `while` - keep doing something *until* a condition changes, which is the
   first time your program controls how many times it repeats.
 
-The mechanical thing to get right is the shape:
-
-```
-if something:
-    this line is inside
-    so is this one
-this line is not
-```
-
-The **colon** at the end, and the **indentation** underneath, are how Python
-knows where a block starts and stops.  Most languages use curly braces for
-this; Python uses the layout you were going to write anyway.  Four spaces is
-the convention.  Be consistent - mixing tabs and spaces produces errors that
-are genuinely hard to see, because the two look identical on screen.
-
-By the end of this module you will write your first program that keeps going
-until *something happens* rather than running a fixed number of steps.  That
-is a real game.
-
 ## Further Reading
 
 * Automate the Boring Stuff with Python

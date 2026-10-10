@@ -1,8 +1,10 @@
 # Exit Codes
 
-When a program finishes, it hands one small number back to whoever started it.
-That number is the **exit status**, and it answers exactly one question: did
-this work?
+When a program finishes, it hands one small number back to it's parent process.
+The parent process could be the shell that you typed the command into, it could
+be the desktop environment that you launched a program by clicking on it, or it
+could be from a program starting it with the system() call.  That number is
+the **exit status**, and it usually answers the question: did this work?
 
 * **0 means success.**  Zero problems.
 * **Anything else means failure.**  Which number can mean which kind of
@@ -11,6 +13,10 @@ this work?
 It is backwards from what you would guess, and there is a reason: there is
 only one way to succeed, but lots of ways to fail, so success gets the one
 special value.
+
+Success as 0, anything else as failures is a convention, you could make your
+program return anything you want.  But you should stick to the convention
+because other tools / shell features depend on it.
 
 ## Seeing it
 
@@ -100,9 +106,6 @@ and `echo $?` afterwards shows `42`.
 
 **This challenge checks your exit status as well as your output.**  Getting
 the line right but always exiting 0 will not pass.
-
-You do not need `if` for this - you have not been taught it yet, and you do
-not need it.  The number you should exit with is the number you were given.
 
 Check it yourself:
 
