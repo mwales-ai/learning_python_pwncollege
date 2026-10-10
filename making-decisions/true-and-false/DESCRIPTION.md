@@ -1,4 +1,8 @@
-# True and False
+# Password Complexity
+
+Every signup form you have ever used has one of these: a little meter that
+scores your password as you type it.  You are going to build the logic
+behind one.
 
 Here is something that is not obvious until somebody says it out loud:
 
@@ -16,11 +20,11 @@ False
 variable:
 
 ```
->>> big_enough = 5 > 3
->>> big_enough
+>>> long_enough = 5 > 3
+>>> long_enough
 True
->>> print(f"big enough: {big_enough}")
-big enough: True
+>>> print(f"long enough: {long_enough}")
+long enough: True
 ```
 
 `True` and `False` are the two **boolean** values, named after George Boole.
@@ -45,50 +49,105 @@ False
 A note on `or`: in English "or" often means one or the other but not both.  In
 programming it always means **at least one**, including both.
 
-## The `in` operator
+## Booleans are numbers wearing a costume
 
-`in` asks whether something appears inside a list or a string:
+This is the part that surprises everybody:
 
 ```
->>> "hunter2" in ["password", "123456", "hunter2"]
+>>> True + True + False
+2
+>>> True == 1
 True
+>>> False == 0
+True
+```
+
+`bool` is secretly a kind of `int`.  `True` **is** `1` and `False` **is**
+`0`, not just something that looks like it.  Which means if you have five
+`True`/`False` conditions and want to know how many of them hold, you do
+not need a single `if` - you just add them:
+
+```
+>>> has_length = True
+>>> has_number = True
+>>> has_symbol = False
+>>> has_length + has_number + has_symbol
+2
+```
+
+## The `in` operator
+
+`in` asks whether something appears inside a string (or a list):
+
+```
 >>> "cat" in "concatenate"
 True
 >>> "z" in "hello"
 False
 ```
 
-And `not in` is the opposite, written the way you would say it:
+## Checking for any of several characters
+
+There is no single function for "does this string contain a digit" at this
+point in the dojo - but you already have everything you need.  Chain `in`
+checks together with `or`, one per digit:
 
 ```
->>> password not in COMMON
+>>> password = "Hunter2"
+>>> has_number = ("0" in password or "1" in password or "2" in password
+...               or "3" in password or "4" in password or "5" in password
+...               or "6" in password or "7" in password or "8" in password
+...               or "9" in password)
+>>> has_number
 True
 ```
 
-This is enormously useful and you will use it constantly.
+It is long, but it is only **one idea** - "at least one digit is in here" -
+so it still gets exactly one name.  The same pattern works for any small set
+of characters you are checking for, no matter how many `in` checks it takes.
+
+## Checking for mixed case without a loop
+
+`.upper()` and `.lower()` return a whole new string - they do not tell you
+directly whether a string is "mixed case".  But comparing the original
+against each of them does:
+
+```
+>>> password = "Hunter2"
+>>> password != password.lower()   # True means it HAS an uppercase letter
+True
+>>> password != password.upper()   # True means it HAS a lowercase letter
+True
+```
+
+If converting to lowercase *changed* the string, something in there was
+uppercase.  If converting to uppercase *changed* it, something was
+lowercase.  Mixed case means both are true at once.
 
 ## Name your conditions
 
-When a decision has several parts, do not cram them into one giant `if`:
+When a decision has several parts, do not cram them into one giant
+expression:
 
 ```
-if (username == "root" or username == "admin") and len(password) >= 8 and password not in COMMON:
+score = (len(password) > 8) + (len(password) > 16) + (password != password.lower() and password != password.upper()) + ("0" in password or "1" in password or "2" in password or "3" in password or "4" in password or "5" in password or "6" in password or "7" in password or "8" in password or "9" in password) + ("!" in password or "@" in password or "#" in password or "$" in password or "%" in password)
 ```
 
-That is correct and nobody can read it.  Give each part a name:
+That is correct and nobody can read it, least of all you in a week.  Give
+each part a name:
 
 ```
-name_ok = username == "root" or username == "admin"
-long_enough = len(password) >= 8
-not_common = password not in COMMON
+long_enough = len(password) > 8
+very_long = len(password) > 16
+mixed_case = password != password.lower() and password != password.upper()
+has_number = "0" in password or "1" in password or "2" in password or "3" in password or "4" in password or "5" in password or "6" in password or "7" in password or "8" in password or "9" in password
 
-allowed = name_ok and long_enough and not_common
+score = long_enough + very_long + mixed_case + has_number
 ```
 
-Now the last line reads like a sentence.  Better still, when it comes out
-`False` and you do not know why, you can **print each part** and see
-immediately which one is the problem.  That is the debugging technique this
-challenge is really teaching.
+Now each line reads like a sentence, and when the total comes out wrong you
+can print each part and see immediately which one is to blame.  That is the
+debugging technique this challenge is really teaching.
 
 ## Further Reading
 
@@ -99,51 +158,64 @@ challenge is really teaching.
 
 # Instructions
 
-Write a login checker that shows its working.
+Write a password complexity checker.
 
-Read two lines:
-
-```
-line 1     a username
-line 2     a password
-```
-
-Then print exactly four lines:
+Read one line: a password.  Award one point for each of these that is true,
+and print exactly six lines:
 
 ```
-username ok: <True or False>
-password long enough: <True or False>
-not a common password: <True or False>
-login allowed: <True or False>
+longer than 8: <True or False>
+longer than 16: <True or False>
+mixed case: <True or False>
+has a number: <True or False>
+has a symbol: <True or False>
+score: <total points, 0 to 5>
 ```
 
 The rules:
 
-* **username ok** - the username is `root` or `admin`.  Nothing else.
-* **password long enough** - it is at least 8 characters.  `len()` gives you
-  the length.
-* **not a common password** - it is *not* one of these five:
+* **longer than 8** - the password is **more than** 8 characters.  Exactly 8
+  does not count.
+* **longer than 16** - the password is **more than** 16 characters.  Exactly
+  16 does not count.
+* **mixed case** - it contains at least one uppercase letter **and** at
+  least one lowercase letter.
+* **has a number** - it contains at least one digit, `0` through `9`.
+* **has a symbol** - it contains at least one of these five characters:
+  `! @ # $ %`.  Any other punctuation does not count.
+* **score** - how many of the five rules above are true.  `0` to `5`.
 
-  ```
-  password    123456    hunter2    letmein    qwerty
-  ```
-
-* **login allowed** - all three of the above are true.
-
-So for username `admin` and password `hunter2`:
+So for password `Hunter2!`:
 
 ```
-username ok: True
-password long enough: False
-not a common password: False
-login allowed: False
+longer than 8: False
+longer than 16: False
+mixed case: True
+has a number: True
+has a symbol: True
+score: 3
+```
+
+`Hunter2!` is exactly 8 characters, which is why both length rules say
+`False` - this is the same "exactly on the boundary" trap as the elif
+ladder, and it is checked on purpose.
+
+And for `SuperSecurePass123!`:
+
+```
+longer than 8: True
+longer than 16: True
+mixed case: True
+has a number: True
+has a symbol: True
+score: 5
 ```
 
 Do not write `if` statements that print the words `True` and `False`
 yourself.  Work out each condition as a value, put it in a variable, and let
-the f-string print it.  That is the whole point of the challenge - and it is
-far less typing.
+the f-string print it - and let addition compute `score` for you.  That is
+the whole point of the challenge.
 
 ```
-/challenge/run ./login.py
+/challenge/run ./complexity.py
 ```

@@ -8,6 +8,6 @@ challenges:
   - id: quadratic-formula
     name: The Quadratic Formula
   - id: true-and-false
-    name: True and False
+    name: Password Complexity
   - id: guessing-game
     name: The Guessing Game

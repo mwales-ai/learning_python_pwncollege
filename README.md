@@ -121,10 +121,11 @@ correctly you get the flag.
   `NO ROOTS`.
   * **Skills:** `elif` on a computed value, `**0.5`, combining `sys.argv` with
                 branching, checking argument count
-* **True and False** - Combine conditions with `and`, `or`, and `not` to
-  validate input.
+* **Password Complexity** - Score a password: a point each for being over 8
+  characters, over 16, mixed case, a digit, and a symbol from `! @ # $ %`.
   * **Skills:** booleans, comparison operators, `and`/`or`/`not`, `in`,
-                short-circuit evaluation
+                `bool` is secretly an `int` (so you can add conditions up),
+                checking for a character class without a loop
 * **The Guessing Game** - A `while` loop that keeps asking until the player
   guesses the secret number, printing "too high" or "too low" each time - the
   first challenge that feels like a real *game*.
