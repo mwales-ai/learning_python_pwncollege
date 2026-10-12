@@ -75,7 +75,8 @@ timeout rather than a hang.
 
 Write the number guessing game.
 
-Read the secret number on the first line, then read guesses one per line until
+The secret number arrives as a **command line argument** - `sys.argv[1]` -
+not on standard input.  Read guesses one per line from standard input until
 one of them is right.
 
 For each guess, print exactly one line:
@@ -94,10 +95,15 @@ It took you <number of guesses> guesses.
 
 The count includes the winning guess.
 
-So for this input:
+So run like this:
 
 ```
-50
+./guess.py 50
+```
+
+with this on standard input:
+
+```
 25
 75
 60
@@ -120,7 +126,8 @@ Two things to watch:
 
 * Compare **numbers**, not text.  As strings, `"9"` is greater than `"10"`,
   because comparison goes character by character and `9` comes after `1`.
-  `int()` both the secret and every guess.
+  `int()` both the secret and every guess - remember that `sys.argv` entries
+  are strings too, exactly like `input()`.
 * The input always contains a correct guess eventually, so you do not need to
   handle running out of input.
 
@@ -128,17 +135,44 @@ Two things to watch:
 /challenge/run ./guess.py
 ```
 
-## Now play it properly
+## Now play it for real
 
-The secret comes from the input so the judge can check your game.  For an
-actual game, let the computer pick:
+This is the whole reason the secret is an argument instead of the first
+line of input: the judge can hand your program a number it already knows,
+and *you* can hand it a number neither of you has seen yet, and it is the
+exact same program either way.  No editing your solution back and forth.
+
+Bash can hand you that number itself, no Python needed.  `$RANDOM` is a
+built-in variable that gives you a different number from `0` to `32767`
+every time you read it:
 
 ```
-import random
-secret = random.randint(1, 100)
+$ echo $RANDOM
+4057
+$ echo $RANDOM
+29261
 ```
 
-Then run it and play - it is a genuinely decent game, and you wrote it. If you
-always guess the middle of what is left, you can beat any number from 1 to 100
-in seven guesses.  That strategy has a name, **binary search**, and it is one
-of the most important ideas in computer science.
+`%` brings that into whatever range you want, the same way it does in
+Python.  `$(( ... ))` tells bash to do arithmetic instead of treating it as
+text:
+
+```
+$ echo $(( RANDOM % 100 + 1 ))
+76
+```
+
+Put the two together and hand it straight to your program as the argument:
+
+```
+./guess.py $(( RANDOM % 100 + 1 ))
+```
+
+Bash picks the number, substitutes it into the command before your program
+ever starts, and your program never prints it back - so unless you go
+looking for it, you do not know it either.  Now play: type guesses, read
+`too low` / `too high`, and see how many it takes you.
+
+If you always guess the middle of what is left, you can beat any number
+from 1 to 100 in seven guesses.  That strategy has a name, **binary
+search**, and it is one of the most important ideas in computer science.

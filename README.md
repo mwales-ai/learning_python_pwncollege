@@ -128,8 +128,11 @@ correctly you get the flag.
                 checking for a character class without a loop
 * **The Guessing Game** - A `while` loop that keeps asking until the player
   guesses the secret number, printing "too high" or "too low" each time - the
-  first challenge that feels like a real *game*.
-  * **Skills:** `while` loops, loop conditions, `break`
+  first challenge that feels like a real *game*, because it actually is one:
+  the secret arrives as a command line argument, so the exact program that
+  passes the judge is also one you can hand a real random number and play.
+  * **Skills:** `while` loops, loop conditions, `break`, reusing `sys.argv`
+                from Command Line Arguments, bash's `$RANDOM`
 
 ## Module 4: Loops and Lists
 
