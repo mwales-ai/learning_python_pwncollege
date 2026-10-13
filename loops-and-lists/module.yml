@@ -2,7 +2,7 @@ name: Loops and Lists
 allow_privileged: true
 challenges:
   - id: counting-loops
-    name: Counting Loops
+    name: ASCII Values
   - id: fizzbuzz
     name: FizzBuzz
   - id: lists

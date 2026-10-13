@@ -136,9 +136,10 @@ correctly you get the flag.
 
 ## Module 4: Loops and Lists
 
-* **Counting Loops** - Use `for i in range(...)` to print a countdown, a times
-  table, and a triangle of stars.
-  * **Skills:** `for`, `range()` with 1, 2, and 3 arguments, a negative step
+* **ASCII Values** - Walk a string by index with `for i in range(len(word))`
+  and print each character next to its decimal and hex ASCII value.
+  * **Skills:** `for`, `range()` with 1, 2, and 3 arguments, indexing a
+                string with `[i]`, `ord()` and `chr()`
 * **FizzBuzz** - The classic.  Print the numbers 1 to 100, one per line, but
   print `Fizz` for multiples of 3, `Buzz` for multiples of 5, and `FizzBuzz`
   for multiples of both.

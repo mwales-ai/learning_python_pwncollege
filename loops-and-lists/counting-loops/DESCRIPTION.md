@@ -1,4 +1,11 @@
-# Counting Loops
+# ASCII Values
+
+Every character you have ever typed is secretly a number.  Your computer
+never actually stores the letter `A` - it stores `65`, and only turns it
+back into a letter shape when it draws it on your screen.  Time to see that
+number for yourself.
+
+## for loops and range()
 
 A `while` loop keeps going until something changes.  A `for` loop does
 something a **known number of times**, and that turns out to be most of what
@@ -11,9 +18,7 @@ for i in range(5):
 
 prints `0 1 2 3 4`, each on its own line.
 
-## range()
-
-`range()` produces a sequence of numbers, and it comes in three shapes:
+## range() comes in three shapes
 
 ```
 range(5)           0 1 2 3 4
@@ -30,38 +35,71 @@ range(5, 0, -1)    5 4 3 2 1
 
 **`range()` stops BEFORE the stop value.**
 
-`range(1, 10)` is 1 through 9.  Not 10.  If you want the numbers 1 through 10,
-you write `range(1, 11)`.
+`range(1, 10)` is 1 through 9.  Not 10.  This looks like a design mistake for
+about a week and then starts making sense, because `range(len(word))` gives
+you exactly the valid positions of `word` - which is exactly what you want
+below.
 
-This looks like a design mistake for about a week and then starts making
-sense, because `range(len(mylist))` gives you exactly the valid positions of a
-list - which is what you almost always want.
+## Indexing into a string
 
-Two consequences worth memorising:
-
-* To include N, write `N + 1` as the stop.
-* To count **down** to 1, write `range(n, 0, -1)`.  The stop is 0 because it
-  stops before it, so the last number you actually get is 1.
-
-`range(5, 0)` with no step gives you *nothing at all*.  It is already past the
-stop, so there is nothing to count.  If a loop mysteriously produces no
-output, check this first.
-
-## The loop variable is a real variable
-
-`i` is not just a counter ticking away in the background; you can use it:
+You have already seen square brackets pick one item out of something -
+`sys.argv[0]` is the first item of `sys.argv`.  A string works the same way.
+`word[i]` gives you the single character at position `i`, counting from 0:
 
 ```
-for i in range(1, 11):
-    print(f"7 x {i} = {7 * i}")
+>>> word = "Hi!"
+>>> word[0]
+'H'
+>>> word[1]
+'i'
+>>> word[2]
+'!'
 ```
 
-And remember string repetition from the birthday banner - `"*" * 3` is
-`"***"`.  Put that in a loop and you have drawn a triangle:
+Combine that with `range(len(word))` and you can visit every character, one
+at a time, in order:
 
 ```
-for i in range(1, 4):
-    print("*" * i)
+for i in range(len(word)):
+    print(word[i])
+```
+
+`i` takes on every valid position - `0`, `1`, `2` - and `word[i]` is the
+character sitting there.  This is the loop variable being a real variable,
+not just a counter ticking away in the background: you are using `i` itself
+to reach into `word`.
+
+## ord() and chr(): turning that into a number
+
+`ord()` takes a single character and gives you back the whole number your
+computer actually stores for it - its **ASCII value**.  `chr()` goes the
+other direction, number back to character:
+
+```
+>>> ord("A")
+65
+>>> ord("a")
+97
+>>> ord(" ")
+32
+>>> chr(65)
+'A'
+>>> chr(97)
+'a'
+```
+
+Notice `"A"` and `"a"` are 32 apart, and every letter keeps that same gap -
+that is exactly how `.upper()` and `.lower()` work under the hood.
+
+## Hex, one more time
+
+Hex to Decimal showed you `f"{n:02X}"`: capital letters, no `0x`, padded to
+at least 2 digits - exactly enough for one byte, which is exactly the size
+of an ASCII value.
+
+```
+>>> f"{ord('A'):02X}"
+'41'
 ```
 
 ## Further Reading
@@ -70,51 +108,47 @@ for i in range(1, 4):
   * [Chapter 2 - Flow Control](https://automatetheboringstuff.com/3e/chapter2.html)
 * A Byte of Python
   * [Control Flow](https://python.swaroopch.com/control_flow.html)
+* [The ASCII table](https://www.asciitable.com/) - skim it once. `0`-`9` are
+  consecutive, `A`-`Z` are consecutive, `a`-`z` are consecutive, and none of
+  those three ranges touch each other.
 
 # Instructions
 
-Read one number, `N`, and print three sections.
-
-First the word `Countdown:` on its own line, then the numbers from `N` down to
-`1`, one per line.
-
-Then `Times table:` on its own line, then ten lines of `N` times 1 through 10,
-in this exact format:
+Read one line of text and print one line **per character**:
 
 ```
-N x 1 = ...
+<character> <decimal ASCII value> <hex ASCII value>
 ```
 
-Then `Triangle:` on its own line, then `N` rows of stars: one star on the
-first row, two on the second, up to `N` on the last.
+Each piece is separated by a single space.  The hex value uses the Hex to
+Decimal style: capital letters, no `0x` prefix, at least 2 digits.
 
-For input `3` the whole output is:
+Use a `for` loop over `range(len(...))` and index into the string with `[i]`
+to get each character - that is what this challenge is practicing.  Python
+also has a shorter way to walk a string directly, but you have not been
+taught it yet; you will meet it properly in Loop Over a List.
 
-```
-Countdown:
-3
-2
-1
-Times table:
-3 x 1 = 3
-3 x 2 = 6
-3 x 3 = 9
-3 x 4 = 12
-3 x 5 = 15
-3 x 6 = 18
-3 x 7 = 21
-3 x 8 = 24
-3 x 9 = 27
-3 x 10 = 30
-Triangle:
-*
-**
-***
-```
-
-Each section is a separate `for` loop, and each one needs a different shape of
-`range()`.  That is the exercise.
+So for input `Go Hackers!`:
 
 ```
-/challenge/run ./count.py
+G 71 47
+o 111 6F
+  32 20
+H 72 48
+a 97 61
+c 99 63
+k 107 6B
+e 101 65
+r 114 72
+s 115 73
+! 33 21
+```
+
+That line that looks like it starts with two spaces is not a mistake - the
+character being described on that line **is** a space, and the separator
+right after it is a second space.  `  32 20` is the correct line for a
+space character.
+
+```
+/challenge/run ./ascii.py
 ```
