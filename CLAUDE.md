@@ -18,9 +18,12 @@ Key things the README encodes that are easy to get wrong if you skip it:
 
 * The ordering is deliberate and **not** the ordering a normal Python book
   uses.  Students hit stdout vs stderr, exit codes, and `sys.argv` in module 2,
-  files in module 5, and Unix filters in module 6 - long before functions and
-  dictionaries.  The goal is Python as a *useful tool*, tied back to the Linux
-  Luminarium dojo, not a language-feature tour.
+  functions in module 4, files in module 6, and Unix filters in module 7 -
+  well before dictionaries, which is the one module still held back to the
+  end.  The goal is Python as a *useful tool*, tied back to the Linux
+  Luminarium dojo, not a language-feature tour.  Functions moved early
+  (2026-10-24) specifically so Loops and Lists would have functions already
+  available to combine with loops, not just loops alone.
 * Challenges in the README are **intentionally unnumbered**, because we expect
   to insert new ones between existing ones.  Keep it that way.  Module headings
   stay; per-challenge numbers do not.
@@ -53,18 +56,49 @@ Modules currently built:
 | 1 | `getting-started` | running-interpreter, string-concatenation, hello-hacker, run-it-yourself, variables-and-fstrings, debug-me |
 | 2 | `talking-to-the-terminal` | tippy-tipper, why-are-we-yelling, birthday-banner, hex-to-decimal, two-kinds-of-output, exit-codes, command-line-arguments |
 | 3 | `making-decisions` | if-and-else, elif-ladder, quadratic-formula, true-and-false, guessing-game |
-| 4 | `loops-and-lists` | counting-loops, fizzbuzz, lists, loop-over-a-list, secret-decoder-ring |
-| 5 | `files` | read-a-file, write-a-file, line-by-line, hangman, append-and-transform, game-genie-patcher |
-| 6 | `unix-filters` | read-from-standard-input, write-your-own-grep, in-the-middle-of-a-pipeline, fizzbuzz-the-filter, count-and-total |
-| 7 | `working-with-text` | slicing-strings-apart, your-own-cut |
-| 8 | `functions` | define-and-call, build-a-toolbox, wps-pin-cracker, stock-tracker |
+| 4 | `functions` | define-and-call, wps-pin-cracker |
+| 5 | `loops-and-lists` | counting-loops, fizzbuzz, lists, loop-over-a-list, secret-decoder-ring, stock-tracker |
+| 6 | `files` | read-a-file, write-a-file, line-by-line, hangman, append-and-transform, game-genie-patcher |
+| 7 | `unix-filters` | read-from-standard-input, write-your-own-grep, in-the-middle-of-a-pipeline, fizzbuzz-the-filter, count-and-total |
+| 8 | `working-with-text` | slicing-strings-apart, your-own-cut |
 | 9 | `dictionaries` | lookup-tables, capstone-the-report |
 
-**All nine README modules are built** - 42 challenges as of the last
+**All nine README modules are built** - 41 challenges as of the last
 reshuffle (see git log for the running history of additions/moves/removals;
 do not trust this count blindly, recompute from each module.yml if it
 matters). There is also a dojo-level `DESCRIPTION.md` beside `dojo.yml`,
 which is what pwn.college shows on the dojo's front page.
+
+Functions moved from module 8 to module 4 (2026-10-24), between Making
+Decisions and Loops and Lists, on the theory that Loops and Lists gets
+more interesting challenge options once functions already exist to
+combine with loops. This forced two kinds of cleanup:
+
+* `build-a-toolbox`'s entire premise is "go refactor your FizzBuzz filter
+  from Unix Filters" - a hard dependency on a module that now comes well
+  *after* Functions. No quick fix exists (neither FizzBuzz challenge - the
+  plain one in Loops and Lists or the filter one in Unix Filters - exists
+  yet at this point in the curriculum), so it was pulled out of
+  `functions/module.yml` and the README rather than rewritten. The files
+  are still on disk at `functions/build-a-toolbox/`, just not deployed;
+  revisit or delete later.
+* `define-and-call` and `wps-pin-cracker`'s golden solutions used
+  `for i in range(...)` to read/brute-force a count - rewritten as counted
+  `while` loops (the only loop taught this early now), output unchanged
+  and reverified against the existing hashes.
+* `stock-tracker` moved to the **end** of Loops and Lists instead of
+  staying in Functions - its own DESCRIPTION.md teaches `for date in
+  dates:` and list indexing, i.e. Loop Over a List's exact lesson, so it
+  reads better placed right after that challenge than it would stuck in
+  Functions ahead of lists existing at all. Its solution.py also used to
+  build `dates` with a slice + list comprehension - neither taught by
+  Lists (which only teaches building a list with `.append()` in a loop) -
+  so that got rewritten too, output reverified against the live
+  `st_server` and unchanged.
+
+Everything else that was already in Loops and Lists (the plain FizzBuzz,
+Lists, Loop Over a List, Secret Decoder Ring) needed no changes - they
+never depended on Functions existing, only the reverse direction mattered.
 
 Tippy Tipper, Why Are We Yelling, and Birthday Banner were moved from
 Getting Started into Talking to the Terminal, and Say My Name and Number
@@ -99,9 +133,9 @@ rules out things you would reach for without thinking:
   That is why `command-line-arguments` takes exactly two arguments and indexes
   them, and why `exit-codes` is handed the status to exit with rather than
   deciding it - `if` had not been taught yet either.
-* Module 2 comes before `if`, module 4 before `.split()` and `.join()`.  The
-  `lists` challenge builds its list with a counted loop and `.append()` for
-  exactly this reason.
+* Module 2 comes before `if`, module 5 (loops-and-lists) before `.split()`
+  and `.join()`.  The `lists` challenge builds its list with a counted loop
+  and `.append()` for exactly this reason.
 * Reading an unknown number of lines needs `try/except EOFError`, which is
   never taught.  So challenges take a **count** first, or a sentinel that ends
   the input - see `hangman` and `guessing-game`.

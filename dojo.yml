@@ -7,9 +7,9 @@ modules:
   - id: getting-started
   - id: talking-to-the-terminal
   - id: making-decisions
+  - id: functions
   - id: loops-and-lists
   - id: files
   - id: unix-filters
   - id: working-with-text
-  - id: functions
   - id: dictionaries

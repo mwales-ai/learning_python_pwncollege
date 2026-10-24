@@ -11,3 +11,5 @@ challenges:
     name: Loop Over a List
   - id: secret-decoder-ring
     name: Secret Decoder Ring
+  - id: stock-tracker
+    name: Stock Tracker

@@ -1,17 +1,18 @@
 # Stock Tracker
 
-You just learned how to make a Python program ask another *program* a
-question and read the answer back. Now do the same thing to a program
-running somewhere else entirely - a **web server** - using the same tool
-Linux Luminarium introduced you to for exactly this: `curl`.
+Back in Cracking a WPS PIN you made a Python program ask another *program*
+a question and read the answer back, with `subprocess.run()`. Now do the
+same thing to a program running somewhere else entirely - a **web
+server** - using the same tool Linux Luminarium introduced you to for
+exactly this: `curl`.
 
 ## Why curl instead of a Python library
 
 Python has libraries built specifically for making web requests. This
 dojo is not using one, on purpose: `curl` is a program you already know how
 to run by hand from the terminal, and running it from Python is nothing
-more than the `subprocess.run()` you just learned in Cracking a WPS PIN,
-pointed at a different program.
+more than the `subprocess.run()` from Cracking a WPS PIN, pointed at a
+different program.
 
 ```python
 import subprocess
