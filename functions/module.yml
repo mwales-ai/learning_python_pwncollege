@@ -3,5 +3,7 @@ allow_privileged: true
 challenges:
   - id: define-and-call
     name: Define and Call
+  - id: is-prime
+    name: Is It Prime?
   - id: wps-pin-cracker
     name: Cracking a WPS PIN
