@@ -1,58 +1,25 @@
 # Define and Call
 
+In almost all programming languages you can group a collection of code together
+into a function, and then you can repeatedly call that function over and over,
+and from different places in the code.  Other languages may call it a subroutine
+or method, these concepts are very similar.
+
 ```
 def area(width, height):
     return width * height
 ```
 
-That is a function.  Three parts:
+Parts of a function:
 
 * `def` and a **name**
-* **parameters** in brackets - the values it needs
-* a **body**, indented, ending in `return`
+* **argument list** in parentheses - the values it needs
+* a **body**, indented with spaces or tabs (be consistent)
+* Optional return statements to return a value, or exit function early
 
-Defining it does not run it.  Nothing happens until you **call** it:
-
-```
->>> area(17, 6)
-102
-```
-
-Defining and calling are separate steps, and "I wrote the function but nothing
-happened" is a rite of passage.  The `def` block only teaches Python what the
-name means.
-
-## return is not print
-
-This is the important one.
-
-```
-def area_printer(w, h):
-    print(w * h)
-
-def area(w, h):
-    return w * h
-```
-
-Both put `102` on your screen when you use them.  They are not remotely the
-same:
-
-```
->>> total = area(17, 6) + area(2, 3)
->>> total
-108
-
->>> total = area_printer(17, 6) + area_printer(2, 3)
-TypeError: unsupported operand type(s) for +: 'NoneType' and 'NoneType'
-```
-
-A function that prints has **given its answer away to the screen**.  A function
-that returns hands the value back to your program, which can then print it,
-add it, store it, or pass it on.
-
-**Return the value.  Let the caller decide what to do with it.**
-
-A function with no `return` gives back `None`.  If your output says `None`,
+You can write a function with no return statements at all.  The function will
+stop executing when you get to the end of the indented lines of code.  A
+function with no `return` gives back `None`.  If your output says `None`,
 that is what happened.
 
 ## Parameters are local
