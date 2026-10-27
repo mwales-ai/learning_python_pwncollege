@@ -26,61 +26,67 @@ Variables and f-strings:
 A remainder of `0` means it divides evenly.  So "does `d` divide `n`
 evenly?" is just `n % d == 0`.
 
-## Building is_prime() with a while loop
+## is_factor(): one small function, given to you
 
-The straightforward plan: try every number from `2` up to `n - 1` as a
-possible divisor.  If any of them divides `n` evenly, `n` is not prime.  If
-none of them do, it is.
+Here is a function that answers one tiny question - does `divisor` divide
+`number` evenly?
 
 ```python
-def is_prime(n):
-    if n < 2:
-        return False
-
-    divisor = 2
-    while divisor < n:
-        if n % divisor == 0:
-            return False
-        divisor = divisor + 1
-
-    return True
+def is_factor(number, divisor):
+    return number % divisor == 0
 ```
 
-Notice `return` inside a `while` loop works exactly like it does anywhere
-else - the moment `is_prime` finds a divisor, it hands back `False` and
-stops right there, loop and all.  You do not need a flag variable to
-remember what happened; returning **is** how you report it.
+That is the entire function.  Add it to your script exactly as written.
+Everything else in this challenge - including `is_prime()` itself - is
+something you are going to build by **calling `is_factor()` over and over**
+from inside a `while` loop, not by writing one giant function that does
+everything at once.
+
+## Calling it from a loop
+
+Here is that pattern put to work on a different question: how many
+divisors does `12` have in total?
+
+```python
+def count_divisors(number):
+    count = 0
+    divisor = 1
+    while divisor <= number:
+        if is_factor(number, divisor):
+            count = count + 1
+        divisor = divisor + 1
+    return count
+```
+
+`count_divisors(12)` returns `6` - `1`, `2`, `3`, `4`, `6`, and `12` all
+divide it evenly.  Notice the shape: a loop variable (`divisor`) starts
+somewhere sensible, `is_factor()` gets asked about it on every trip through
+the loop, and `divisor` increases by one each time until the loop's
+condition says stop.
+
+`is_prime()` is going to have that exact same shape.  It just asks a
+different question (is there **any** divisor that divides evenly, instead
+of counting all of them) and gives up the moment it finds one - which
+means `return` instead of `count = count + 1`.
 
 ## The speedup almost nobody is shown
 
-That function works, but it does far more work than it needs to.  Think
-about `n = 100`. If a number bigger than `10` divides `100` evenly - say,
-`50` - then `100 / 50 = 2`, and `2` is smaller than `10` and *also* divides
-`100` evenly. Divisors always come in pairs that multiply back to `n`, and
-one member of every pair is never bigger than the number's own square root.
+An `is_prime()` built the obvious way - checking every divisor from `2` up
+to `n - 1` - works, but does far more work than it needs to.  Think about
+`n = 100`.  If a number bigger than `10` divides `100` evenly - say, `50` -
+then `100 / 50 = 2`, and `2` is smaller than `10` and *also* divides `100`
+evenly.  Divisors always come in pairs that multiply back to `n`, and one
+member of every pair is never bigger than the number's own square root.
 
 That means you only ever need to check divisors up to `sqrt(n)` - if
 nothing up to there divides `n`, nothing bigger will either, because its
-"partner" would already have been caught. You do not even need a square
+"partner" would already have been caught.  You do not even need a square
 root function to use this: `divisor` up to `sqrt(n)` is exactly the same
 set of numbers as `divisor * divisor <= n`, and that version only uses
-multiplication, which you already have.
+multiplication, which you already have.  Use that as your loop's stopping
+condition instead of `divisor < n`.
 
-```python
-def is_prime(n):
-    if n < 2:
-        return False
-
-    divisor = 2
-    while divisor * divisor <= n:
-        if n % divisor == 0:
-            return False
-        divisor = divisor + 1
-
-    return True
-```
-
-For a small `n` the difference is invisible. For a six-digit `n` it is the
+For a small `n` the difference is invisible.  For a six-digit `n` it is the
 difference between instant and noticeably slow - and the judge for this
 challenge uses numbers large enough that it matters.
 
@@ -96,8 +102,22 @@ challenge uses numbers large enough that it matters.
 
 # Instructions
 
-Write an `is_prime(n)` function, using the while-loop-and-`%` technique
-above, and use it to answer a second question: given a number, find the
+Include the `is_factor()` function from above in your script, exactly as
+given. Then write `is_prime(n)` yourself - a `while` loop that calls
+`is_factor(n, divisor)` once per divisor, stopping at `divisor * divisor <=
+n` instead of `divisor < n`, and returning the moment it finds one, the
+way `count_divisors()` above called `is_factor()` but did not write its
+own copy of the `%` check.
+
+Handle numbers less than `2` before the loop even starts, the way "What
+makes a number prime" defined them - they are not prime, full stop, and no
+amount of looping will discover a divisor for a number that has none.  If
+you skip this, `is_prime(0)`, `is_prime(1)`, and every negative number will
+come back `True` by accident: with `divisor` starting at `2`, `divisor *
+divisor <= n` is already false before the loop runs even once, so a loop
+that only returns `False` *inside* itself never gets the chance to.
+
+Use `is_prime()` to answer a second question: given a number, find the
 first prime number that is **greater than or equal to it**.
 
 Your program takes one command line argument - a whole number, `n`, which

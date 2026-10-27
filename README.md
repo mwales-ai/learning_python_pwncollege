@@ -139,10 +139,13 @@ correctly you get the flag.
 * **Define and Call** - Write a function that takes an argument, does the work,
   and `return`s a value; call it several times.
   * **Skills:** `def`, parameters, `return` vs `print`, local variables
-* **Is It Prime?** - Write `is_prime(n)` with a `while` loop and `%`, then use
-  it to find a number itself or the next prime after it.
-  * **Skills:** `return` inside a loop, the divisors-come-in-pairs speedup
-                (`divisor * divisor <= n`), a function controlling a search
+* **Is It Prime?** - Given a one-line `is_factor()` function, build
+  `is_prime(n)` yourself by calling it from a `while` loop, then use it to
+  find a number itself or the next prime after it.
+  * **Skills:** calling a given function instead of reaching for `%`
+                directly, `return` inside a loop, the divisors-come-in-pairs
+                speedup (`divisor * divisor <= n`), a function controlling
+                a search
   * **Discussion:** This is the same `%`-and-loop idea RSA encryption is
     built on - picking huge primes is the whole security model.
 * **Cracking a WPS PIN** - Brute-force an 8-digit PIN behind a provided
