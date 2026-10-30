@@ -58,7 +58,7 @@ functions at the top of the file, the code that uses them underneath.
 ## Further Reading
 
 * Automate the Boring Stuff with Python
-  * [Chapter 3 - Functions](https://automatetheboringstuff.com/3e/chapter3.html)
+  * [Chapter 4 - Functions](https://automatetheboringstuff.com/3e/chapter4.html)
 * A Byte of Python
   * [Functions](https://python.swaroopch.com/functions.html)
 

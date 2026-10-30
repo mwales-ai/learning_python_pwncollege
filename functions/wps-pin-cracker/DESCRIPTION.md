@@ -134,7 +134,7 @@ looking for). Once you have confirmed digits 1-4 and are searching digits
   the real vulnerability this challenge reproduces, disclosed by Stefan
   Viehböck in December 2011
 * Automate the Boring Stuff with Python
-  * [Chapter 3 - Functions](https://automatetheboringstuff.com/3e/chapter3.html)
+  * [Chapter 4 - Functions](https://automatetheboringstuff.com/3e/chapter4.html)
 
 # Instructions
 

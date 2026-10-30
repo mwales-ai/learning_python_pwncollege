@@ -96,7 +96,7 @@ file the *shape* of the problem away. You will meet ways to fix it later.
 ## Further Reading
 
 * Automate the Boring Stuff with Python
-  * [Chapter 3 - Functions](https://automatetheboringstuff.com/3e/chapter3.html)
+  * [Chapter 4 - Functions](https://automatetheboringstuff.com/3e/chapter4.html)
 * A Byte of Python
   * [Functions](https://python.swaroopch.com/functions.html)
 * [Wikipedia: ReDoS](https://en.wikipedia.org/wiki/ReDoS) - the regular
