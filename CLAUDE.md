@@ -56,14 +56,14 @@ Modules currently built:
 | 1 | `getting-started` | running-interpreter, string-concatenation, hello-hacker, run-it-yourself, variables-and-fstrings, debug-me |
 | 2 | `talking-to-the-terminal` | tippy-tipper, why-are-we-yelling, birthday-banner, hex-to-decimal, two-kinds-of-output, exit-codes, command-line-arguments |
 | 3 | `making-decisions` | if-and-else, elif-ladder, quadratic-formula, true-and-false, guessing-game |
-| 4 | `functions` | define-and-call, is-prime, wps-pin-cracker |
+| 4 | `functions` | define-and-call, is-prime, fibonacci, wps-pin-cracker |
 | 5 | `loops-and-lists` | counting-loops, fizzbuzz, lists, loop-over-a-list, secret-decoder-ring, stock-tracker |
 | 6 | `files` | read-a-file, write-a-file, line-by-line, hangman, append-and-transform, game-genie-patcher |
 | 7 | `unix-filters` | read-from-standard-input, write-your-own-grep, in-the-middle-of-a-pipeline, fizzbuzz-the-filter, count-and-total |
 | 8 | `working-with-text` | slicing-strings-apart, your-own-cut |
 | 9 | `dictionaries` | lookup-tables, capstone-the-report |
 
-**All nine README modules are built** - 42 challenges as of the last
+**All nine README modules are built** - 43 challenges as of the last
 reshuffle (see git log for the running history of additions/moves/removals;
 do not trust this count blindly, recompute from each module.yml if it
 matters). There is also a dojo-level `DESCRIPTION.md` beside `dojo.yml`,

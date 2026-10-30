@@ -32,7 +32,7 @@ online Python reference books that I would suggest for new students:
 
 # Challenges and Concepts
 
-The dojo is 42 challenges, grouped into 9 modules.  The challenges are
+The dojo is 43 challenges, grouped into 9 modules.  The challenges are
 deliberately *not* numbered - we expect to insert new ones between existing
 ones as the material gets refined - but the order within and between modules is
 meaningful.  That order gets to *useful* things (talking to the terminal,
@@ -148,6 +148,15 @@ correctly you get the flag.
                 a search
   * **Discussion:** This is the same `%`-and-loop idea RSA encryption is
     built on - picking huge primes is the whole security model.
+* **Fibonacci Numbers** - Write a recursive `fib(n)`, two base cases and two
+  recursive calls, after seeing `factorial()` as the one-base-case,
+  one-call warm up.
+  * **Skills:** recursion, base case vs. recursive case, a function with
+                more than one base case and more than one recursive call
+  * **Discussion:** Naive recursive Fibonacci is exponentially slow -
+    `fib(30)` alone makes over two million calls - which is the same shape
+    of bug as a real "algorithmic complexity attack" (see ReDoS).  Nothing
+    here is wrong, it is just redoing the same work over and over.
 * **Cracking a WPS PIN** - Brute-force an 8-digit PIN behind a provided
   oracle program in under 11,000 guesses instead of 100,000,000, by
   exploiting the same two-stage validation leak and checksum shortcut that
