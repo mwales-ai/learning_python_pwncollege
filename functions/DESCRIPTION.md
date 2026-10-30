@@ -10,23 +10,20 @@ write your own.
 
 Functions buy you four things:
 
-* **A name for an idea.**  `fizzbuzz(n)` says what it does.  Twelve lines of
-  `if` and `%` in the middle of a loop does not.
+* **A name for an idea.**  `encrypt_msg(p)` says what it does. You can usually
+  get a good idea of what a chunk of code in a function does by looking at the
+  name. 
 * **Write it once.**  Copy-pasted code has to be fixed everywhere, and you will
-  always miss one.
-* **Somewhere to look when it breaks.**  If the FizzBuzz answers are wrong, the
-  bug is in `fizzbuzz()`.  Not somewhere in two hundred lines.
-* **Reuse.**  A function that *returns* a value can be used anywhere.  One that
-  prints can only ever do the one thing.
-
-That last point is the heart of this module.  **`return` is not `print`.**
-`print` shows a human something.  `return` hands a value back to the code that
-asked for it.  Beginners reach for `print` because they can see it working;
-the moment you need that value for anything else, you have to rewrite the
-function.
-
-By the end of this module you will take a program you already wrote and
-rearrange it into pieces - which is what real programming mostly is.
+  always miss one. A popular theme in programming is _D.R.Y._ which stands for
+  Don't Repeat Yourself. If you see a chunk of code that is duplicated, turn it
+  into a function.
+* **Fix it Once**  Nobody is perfect, your code will have bugs from time to
+  time.  The only thing worse than fixing a bug is finding it and fixing it
+  again later in a different part of your program.
+* **Reuse.**  You can call a function as many timea as you want.  Anytime your
+  code needs to repeat what the function does, call it instead.  Saves us all
+  that typing.  Maybe you even use this function later again in a different
+  program too.
 
 ## Further Reading
 
