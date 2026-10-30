@@ -17,7 +17,7 @@ Functions buy you four things:
   always miss one. A popular theme in programming is _D.R.Y._ which stands for
   Don't Repeat Yourself. If you see a chunk of code that is duplicated, turn it
   into a function.
-* **Fix it Once**  Nobody is perfect, your code will have bugs from time to
+* **Fix it Once.**  Nobody is perfect, your code will have bugs from time to
   time.  The only thing worse than fixing a bug is finding it and fixing it
   again later in a different part of your program.
 * **Reuse.**  You can call a function as many timea as you want.  Anytime your
