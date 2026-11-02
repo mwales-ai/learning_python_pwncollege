@@ -1,6 +1,8 @@
 name: Loops and Lists
 allow_privileged: true
 challenges:
+  - id: guessing-game
+    name: The Guessing Game
   - id: counting-loops
     name: ASCII Values
   - id: fizzbuzz

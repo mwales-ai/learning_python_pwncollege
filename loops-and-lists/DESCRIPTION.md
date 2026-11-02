@@ -6,8 +6,10 @@ it says "now do that again for the next one", and that is what a **loop** is.
 
 This module is about the two ideas that make loops worth having:
 
-* **Loops** let you repeat work without repeating yourself.  A `for` loop over
-  a range of numbers, or over the characters of a string, replaces a hundred
+* **Loops** let you repeat work without repeating yourself.  A `while` loop
+  repeats until a condition changes - you do not know in advance how many
+  times.  A `for` loop over a range of numbers, or over the characters of a
+  string, repeats a *known* number of times, and replaces a hundred
   copy-pasted lines with three.
 * **Lists** let one variable hold many values, so you have something worth
   looping over in the first place.

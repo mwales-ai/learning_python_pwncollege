@@ -56,8 +56,8 @@ Modules currently built:
 |--------|-----------|------------|
 | 1 | `getting-started` | running-interpreter, string-concatenation, hello-hacker, run-it-yourself, variables-and-fstrings, debug-me |
 | 2 | `talking-to-the-terminal` | tippy-tipper, why-are-we-yelling, birthday-banner, hex-to-decimal, two-kinds-of-output, exit-codes, command-line-arguments |
-| 3 | `making-decisions` | if-and-else, elif-ladder, quadratic-formula, true-and-false, guessing-game |
-| 4 | `loops-and-lists` | counting-loops, fizzbuzz, lists, loop-over-a-list, secret-decoder-ring |
+| 3 | `making-decisions` | if-and-else, elif-ladder, quadratic-formula, true-and-false |
+| 4 | `loops-and-lists` | guessing-game, counting-loops, fizzbuzz, lists, loop-over-a-list, secret-decoder-ring |
 | 5 | `functions` | define-and-call, is-prime, fibonacci, wps-pin-cracker, stock-tracker |
 | 6 | `files` | read-a-file, write-a-file, line-by-line, hangman, append-and-transform, game-genie-patcher |
 | 7 | `unix-filters` | read-from-standard-input, write-your-own-grep, in-the-middle-of-a-pipeline, fizzbuzz-the-filter, count-and-total |
@@ -122,6 +122,24 @@ Functions and Loops and Lists no matter which of modules 4/5 each one is.
 **Moral:** before writing a challenge that assumes "Functions comes before
 Loops and Lists" or vice versa as a fact, check `dojo.yml`/the README -
 this has now flipped twice.
+
+The Guessing Game also moved (2026-11-02), from the end of Making
+Decisions to the **start** of Loops and Lists - it teaches the `while`
+loop, which is a loop, not a decision, and now sits right before `for`
+(ASCII Values) the same way it always immediately preceded it before (the
+two were already adjacent across the module boundary; this just moves the
+boundary instead of the challenge's neighbors). Updated both
+`module.yml`s, the README, and both modules' own `DESCRIPTION.md`:
+Making Decisions dropped its "`while` - keep doing something until a
+condition changes" bullet, and Loops and Lists' intro now mentions `while`
+alongside `for` as the two loop shapes this module covers. No challenge
+content changed - just the one stale path comment in solution.py (`making-
+decisions / guessing-game` -> `loops-and-lists / guessing-game`).
+
+Nice side effect: `CLAUDE.md`'s own "Modules 1 to 3 come before loops, so
+those challenges must be loop free" claim (two sections below) used to be
+false the moment you checked it - Guessing Game, in module 3, used a
+`while` loop. It is now actually true.
 
 Tippy Tipper, Why Are We Yelling, and Birthday Banner were moved from
 Getting Started into Talking to the Terminal, and Say My Name and Number

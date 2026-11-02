@@ -126,6 +126,9 @@ correctly you get the flag.
   * **Skills:** booleans, comparison operators, `and`/`or`/`not`, `in`,
                 `bool` is secretly an `int` (so you can add conditions up),
                 checking for a character class without a loop
+
+## Module 4: Loops and Lists
+
 * **The Guessing Game** - A `while` loop that keeps asking until the player
   guesses the secret number, printing "too high" or "too low" each time - the
   first challenge that feels like a real *game*, because it actually is one:
@@ -133,9 +136,6 @@ correctly you get the flag.
   passes the judge is also one you can hand a real random number and play.
   * **Skills:** `while` loops, loop conditions, `break`, reusing `sys.argv`
                 from Command Line Arguments, bash's `$RANDOM`
-
-## Module 4: Loops and Lists
-
 * **ASCII Values** - Walk a string by index with `for i in range(len(word))`
   and print each character next to its decimal and hex ASCII value.
   * **Skills:** `for`, `range()` with 1, 2, and 3 arguments, indexing a

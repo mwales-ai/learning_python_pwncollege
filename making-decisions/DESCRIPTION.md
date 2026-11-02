@@ -10,8 +10,6 @@ next.
 * `if` and `else` - do this, otherwise do that.
 * `elif` - a ladder of choices, taken in order.
 * `and`, `or`, `not`, and `in` - combining several conditions into one answer.
-* `while` - keep doing something *until* a condition changes, which is the
-  first time your program controls how many times it repeats.
 
 ## Further Reading
 

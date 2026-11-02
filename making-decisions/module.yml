@@ -9,5 +9,3 @@ challenges:
     name: The Quadratic Formula
   - id: true-and-false
     name: Password Complexity
-  - id: guessing-game
-    name: The Guessing Game
