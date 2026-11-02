@@ -67,7 +67,7 @@ You do not need `math.sqrt()` for this.  Raising a number to the power
 1.4142135623730951
 ```
 
-Combined with `round()` from Tippy Tipper, that is everything you need.
+Combined with `round()` learned in Tippy Tipper, that is everything you need.
 
 ## Reading the coefficients from the command line
 
