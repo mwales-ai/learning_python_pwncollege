@@ -9,3 +9,5 @@ challenges:
     name: Fibonacci Numbers
   - id: wps-pin-cracker
     name: Cracking a WPS PIN
+  - id: stock-tracker
+    name: Stock Tracker

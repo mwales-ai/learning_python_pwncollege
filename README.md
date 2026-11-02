@@ -134,7 +134,41 @@ correctly you get the flag.
   * **Skills:** `while` loops, loop conditions, `break`, reusing `sys.argv`
                 from Command Line Arguments, bash's `$RANDOM`
 
-## Module 4: Functions
+## Module 4: Loops and Lists
+
+* **ASCII Values** - Walk a string by index with `for i in range(len(word))`
+  and print each character next to its decimal and hex ASCII value.
+  * **Skills:** `for`, `range()` with 1, 2, and 3 arguments, indexing a
+                string with `[i]`, `ord()` and `chr()`
+* **FizzBuzz** - The classic.  Print the numbers 1 to 100, one per line, but
+  print `Fizz` for multiples of 3, `Buzz` for multiples of 5, and `FizzBuzz`
+  for multiples of both.
+  * **Skills:** `%`, the divisibility test `n % 3 == 0`, loop + `if`/`elif`,
+                branch order
+  * **Discussion:** This exact problem is famous as a screening question handed
+    to new grads and new software engineers in job interviews - not because it
+    is hard, but because it quickly shows whether someone can turn a
+    plain-English rule into working code.  You are doing it in week one.
+* **Lists** - Build a list, index it, slice it, `append()` to it, and take its
+  `len()`.
+  * **Skills:** creating and indexing a list, zero-based and negative indexes,
+                `.append()`, `IndexError`
+* **Loop Over a List** - Walk a list to find the biggest item, the total, and
+  the average.
+  * **Skills:** the accumulator pattern, `for item in list:`,
+                `sum()`/`min()`/`max()`
+* **Secret Decoder Ring** - You are handed the key to a substitution cipher -
+  one line of original characters, and underneath it what each was turned into
+  - followed by a pile of intercepted messages to decode.  The real lesson is
+  that a position in one line maps to the same position in the other.
+  * **Skills:** looping over string characters, `.index()`, guarding with `in`,
+                the accumulator pattern
+  * **Discussion:** Substitution ciphers are genuinely ancient - Caesar used
+    one - and this is the first challenge whose output is something you would
+    actually want to read.  We come back to this problem in the dictionaries
+    module, where it gets much shorter.
+
+## Module 5: Functions
 
 * **Define and Call** - Write a function that takes an argument, does the work,
   and `return`s a value; call it several times.
@@ -168,40 +202,6 @@ correctly you get the flag.
     `pin_verify` oracle leaks "which half was wrong" exactly the way a
     real WPS-vulnerable access point did, and the checksum formula that
     removes the 8th digit from the search is the real published one.
-
-## Module 5: Loops and Lists
-
-* **ASCII Values** - Walk a string by index with `for i in range(len(word))`
-  and print each character next to its decimal and hex ASCII value.
-  * **Skills:** `for`, `range()` with 1, 2, and 3 arguments, indexing a
-                string with `[i]`, `ord()` and `chr()`
-* **FizzBuzz** - The classic.  Print the numbers 1 to 100, one per line, but
-  print `Fizz` for multiples of 3, `Buzz` for multiples of 5, and `FizzBuzz`
-  for multiples of both.
-  * **Skills:** `%`, the divisibility test `n % 3 == 0`, loop + `if`/`elif`,
-                branch order
-  * **Discussion:** This exact problem is famous as a screening question handed
-    to new grads and new software engineers in job interviews - not because it
-    is hard, but because it quickly shows whether someone can turn a
-    plain-English rule into working code.  You are doing it in week one.
-* **Lists** - Build a list, index it, slice it, `append()` to it, and take its
-  `len()`.
-  * **Skills:** creating and indexing a list, zero-based and negative indexes,
-                `.append()`, `IndexError`
-* **Loop Over a List** - Walk a list to find the biggest item, the total, and
-  the average.
-  * **Skills:** the accumulator pattern, `for item in list:`,
-                `sum()`/`min()`/`max()`
-* **Secret Decoder Ring** - You are handed the key to a substitution cipher -
-  one line of original characters, and underneath it what each was turned into
-  - followed by a pile of intercepted messages to decode.  The real lesson is
-  that a position in one line maps to the same position in the other.
-  * **Skills:** looping over string characters, `.index()`, guarding with `in`,
-                the accumulator pattern
-  * **Discussion:** Substitution ciphers are genuinely ancient - Caesar used
-    one - and this is the first challenge whose output is something you would
-    actually want to read.  We come back to this problem in the dictionaries
-    module, where it gets much shorter.
 * **Stock Tracker** - Query a localhost price server with `curl`, one day
   at a time, to find the single best day to buy and single best day to
   sell a stock.

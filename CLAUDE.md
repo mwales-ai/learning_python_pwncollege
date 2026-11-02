@@ -18,12 +18,13 @@ Key things the README encodes that are easy to get wrong if you skip it:
 
 * The ordering is deliberate and **not** the ordering a normal Python book
   uses.  Students hit stdout vs stderr, exit codes, and `sys.argv` in module 2,
-  functions in module 4, files in module 6, and Unix filters in module 7 -
-  well before dictionaries, which is the one module still held back to the
-  end.  The goal is Python as a *useful tool*, tied back to the Linux
-  Luminarium dojo, not a language-feature tour.  Functions moved early
-  (2026-10-24) specifically so Loops and Lists would have functions already
-  available to combine with loops, not just loops alone.
+  loops and lists in module 4, functions in module 5, files in module 6,
+  and Unix filters in module 7 - well before dictionaries, which is the one
+  module still held back to the end.  The goal is Python as a *useful
+  tool*, tied back to the Linux Luminarium dojo, not a language-feature
+  tour.  Loops and Lists and Functions have swapped places more than once
+  (see the history note below) - check module.yml, not your memory of a
+  past session, before assuming which one currently comes first.
 * Challenges in the README are **intentionally unnumbered**, because we expect
   to insert new ones between existing ones.  Keep it that way.  Module headings
   stay; per-challenge numbers do not.
@@ -56,8 +57,8 @@ Modules currently built:
 | 1 | `getting-started` | running-interpreter, string-concatenation, hello-hacker, run-it-yourself, variables-and-fstrings, debug-me |
 | 2 | `talking-to-the-terminal` | tippy-tipper, why-are-we-yelling, birthday-banner, hex-to-decimal, two-kinds-of-output, exit-codes, command-line-arguments |
 | 3 | `making-decisions` | if-and-else, elif-ladder, quadratic-formula, true-and-false, guessing-game |
-| 4 | `functions` | define-and-call, is-prime, fibonacci, wps-pin-cracker |
-| 5 | `loops-and-lists` | counting-loops, fizzbuzz, lists, loop-over-a-list, secret-decoder-ring, stock-tracker |
+| 4 | `loops-and-lists` | counting-loops, fizzbuzz, lists, loop-over-a-list, secret-decoder-ring |
+| 5 | `functions` | define-and-call, is-prime, fibonacci, wps-pin-cracker, stock-tracker |
 | 6 | `files` | read-a-file, write-a-file, line-by-line, hangman, append-and-transform, game-genie-patcher |
 | 7 | `unix-filters` | read-from-standard-input, write-your-own-grep, in-the-middle-of-a-pipeline, fizzbuzz-the-filter, count-and-total |
 | 8 | `working-with-text` | slicing-strings-apart, your-own-cut |
@@ -100,6 +101,28 @@ Everything else that was already in Loops and Lists (the plain FizzBuzz,
 Lists, Loop Over a List, Secret Decoder Ring) needed no changes - they
 never depended on Functions existing, only the reverse direction mattered.
 
+**Reverted (2026-11-02):** Loops and Lists moved back in front of
+Functions (module 4 and 5 again, in that order), undoing the swap above.
+`stock-tracker` moved with it - back into Functions, appended after
+`wps-pin-cracker` this time (it needs `subprocess.run()` from there), now
+that Loops and Lists being first means its `for date in dates:` /
+`.append()` dependencies are satisfied either way. Its DESCRIPTION.md and
+solution.py needed no content changes, just a path-comment fix (`Solution:
+loops-and-lists / stock-tracker` -> `functions / stock-tracker`) - the
+"Back in Cracking a WPS PIN" and "the accumulator pattern from Loop Over a
+List" references in its text both still read correctly regardless of
+which module order is active, since neither claims a specific distance.
+`define-and-call` and `wps-pin-cracker` kept their `while`-loop solutions
+from the previous swap rather than reverting to `for`/`range()` - no need,
+they still work correctly either way - but their stale comments claiming
+"Functions now comes before Loops and Lists" were fixed since that is
+false again. `build-a-toolbox` remains shelved regardless of this swap -
+its dependency is on Unix Filters (module 7), which stays after both
+Functions and Loops and Lists no matter which of modules 4/5 each one is.
+**Moral:** before writing a challenge that assumes "Functions comes before
+Loops and Lists" or vice versa as a fact, check `dojo.yml`/the README -
+this has now flipped twice.
+
 Tippy Tipper, Why Are We Yelling, and Birthday Banner were moved from
 Getting Started into Talking to the Terminal, and Say My Name and Number
 Cruncher were deleted outright (2026-09-30/10-03): their skills all
@@ -133,7 +156,7 @@ rules out things you would reach for without thinking:
   That is why `command-line-arguments` takes exactly two arguments and indexes
   them, and why `exit-codes` is handed the status to exit with rather than
   deciding it - `if` had not been taught yet either.
-* Module 2 comes before `if`, module 5 (loops-and-lists) before `.split()`
+* Module 2 comes before `if`, module 4 (loops-and-lists) before `.split()`
   and `.join()`.  The `lists` challenge builds its list with a counted loop
   and `.append()` for exactly this reason.
 * Reading an unknown number of lines needs `try/except EOFError`, which is
