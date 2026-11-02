@@ -32,7 +32,7 @@ online Python reference books that I would suggest for new students:
 
 # Challenges and Concepts
 
-The dojo is 43 challenges, grouped into 9 modules.  The challenges are
+The dojo is 44 challenges, grouped into 9 modules.  The challenges are
 deliberately *not* numbered - we expect to insert new ones between existing
 ones as the material gets refined - but the order within and between modules is
 meaningful.  That order gets to *useful* things (talking to the terminal,
@@ -136,6 +136,12 @@ correctly you get the flag.
   passes the judge is also one you can hand a real random number and play.
   * **Skills:** `while` loops, loop conditions, `break`, reusing `sys.argv`
                 from Command Line Arguments, bash's `$RANDOM`
+* **Is It a Palindrome?** - Walk in from both ends of a string with a
+  `while` loop, comparing characters as you go, to decide whether it reads
+  the same forwards and backwards.
+  * **Skills:** indexing a string with `[i]`, the `len(word) - 1` last
+                position, a two-pointer walk, a flag variable that can
+                only turn `False`
 * **ASCII Values** - Walk a string by index with `for i in range(len(word))`
   and print each character next to its decimal and hex ASCII value.
   * **Skills:** `for`, `range()` with 1, 2, and 3 arguments, indexing a

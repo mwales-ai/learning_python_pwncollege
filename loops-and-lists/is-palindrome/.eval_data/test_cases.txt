@@ -1,0 +1,22 @@
+racecar
+END_TEST_CASE
+python
+END_TEST_CASE
+level
+END_TEST_CASE
+noon
+END_TEST_CASE
+hello
+END_TEST_CASE
+a
+END_TEST_CASE
+aa
+END_TEST_CASE
+ab
+END_TEST_CASE
+wow mom wow
+END_TEST_CASE
+able was i ere i saw elba
+END_TEST_CASE
+not a palindrome
+END_TEST_CASE

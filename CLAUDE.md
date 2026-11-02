@@ -57,14 +57,14 @@ Modules currently built:
 | 1 | `getting-started` | running-interpreter, string-concatenation, hello-hacker, run-it-yourself, variables-and-fstrings, debug-me |
 | 2 | `talking-to-the-terminal` | tippy-tipper, why-are-we-yelling, birthday-banner, hex-to-decimal, two-kinds-of-output, exit-codes, command-line-arguments |
 | 3 | `making-decisions` | if-and-else, elif-ladder, quadratic-formula, true-and-false |
-| 4 | `loops-and-lists` | guessing-game, counting-loops, fizzbuzz, lists, loop-over-a-list, secret-decoder-ring |
+| 4 | `loops-and-lists` | guessing-game, is-palindrome, counting-loops, fizzbuzz, lists, loop-over-a-list, secret-decoder-ring |
 | 5 | `functions` | define-and-call, is-prime, fibonacci, wps-pin-cracker, stock-tracker |
 | 6 | `files` | read-a-file, write-a-file, line-by-line, hangman, append-and-transform, game-genie-patcher |
 | 7 | `unix-filters` | read-from-standard-input, write-your-own-grep, in-the-middle-of-a-pipeline, fizzbuzz-the-filter, count-and-total |
 | 8 | `working-with-text` | slicing-strings-apart, your-own-cut |
 | 9 | `dictionaries` | lookup-tables, capstone-the-report |
 
-**All nine README modules are built** - 43 challenges as of the last
+**All nine README modules are built** - 44 challenges as of the last
 reshuffle (see git log for the running history of additions/moves/removals;
 do not trust this count blindly, recompute from each module.yml if it
 matters). There is also a dojo-level `DESCRIPTION.md` beside `dojo.yml`,
@@ -141,6 +141,16 @@ those challenges must be loop free" claim (two sections below) used to be
 false the moment you checked it - Guessing Game, in module 3, used a
 `while` loop. It is now actually true.
 
+Added `is-palindrome` right after it (2026-11-02) - second challenge in
+Loops and Lists, "Is It a Palindrome?". It reuses the `while` loop from
+Guessing Game and is the actual FIRST introduction of string indexing
+(`word[i]`) and the `len(word) - 1` last-position rule, via a two-pointer
+walk comparing characters from both ends inward. This pushed ASCII
+Values down to third and meant ASCII Values' own "Indexing into a
+string" section needed a rewrite - it used to introduce `word[i]` fresh;
+now it recaps Is It a Palindrome? and spends its own words on
+`range(len(word))` and left-to-right iteration instead, which is the
+part that is actually new there.
 Tippy Tipper, Why Are We Yelling, and Birthday Banner were moved from
 Getting Started into Talking to the Terminal, and Say My Name and Number
 Cruncher were deleted outright (2026-09-30/10-03): their skills all

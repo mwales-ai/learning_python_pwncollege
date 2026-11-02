@@ -40,11 +40,11 @@ about a week and then starts making sense, because `range(len(word))` gives
 you exactly the valid positions of `word` - which is exactly what you want
 below.
 
-## Indexing into a string
+## Indexing into a string, one more time
 
-You have already seen square brackets pick one item out of something -
-`sys.argv[0]` is the first item of `sys.argv`.  A string works the same way.
-`word[i]` gives you the single character at position `i`, counting from 0:
+Is It a Palindrome? already showed you `word[i]` - square brackets pick a
+single character out of a string by position, counting from `0`, the
+same way `sys.argv[0]` picks the first item out of a list:
 
 ```
 >>> word = "Hi!"
@@ -56,8 +56,9 @@ You have already seen square brackets pick one item out of something -
 '!'
 ```
 
-Combine that with `range(len(word))` and you can visit every character, one
-at a time, in order:
+That challenge walked in from both ends with a `while` loop.  Combine
+indexing with `range(len(word))` instead and you can visit every
+character in order, left to right, one at a time:
 
 ```
 for i in range(len(word)):

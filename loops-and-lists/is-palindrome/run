@@ -1,0 +1,365 @@
+#!/usr/bin/exec-suid -- /usr/local/bin/python3 -I
+
+import sys, hashlib, subprocess, os
+
+from typing import List, Tuple
+
+# How long a single test case is allowed to run.  A beginner's while loop that
+# never exits should fail the challenge, not hang the judge forever.
+TEST_CASE_TIMEOUT = 10
+
+EVAL = "/challenge/.eval_data"
+
+# Required.  Everything else in .eval_data is optional, and a challenge that
+# does not need it simply leaves the file out.
+F_CASES  = f"{EVAL}/test_cases.txt"      # stdin for each case
+F_OUT    = f"{EVAL}/hashes.txt"          # expected stdout, hashed per line
+F_ARGS   = f"{EVAL}/args.txt"            # command line arguments per case
+F_ERR    = f"{EVAL}/stderr_hashes.txt"   # expected stderr, hashed per line
+F_EXIT   = f"{EVAL}/exit_codes.txt"      # expected exit status per case
+F_OPATH  = f"{EVAL}/output_paths.txt"    # a file the program is expected to WRITE
+F_OSEED  = f"{EVAL}/output_seeds.txt"    # content to put there BEFORE running
+F_OHASH  = f"{EVAL}/output_file_hashes.txt"  # expected contents of that file
+
+def debug(msg:str):
+    if(False):
+        sys.stderr.write(msg + "\n")
+
+def run_cmd(cmd: List[str], stdin_text:str ="", alt_user:str = None, timeout=None, cwd=None, env=None) -> Tuple[str, str, int]:
+    """
+    Run an external process, feed it text on stdin, block until it finishes,
+    and return (stdout, stderr, returncode). Raises on timeout if specified.
+    """
+
+    if alt_user:
+        run_cmd = ["runuser", "-u", alt_user, "--"]
+        run_cmd.extend(cmd)
+
+        # runas requires real user be set to root as well
+        os.setuid(0)
+    else:
+        run_cmd = cmd
+
+    try:
+        cp = subprocess.run(
+            run_cmd,                      # e.g. ["grep", "-n", "foo"]
+            input=stdin_text,         # text to send to stdin
+            capture_output=True,      # capture stdout and stderr
+            text=True,                # use str instead of bytes
+            timeout=timeout,          # optional: seconds
+            cwd=cwd, env=env,         # optional: working dir / env
+            check=False               # don't raise on nonzero exit
+        )
+
+        return cp.stdout, cp.stderr, cp.returncode
+    except subprocess.TimeoutExpired as e:
+        # e.stdout / e.stderr may contain partial output
+        raise
+
+def read_in_file(path:str) -> list[ list[str] ]:
+    """
+    Read a file of END_TEST_CASE delimited sections.
+
+    END_TEST_CASE is a TERMINATOR, not a separator: every section that is
+    followed by one is a test case, INCLUDING an empty one.  A challenge whose
+    program reads nothing from stdin still needs a case to run, and it is
+    expressed as a section with no lines in it.  Only the trailing text after
+    the final terminator is discarded.
+    """
+    ret_val = []
+    with open(path, "r") as f:
+        file_data = f.read()
+
+    sections = file_data.split("END_TEST_CASE")
+    for section in sections[:-1]:          # drop whatever trails the last one
+        lines_of_tc = []
+        for single_line in section.split("\n"):
+            single_line = single_line.strip()
+            if single_line != "":
+                lines_of_tc.append(single_line)
+        ret_val.append(lines_of_tc)
+    return ret_val
+
+def read_optional(path:str):
+    if not os.path.exists(path):
+        return None
+    return read_in_file(path)
+
+def read_exit_codes(path:str):
+    """One expected exit status per line, one line per test case."""
+    if not os.path.exists(path):
+        return None
+    codes = []
+    with open(path, "r") as f:
+        for line in f:
+            line = line.strip()
+            if line != "":
+                codes.append(int(line))
+    return codes
+
+def prepare_output_path(path: str, seed: List[str]) -> bool:
+    """
+    Get the file the student is supposed to write into a known state.
+
+    With a seed we write it and make it world writable, because the judge runs
+    as root while the student's program runs as `hacker` - a root owned 0644
+    file would be unwritable and the challenge would be impossible.  Without a
+    seed we simply remove it, so a leftover file from a previous run cannot
+    pass a program that writes nothing.
+    """
+    try:
+        if os.path.exists(path):
+            os.remove(path)
+        if seed is not None:
+            with open(path, "w") as f:
+                for line in seed:
+                    f.write(line + "\n")
+            os.chmod(path, 0o666)
+        return True
+    except OSError as e:
+        print(f"This challenge is misconfigured, please report it.")
+        print(f"Could not prepare {path}: {e}")
+        return False
+
+def convert_str_to_hash(text: str) -> str:
+    verifyHash = hashlib.sha256()
+    verifyHash.update(text.strip().encode("utf-8"))
+    hash_str = verifyHash.digest().hex()
+    return hash_str
+
+def clean_output_lines(text: str) -> List[str]:
+    """
+    Split program output into the lines we actually judge: stripped, with
+    blank lines dropped.  gen_hashes.py must do this identically or the
+    hashes will not line up.
+    """
+    ret_val = []
+    for single_line in text.split("\n"):
+        single_line = single_line.strip()
+        if single_line == "":
+            continue
+        ret_val.append(single_line)
+    return ret_val
+
+def convert_strs_to_hashes(text: List[str]) -> List[str]:
+    ret_val = []
+    for single_line in text:
+        if (single_line.strip() == ""):
+            continue
+        ret_val.append(convert_str_to_hash(single_line))
+    return ret_val
+
+def check_solution_script(solution_script: str) -> bool:
+    """Friendly up front errors instead of a traceback out of subprocess."""
+    if not os.path.exists(solution_script):
+        print(f"I cannot find a file named {solution_script}")
+        print("Check the path you passed to /challenge/run")
+        return False
+
+    if os.path.isdir(solution_script):
+        print(f"{solution_script} is a directory, not a program")
+        return False
+
+    if not os.access(solution_script, os.X_OK):
+        print(f"{solution_script} is not executable, so I cannot run it.")
+        print(f"Fix it with:  chmod +x {solution_script}")
+        print("Your script also needs this as its very first line:")
+        print("    #!/usr/bin/env python3")
+        return False
+
+    try:
+        with open(solution_script, "r") as f:
+            first_line = f.readline()
+    except OSError as e:
+        print(f"I could not read {solution_script}: {e}")
+        return False
+
+    if not first_line.startswith("#!"):
+        print(f"{solution_script} does not start with a shebang line, so Linux")
+        print("does not know what to run it with.  Make the very first line:")
+        print("    #!/usr/bin/env python3")
+        return False
+
+    return True
+
+def compare_stream(name: str, output_lines: List[str], hash_hex: List[str]) -> bool:
+    """Compare one stream's lines against expected hashes."""
+    hashes_out = convert_strs_to_hashes(output_lines)
+
+    # Compare the lines that exist first, so the student is told about a wrong
+    # line before being told about a missing one.  That is the more useful
+    # error nearly every time.
+    for i in range(min(len(hashes_out), len(hash_hex))):
+        if hashes_out[i] == hash_hex[i]:
+            print(f"{name} line {i+1} is good")
+        else:
+            print(f"{name} line {i+1} is incorrect")
+            return False
+
+    if len(hashes_out) < len(hash_hex):
+        print(f"Missing {name} output: I expected {len(hash_hex)} lines "
+              f"but got {len(hashes_out)}")
+        return False
+
+    if len(hashes_out) > len(hash_hex):
+        print(f"Too much {name} output: I expected {len(hash_hex)} lines "
+              f"but got {len(hashes_out)}")
+        print(f"The first extra line was: {output_lines[len(hash_hex)]}")
+        return False
+
+    return True
+
+def execute_tc(test_data: List[str], hash_hex: List[str], solution_script: str,
+               args: List[str], err_hex: List[str], want_code,
+               out_path, out_seed, out_hex) -> bool:
+    cmd = [solution_script] + list(args)
+
+    if out_path is not None:
+        if not prepare_output_path(out_path, out_seed):
+            return False
+
+    if args:
+        print(f"Going to run: {' '.join(cmd)}")
+    else:
+        print(f"Going to execute your script {solution_script}")
+
+    if test_data:
+        print("with the following input:")
+        print(test_data)
+    else:
+        print("with no input on stdin")
+
+    try:
+        tc_out, tc_err, tc_code = run_cmd(cmd, "\n".join(test_data),
+                                          "hacker", timeout=TEST_CASE_TIMEOUT)
+    except subprocess.TimeoutExpired:
+        print(f"Your program was still running after {TEST_CASE_TIMEOUT} seconds, so I stopped it.")
+        print("A loop that never finishes is the usual cause.")
+        return False
+    except OSError as e:
+        print(f"I could not run {solution_script}: {e}")
+        print("Check that the first line of your script is:")
+        print("    #!/usr/bin/env python3")
+        return False
+
+    out_lines = clean_output_lines(tc_out)
+    err_lines = clean_output_lines(tc_err)
+
+    print("Your programs output:")
+    for i in range(len(out_lines)):
+        print(f"Line {i+1} = {out_lines[i]}")
+
+    if err_hex is None:
+        # stderr is not being judged, so show it but do not hold it against them
+        if tc_err:
+            print("Your programs stderr (ignored):")
+            print(tc_err)
+    else:
+        print("Your programs stderr:")
+        for i in range(len(err_lines)):
+            print(f"Line {i+1} = {err_lines[i]}")
+
+    if not compare_stream("stdout", out_lines, hash_hex):
+        return False
+
+    if err_hex is not None:
+        if not compare_stream("stderr", err_lines, err_hex):
+            return False
+
+    if out_path is not None:
+        if not os.path.exists(out_path):
+            print(f"Your program was supposed to write {out_path}, but that "
+                  f"file does not exist afterwards.")
+            return False
+        try:
+            with open(out_path, "r") as f:
+                file_lines = clean_output_lines(f.read())
+        except OSError as e:
+            print(f"Could not read back {out_path}: {e}")
+            return False
+
+        print(f"The file {out_path} now contains:")
+        for i in range(len(file_lines)):
+            print(f"Line {i+1} = {file_lines[i]}")
+
+        if not compare_stream("file", file_lines, out_hex):
+            return False
+
+    if want_code is not None:
+        if tc_code != want_code:
+            print(f"Wrong exit status: I expected {want_code} but your program "
+                  f"exited with {tc_code}")
+            print("Check it yourself with:  echo $?")
+            return False
+        print(f"Exit status {tc_code} is good")
+
+    print(f"!! TEST CASE PASSED !!")
+    return True
+
+
+def main(argv):
+    if len(argv) != 2:
+        print("You need to pass me the path of your script")
+        return
+
+    solution_script = argv[1]
+    if not check_solution_script(solution_script):
+        sys.exit(1)
+
+    verify_hashes = read_in_file(F_OUT)
+    test_data     = read_in_file(F_CASES)
+    arg_data      = read_optional(F_ARGS)
+    err_hashes    = read_optional(F_ERR)
+    exit_codes    = read_exit_codes(F_EXIT)
+    out_paths     = read_optional(F_OPATH)
+    out_seeds     = read_optional(F_OSEED)
+    out_hashes    = read_optional(F_OHASH)
+
+    # zip() would silently drop the extra cases and quietly make the challenge
+    # easier, so refuse to run instead.  This is a challenge authoring bug, not
+    # anything the student did.
+    counts = {"hashes.txt": len(verify_hashes), "test_cases.txt": len(test_data)}
+    if arg_data is not None:
+        counts["args.txt"] = len(arg_data)
+    if err_hashes is not None:
+        counts["stderr_hashes.txt"] = len(err_hashes)
+    if exit_codes is not None:
+        counts["exit_codes.txt"] = len(exit_codes)
+    if out_paths is not None:
+        counts["output_paths.txt"] = len(out_paths)
+    if out_seeds is not None:
+        counts["output_seeds.txt"] = len(out_seeds)
+    if out_hashes is not None:
+        counts["output_file_hashes.txt"] = len(out_hashes)
+
+    if (out_paths is None) != (out_hashes is None):
+        print("This challenge is misconfigured, please report it.")
+        print("output_paths.txt and output_file_hashes.txt go together.")
+        sys.exit(1)
+
+    if len(set(counts.values())) != 1:
+        print("This challenge is misconfigured, please report it.")
+        for name, n in counts.items():
+            print(f"  {name} has {n} test cases")
+        sys.exit(1)
+
+    for i in range(len(test_data)):
+        print("Starting test case")
+        ok = execute_tc(test_data[i], verify_hashes[i], solution_script,
+                        arg_data[i] if arg_data is not None else [],
+                        err_hashes[i] if err_hashes is not None else None,
+                        exit_codes[i] if exit_codes is not None else None,
+                        out_paths[i][0] if out_paths is not None else None,
+                        out_seeds[i] if out_seeds is not None else None,
+                        out_hashes[i] if out_hashes is not None else None)
+        if not ok:
+            sys.exit(1)
+
+    # Display the flag
+    flag = open("/flag","r").read()
+
+    print("Congrats!")
+    print(flag)
+
+if __name__ == "__main__":
+    main(sys.argv)

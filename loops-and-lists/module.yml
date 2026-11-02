@@ -3,6 +3,8 @@ allow_privileged: true
 challenges:
   - id: guessing-game
     name: The Guessing Game
+  - id: is-palindrome
+    name: Is It a Palindrome?
   - id: counting-loops
     name: ASCII Values
   - id: fizzbuzz
