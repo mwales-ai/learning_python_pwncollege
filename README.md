@@ -142,10 +142,11 @@ correctly you get the flag.
   * **Skills:** indexing a string with `[i]`, the `len(word) - 1` last
                 position, a two-pointer walk, a flag variable that can
                 only turn `False`
-* **ASCII Values** - Walk a string by index with `for i in range(len(word))`
-  and print each character next to its decimal and hex ASCII value.
-  * **Skills:** `for`, `range()` with 1, 2, and 3 arguments, indexing a
-                string with `[i]`, `ord()` and `chr()`
+* **ASCII Values** - Walk a string directly with `for char in word:` and
+  print each character next to its decimal and hex ASCII value.
+  * **Skills:** `for char in word:` (iterating items directly, not by
+                position), `range()` with 1, 2, and 3 arguments, `ord()`
+                and `chr()`
 * **FizzBuzz** - The classic, now over a `start`/`stop` range taken from two
   command line arguments instead of a hardcoded 1 to 100, with four specific
   error messages for bad arguments.

@@ -20,10 +20,11 @@ Notice what makes this work: **position**.  `b` is at position 1 of the top
 line, so we look at position 1 of the bottom line and find `y`.  That is the
 whole trick, and you already know how to find something's position in Python.
 
-## Looping over a string
+## A reminder: looping directly over a string
 
-You have been looping over a range of numbers.  You can also loop directly
-over a string, and Python hands you one character at a time:
+ASCII Values and Loop Over a List both leaned on this, and this challenge
+leans on it hardest of all: `for ch in word:` hands you one character at a
+time, no position needed:
 
 ```
 >>> for ch in "cat":

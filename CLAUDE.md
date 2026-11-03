@@ -151,6 +151,24 @@ string" section needed a rewrite - it used to introduce `word[i]` fresh;
 now it recaps Is It a Palindrome? and spends its own words on
 `range(len(word))` and left-to-right iteration instead, which is the
 part that is actually new there.
+
+ASCII Values changed again (2026-11-03): it now walks the string with
+`for char in word:` instead of `range(len(word))` + `word[i]` - this
+task never needs the position, only the character, so direct iteration
+fits better than the index-based walk it used before. That made ASCII
+Values the real FIRST introduction of `for item in sequence`, which
+pushed the claim down two more challenges: Loop Over a List's opening
+used to introduce `for value in numbers:`/`for ch in "cat":` as brand
+new, and Secret Decoder Ring's "Looping over a string" section re-
+introduced the same thing again - both rewritten to recap ASCII Values
+instead. Loop Over a List's own new content is unchanged by this -
+generalizing the pattern from a string to a real `list`, plus the
+accumulator pattern, which was always the actual point of that
+challenge. `range(len(word))` stays taught in ASCII Values regardless,
+just reframed as "you'll need this soon" (Is It a Palindrome? already
+used it; FizzBuzz needs plain `range()` right after) rather than "this
+task needs it."
+
 Tippy Tipper, Why Are We Yelling, and Birthday Banner were moved from
 Getting Started into Talking to the Terminal, and Say My Name and Number
 Cruncher were deleted outright (2026-09-30/10-03): their skills all

@@ -36,39 +36,28 @@ range(5, 0, -1)    5 4 3 2 1
 **`range()` stops BEFORE the stop value.**
 
 `range(1, 10)` is 1 through 9.  Not 10.  This looks like a design mistake for
-about a week and then starts making sense, because `range(len(word))` gives
-you exactly the valid positions of `word` - which is exactly what you want
-below.
+about a week and then starts making sense - `range(len(x))` always gives you
+exactly the valid positions of `x`, which is exactly what Is It a Palindrome?
+needed for its two-pointer walk.  You will not need it for today's task, but
+you will reach for it constantly from here on.
 
-## Indexing into a string, one more time
+## Visiting every character directly
 
-Is It a Palindrome? already showed you `word[i]` - square brackets pick a
-single character out of a string by position, counting from `0`, the
-same way `sys.argv[0]` picks the first item out of a list:
+Is It a Palindrome? walked a string by *position* - `word[i]`, with `i`
+counting `0`, `1`, `2`.  That is the right tool when you need to know
+*where* you are, like comparing characters from both ends inward.  Today's
+task never asks where a character is, only what it is, in order - and for
+that, Python will hand you the characters themselves, no position required:
 
-```
->>> word = "Hi!"
->>> word[0]
-'H'
->>> word[1]
-'i'
->>> word[2]
-'!'
+```python
+for char in word:
+    print(char)
 ```
 
-That challenge walked in from both ends with a `while` loop.  Combine
-indexing with `range(len(word))` instead and you can visit every
-character in order, left to right, one at a time:
-
-```
-for i in range(len(word)):
-    print(word[i])
-```
-
-`i` takes on every valid position - `0`, `1`, `2` - and `word[i]` is the
-character sitting there.  This is the loop variable being a real variable,
-not just a counter ticking away in the background: you are using `i` itself
-to reach into `word`.
+No `range()`, no `len()`, no `word[i]`.  `char` simply becomes each
+character in turn.  This is the loop variable *being* the item, rather than
+a position you use to go fetch the item - a second shape for-loops come in,
+alongside the position-based one you already know.
 
 ## ord() and chr(): turning that into a number
 
@@ -124,10 +113,9 @@ Read one line of text and print one line **per character**:
 Each piece is separated by a single space.  The hex value uses the Hex to
 Decimal style: capital letters, no `0x` prefix, at least 2 digits.
 
-Use a `for` loop over `range(len(...))` and index into the string with `[i]`
-to get each character - that is what this challenge is practicing.  Python
-also has a shorter way to walk a string directly, but you have not been
-taught it yet; you will meet it properly in Loop Over a List.
+Use a `for` loop that visits the characters directly - `for char in word:`
+- rather than indexing by position.  You do not need the position for this
+one, so do not reach for it.
 
 So for input `Go Hackers!`:
 

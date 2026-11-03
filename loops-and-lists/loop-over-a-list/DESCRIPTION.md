@@ -1,30 +1,26 @@
 # Loop Over a List
 
-You can loop over a list by position:
-
-```
-for i in range(len(numbers)):
-    print(numbers[i])
-```
-
-But when you do not actually need the position, there is a much better way:
+ASCII Values already showed you this, on a string: `for char in word:`
+hands you each item directly, no `range()`, no `len()`, no indexing. The
+exact same syntax works on a real `list`:
 
 ```
 for value in numbers:
     print(value)
 ```
 
-That gives you the **items themselves**, one at a time.  No `range()`, no
-`len()`, no indexing, and nothing to get off by one.  It also reads like
-English.  Use this one unless you specifically need to know *where* you are.
-
-It works on strings too, which is how you will take a word apart in the next
-challenge:
+Compare that to looping by position, which still works but is more
+machinery than you need when you do not actually care *where* you are:
 
 ```
-for ch in "cat":
-    print(ch)
+for i in range(len(numbers)):
+    print(numbers[i])
 ```
+
+Use the direct form unless you specifically need the position - and now
+you have seen it do the same job on a string and on a list, which is
+exactly the point: **a list is the general case, and a string was a
+preview of it.**
 
 ## The accumulator pattern
 
