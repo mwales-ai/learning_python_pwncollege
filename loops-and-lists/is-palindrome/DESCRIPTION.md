@@ -2,14 +2,19 @@
 
 A **palindrome** is a word or phrase that reads the same forwards and
 backwards - `racecar`, `level`, `noon`.  To check one, you need two new
-ideas: pulling a single character out of a string by position, and
-walking toward the middle from both ends at once.
+ideas: pulling a single item out of a list by position, and walking
+toward the middle from both ends at once.
 
-## Strings are indexable
+## A string is a list of characters
 
-A string is not one solid blob of text - it is a sequence of characters,
-each one sitting at a position, counting from `0`.  Square brackets pick
-one out:
+This module is called Loops *and Lists* for a reason, and here is your
+first look at why they go together: a string already behaves like a
+list.  Not a list of words - a list where each **character** is one
+item, sitting at a position, counting from `0`.  The standard list
+operations work on it right now, before you have even met the `list`
+type by name.
+
+**Indexing** - square brackets pick out one item by position:
 
 ```
 >>> word = "cake"
@@ -21,17 +26,15 @@ one out:
 'e'
 ```
 
-`word[0]` is always the first character, never the second - the same
-zero-counting rule you have already seen elsewhere.  Ask for a position
-that does not exist and you get an `IndexError`, the string equivalent of
-walking off the end of a list.
+`word[0]` is always the first item, never the second - the same
+zero-counting rule every list uses.  Ask for a position that does not
+exist - `word[4]` on a 4-item list - and you get an `IndexError`:
+walking off the end of the list.
 
-## The last character, without counting by hand
-
-You already know `len()` tells you how many characters are in a string.
-The last character sits at position `len(word) - 1`, **not** `len(word)` -
-a 4-character word has positions `0`, `1`, `2`, `3`, and position `4` does
-not exist:
+**Length** - `len()` tells you how many items are in the list, the exact
+same function you would call on a real `list` later.  The *last* item
+sits at position `len(word) - 1`, **not** `len(word)` - a 4-item list has
+positions `0`, `1`, `2`, `3`, and position `4` does not exist:
 
 ```
 >>> word = "cake"
@@ -44,6 +47,11 @@ not exist:
 That off-by-one is exactly the same shape as `range()` stopping before its
 stop value - the length and the last valid position are never the same
 number.
+
+(One real difference, for when you meet actual `list`s: those let you
+change one item in place.  A string does not - once it exists, none of
+its characters can be swapped out.  You are only ever *reading*
+characters in this challenge, so that difference does not come up yet.)
 
 ## Checking from both ends at once
 
