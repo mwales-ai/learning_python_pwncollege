@@ -2,7 +2,7 @@
 
 This one is famous.
 
-Print the numbers from 1 to 100, one per line, except:
+Print the numbers from `start` to `stop`, one per line, except:
 
 * if the number divides evenly by **3**, print `Fizz` instead
 * if it divides evenly by **5**, print `Buzz` instead
@@ -69,6 +69,44 @@ like the question.
 
 **Test for both first.**
 
+## The range comes from the command line now
+
+`start` and `stop` arrive as `sys.argv[1]` and `sys.argv[2]`, the same way
+the coefficients did in The Quadratic Formula.  Both are strings, same as
+always - `int()` them before doing math.
+
+## Checking text before you convert it
+
+Up to now, a bad command line argument has just been allowed to crash the
+program with a traceback.  This time, check first.  `.isdigit()` tells you
+whether every character in a string is a digit `0`-`9`:
+
+```
+>>> "123".isdigit()
+True
+>>> "12.5".isdigit()
+False
+>>> "abc".isdigit()
+False
+```
+
+`.isdigit()` says `False` for a negative number too, because `-` is not a
+digit - `"-5".isdigit()` is `False`, even though `-5` is a perfectly good
+whole number.  `.lstrip("-")` removes leading `-` characters (the same
+family as `.strip()`, which you already know, but only from the left
+side), so strip the sign off first and check what is left:
+
+```
+>>> "-5".lstrip("-")
+'5'
+>>> "-5".lstrip("-").isdigit()
+True
+```
+
+That one line - `text.lstrip("-").isdigit()` - is "is this text a valid
+whole number, negative sign allowed" without ever calling `int()` on
+something that might not be one.
+
 ## Further Reading
 
 * Automate the Boring Stuff with Python
@@ -76,10 +114,25 @@ like the question.
 
 # Instructions
 
-Print the numbers from 1 to 100, one per line, with the FizzBuzz rules
-applied.
+Print the numbers from `start` to `stop`, **inclusive**, one per line, with
+the FizzBuzz rules applied.  `start` and `stop` arrive as two command line
+arguments, in that order, and either one may be negative.
 
-Your program reads nothing.  The first few lines and the interesting ones:
+Check the arguments before using them, in this order, and stop at the
+first problem you find.  Print the message to standard error and exit
+with status `1`:
+
+| Problem | Message |
+|---------|---------|
+| not exactly 2 arguments | `Usage: fizzbuzz.py <start> <stop>` |
+| `start` is not a whole number | `start must be a whole number` |
+| `stop` is not a whole number | `stop must be a whole number` |
+| `start` is greater than `stop` | `start must be less than or equal to stop` |
+
+Only once all four checks pass should you print anything on standard
+output.
+
+So `./fizzbuzz.py 1 15` prints:
 
 ```
 1
@@ -89,21 +142,31 @@ Fizz
 Buzz
 Fizz
 7
-...
+8
+Fizz
+Buzz
+11
+Fizz
+13
 14
 FizzBuzz
-16
-...
 ```
 
-Line 15 is `FizzBuzz`.  Line 100 is `Buzz`.  There are exactly 100 lines.
+and `./fizzbuzz.py 10 5` prints nothing on standard output, and on standard
+error:
 
-Spelling and capitalisation matter: `Fizz`, `Buzz`, `FizzBuzz`.
+```
+start must be less than or equal to stop
+```
+
+`start` can equal `stop` - that is a real one-line range, not an error.
+`0` counts as a whole number.  A negative `start` is fine as long as it is
+not bigger than `stop`: `./fizzbuzz.py -5 5` is a real 11-line range.
 
 ```
 /challenge/run ./fizzbuzz.py
 ```
 
-We come back to this problem in the filters module, where instead of counting
-to 100 you will apply the same rules to whatever numbers arrive on standard
-input - in any order, including negative ones.
+We come back to this problem in the filters module, where instead of a
+range you choose yourself, you will apply the same rules to whatever
+numbers arrive on standard input - in any order, including negative ones.

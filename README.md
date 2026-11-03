@@ -146,11 +146,13 @@ correctly you get the flag.
   and print each character next to its decimal and hex ASCII value.
   * **Skills:** `for`, `range()` with 1, 2, and 3 arguments, indexing a
                 string with `[i]`, `ord()` and `chr()`
-* **FizzBuzz** - The classic.  Print the numbers 1 to 100, one per line, but
-  print `Fizz` for multiples of 3, `Buzz` for multiples of 5, and `FizzBuzz`
-  for multiples of both.
+* **FizzBuzz** - The classic, now over a `start`/`stop` range taken from two
+  command line arguments instead of a hardcoded 1 to 100, with four specific
+  error messages for bad arguments.
   * **Skills:** `%`, the divisibility test `n % 3 == 0`, loop + `if`/`elif`,
-                branch order
+                branch order, `text.lstrip("-").isdigit()` to validate
+                before converting, checking several error conditions in
+                order and stopping at the first one
   * **Discussion:** This exact problem is famous as a screening question handed
     to new grads and new software engineers in job interviews - not because it
     is hard, but because it quickly shows whether someone can turn a
