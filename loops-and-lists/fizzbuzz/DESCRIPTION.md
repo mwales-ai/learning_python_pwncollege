@@ -2,7 +2,7 @@
 
 This one is famous.
 
-Print the numbers from `start` to `stop`, one per line, except:
+For this challenge print the numbers from `start` to `stop`, one per line, except:
 
 * if the number divides evenly by **3**, print `Fizz` instead
 * if it divides evenly by **5**, print `Buzz` instead
@@ -19,8 +19,6 @@ program cannot turn a plain English rule into working code.
 
 It gets used because it takes two minutes, it needs nothing but a loop and
 some branching, and there is nowhere to hide.
-
-You are doing it in your first month.
 
 ## The modulus operator
 
@@ -41,35 +39,7 @@ A remainder of zero means it divided evenly.  So "n is a multiple of 3" is:
 n % 3 == 0
 ```
 
-Get comfortable with that shape.  It is how you test for even numbers
-(`n % 2 == 0`), how you wrap around a list, and how the decoder ring you are
-about to write handles the alphabet.
-
-## The actual trap
-
-Here is where most people go wrong.  Think carefully about the *order* of your
-branches:
-
-```
-if n % 3 == 0:
-    print("Fizz")
-elif n % 5 == 0:
-    print("Buzz")
-elif n % 3 == 0 and n % 5 == 0:
-    print("FizzBuzz")
-```
-
-This looks reasonable and it is wrong.  Remember from the elif ladder: **first
-match wins**.  When `n` is 15, the very first test is true, so it prints `Fizz`
-and never looks at the rest.  The `FizzBuzz` branch can never run at all.
-
-And the failure is sneaky - the first fourteen lines are perfect.  You have to
-get to line 15 before anything looks wrong.  This is exactly why interviewers
-like the question.
-
-**Test for both first.**
-
-## The range comes from the command line now
+## The range comes from the command line
 
 `start` and `stop` arrive as `sys.argv[1]` and `sys.argv[2]`, the same way
 the coefficients did in The Quadratic Formula.  Both are strings, same as
@@ -132,16 +102,9 @@ with status `1`:
 Only once all four checks pass should you print anything on standard
 output.
 
-So `./fizzbuzz.py 1 15` prints:
+So `./fizzbuzz.py 8 15` prints:
 
 ```
-1
-2
-Fizz
-4
-Buzz
-Fizz
-7
 8
 Fizz
 Buzz
@@ -166,7 +129,3 @@ not bigger than `stop`: `./fizzbuzz.py -5 5` is a real 11-line range.
 ```
 /challenge/run ./fizzbuzz.py
 ```
-
-We come back to this problem in the filters module, where instead of a
-range you choose yourself, you will apply the same rules to whatever
-numbers arrive on standard input - in any order, including negative ones.
