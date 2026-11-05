@@ -1,97 +1,102 @@
-# Lists
+# Anagram Finder
 
-So far every variable has held exactly one thing.  A **list** holds many
-things under a single name, in order.
+An **anagram** is a word made by rearranging the letters of another word,
+using every letter exactly once.  `listen` and `silent` are anagrams - same
+six letters, different order.
 
-```
->>> words = ["alpha", "bravo", "charlie"]
->>> words
-['alpha', 'bravo', 'charlie']
-```
+## Lists, finally
 
-Square brackets make a list.  `[]` is an empty one, which is usually where you
-start.
-
-## Indexing starts at zero
+A **list** holds many things under one name, in order.  `[]` is an empty one,
+which is usually where you start:
 
 ```
->>> words[0]
-'alpha'
->>> words[1]
-'bravo'
+>>> matches = []
+>>> matches.append("enlist")
+>>> matches.append("silent")
+>>> matches
+['enlist', 'silent']
 ```
 
-The first item is at position **0**, not 1.  So a list of 3 items has valid
-positions 0, 1 and 2 - and asking for `words[3]` is an error:
+`.append()` adds one item to the **end**.  It changes the list in place and
+hands back `None` - so `matches = matches.append(x)` destroys your list.  Just
+call it, do not assign the result.
+
+Indexing a list works exactly like indexing a string, which you already know
+from Is It a Palindrome?: `matches[0]` is the first item, `matches[-1]` is the
+last, and asking for a position past the end is an `IndexError`.
+
+## Turning a line into words: split()
 
 ```
->>> words[3]
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-IndexError: list index out of range
+>>> "the cake is a lie".split()
+['the', 'cake', 'is', 'a', 'lie']
 ```
 
-That "off by one" is so common it has a name.  An `IndexError` almost always
-means you counted from 1 somewhere, or used `len()` as a position.
+`.split()` with no argument breaks a string into a list of words, splitting on
+any whitespace.  That is exactly what you need to turn one line of
+space-separated words into something you can loop over.
 
-## Negative indexes
+## Checking letters, not order: sorted()
 
-Python counts backwards from the end with negative numbers:
-
-```
->>> words[-1]
-'charlie'
->>> words[-2]
-'bravo'
-```
-
-`words[-1]` is the last item.  Get used to writing that instead of
-`words[len(words) - 1]` - it is shorter, it is clearer, and it is one fewer
-place to get the arithmetic wrong.
-
-## len() and append()
-
-`len()` works on a list just like it works on a string:
+Two words are anagrams exactly when they have the same letters, just in a
+different order.  "Same letters" is easy to check once you stop caring about
+order - and **not caring about order is what sorting is for**:
 
 ```
->>> len(words)
-3
+>>> sorted("listen")
+['e', 'i', 'l', 'n', 's', 't']
+>>> sorted("silent")
+['e', 'i', 'l', 'n', 's', 't']
 ```
 
-`.append()` adds one item to the **end**:
+`sorted()` works on a string the same way it works on a list - it hands back
+the items (here, the individual characters) rearranged smallest to largest.
+Two words are anagrams exactly when their sorted letters match:
 
 ```
->>> words.append("delta")
->>> words
-['alpha', 'bravo', 'charlie', 'delta']
->>> len(words)
-4
+>>> sorted("listen") == sorted("silent")
+True
+>>> sorted("listen") == sorted("cat")
+False
 ```
 
-One warning.  `.append()` changes the list in place and hands back `None`.  So
-this destroys your list:
+Notice you get the length check for free.  `cat` only has three letters, so
+its sorted list cannot possibly equal `listen`'s six-letter one - `==` on two
+lists already checks both length and contents, no special case needed.
+
+## Two ways to sort
+
+`sorted(word)` is a **function**.  It leaves `word` alone and hands you back a
+brand new, sorted list - which is exactly what you want above, since you still
+need the original word afterward.
+
+Lists also have a `.sort()` **method**, which sorts the list **in place**
+instead:
 
 ```
->>> words = words.append("echo")     # NO
->>> words
->>> print(words)
-None
+>>> matches = ["silent", "enlist"]
+>>> matches.sort()
+>>> matches
+['enlist', 'silent']
 ```
 
-Just call it.  Do not assign the result.
+Same gotcha as `.append()`: `.sort()` changes the list and returns `None`, so
+`matches = matches.sort()` throws your list away.  Use `sorted()` when you
+need the original untouched; use `.sort()` when you already have your own
+list of results and just want it in order before printing.
 
-## Walking a list by position
+## Putting it back together: join()
 
-You already know `range(len(mylist))` gives exactly the valid positions.  That
-is how you visit items in a particular order - for example, backwards:
+`.join()` is backwards from what everyone expects.  **The separator is the
+string you call it on:**
 
 ```
-for i in range(len(words) - 1, -1, -1):
-    print(words[i])
+>>> ", ".join(["enlist", "silent"])
+'enlist, silent'
 ```
 
-Read that `range` carefully.  Start at the last valid position, step by -1,
-and stop **before** -1, so the last position actually visited is 0.
+Not `matches.join(", ")`.  It works on any sequence of strings, which is why
+it belongs to the separator rather than to the list.
 
 ## Further Reading
 
@@ -102,56 +107,46 @@ and stop **before** -1, so the last position actually visited is 0.
 
 # Instructions
 
-Read a list of words, report on it, then add one more.
+Read a number of test cases.  Each one is a single line of space-separated
+words.  The **first** word on the line is the one to check; figure out which
+of the **other** words on that line are anagrams of it.
 
 The input is:
 
 ```
-line 1     N, how many words follow
-next N     the words, one per line
-last line  one extra word to append
+line 1     T, how many test cases follow
+next T     one line each, space-separated words
 ```
 
-Print exactly this:
+For each test case, print one line:
 
 ```
-count: <how many words you read>
-first: <the first word>
-last: <the last word>
-backwards:
-<the words, one per line, last to first>
-after appending <the extra word> the count is <the new count>
-the last item is now <the extra word>
+<first word>: <the matching words, sorted alphabetically, separated by ", ">
 ```
 
 So for this input:
 
 ```
-3
-kernel
-packet
-cipher
-malware
+2
+listen enlist banana silent
+cat cot act scat
 ```
 
 your program prints:
 
 ```
-count: 3
-first: kernel
-last: cipher
-backwards:
-cipher
-packet
-kernel
-after appending malware the count is 4
-the last item is now malware
+listen: enlist, silent
+cat: act
 ```
 
-Build the list with a loop and `.append()` - start with `[]` and add each word
-as you read it.  Note that `count:` is the count *before* the extra word, and
-the last two lines are *after* it.
+`banana` and `cot`/`scat` are not anagrams of `listen` and `cat` - they do not
+have the same letters, so leave them out.  If **no** word on a line is an
+anagram of the first one, still print the line, just with nothing after the
+colon.
+
+Build the list of matches with `.append()` as you find them, put it in order
+with `.sort()`, then glue it into one line with `", ".join(...)`.
 
 ```
-/challenge/run ./listy.py
+/challenge/run ./anagrams.py
 ```

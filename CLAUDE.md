@@ -169,6 +169,50 @@ just reframed as "you'll need this soon" (Is It a Palindrome? already
 used it; FizzBuzz needs plain `range()` right after) rather than "this
 task needs it."
 
+`lists` was replaced wholesale with Anagram Finder (2026-11-05), keeping
+the same challenge id and the same slot (5th in Loops and Lists, right
+after FizzBuzz and before Loop Over a List) but none of the old content.
+The old Lists challenge taught list literals, `.append()`, zero-based and
+negative indexing, and `IndexError` by having the student build a list
+with a counted loop and report on it; the new one keeps the list-literal
+and `.append()`/indexing basics as a short recap (indexing was already
+independently covered on strings by Is It a Palindrome?, so this does not
+need to be load-bearing) and spends its real content on `.split()`,
+`sorted()` vs `.sort()`, and `", ".join(...)` - none of which were
+taught anywhere before this point in the curriculum. This is a genuine
+curriculum-order change, not just new content: `.split()`/`sorted()`/
+`.join()` used to be first taught in `define-and-call` (module 5,
+one-line mention), `slicing-strings-apart` (module 8, the real first
+deep-dive), and `capstone-the-report` (module 9, `.sort()` on tuples),
+respectively. `slicing-strings-apart`'s split()/join() sections were
+rewritten from "this is new" to "here's a reminder" accordingly (see its
+own history, not repeated here); `define-and-call`, `lookup-tables`, and
+`capstone-the-report` needed no changes - none of them claimed novelty,
+so reading them as a recap costs nothing.
+
+The task the student solves (anagram detection: given a line of words,
+which of the words after the first share all the same letters as it) is
+the thing that forces `sorted()` into this early a slot - comparing
+`sorted(word_a) == sorted(word_b)` is the natural beginner-level way to
+check "same letters, any order" without a hand-rolled letter-counting
+dictionary, which is not available yet (dictionaries are module 9). Two
+words of different length can never be anagrams, and comparing their
+sorted letter-lists already encodes that for free via list `==`, so no
+separate length check is needed.
+
+The user's original request named `/usr/share/dict/words` as the word
+source. The **student's program never reads that file** - doing so would
+hit the exact reproducibility problem this file already documents under
+"Challenges that need a data file" (its contents differ by machine/
+installed dictionary packages, same as the reason `hangman` ships its
+own frozen `words.txt` instead of using it directly). Instead, the live
+system dictionary on the authoring machine was used only to confirm, at
+authoring time, that the words chosen for `test_cases.txt` are real
+English words and genuinely are or are not anagrams of each other
+(`sorted(a) == sorted(b)`) - the same role `/usr/share/dict/words` has
+always been safe for (flavor and realism when hand-picking test data),
+never as something the judged program touches at runtime.
+
 Tippy Tipper, Why Are We Yelling, and Birthday Banner were moved from
 Getting Started into Talking to the Terminal, and Say My Name and Number
 Cruncher were deleted outright (2026-09-30/10-03): their skills all
@@ -202,9 +246,9 @@ rules out things you would reach for without thinking:
   That is why `command-line-arguments` takes exactly two arguments and indexes
   them, and why `exit-codes` is handed the status to exit with rather than
   deciding it - `if` had not been taught yet either.
-* Module 2 comes before `if`, module 4 (loops-and-lists) before `.split()`
-  and `.join()`.  The `lists` challenge builds its list with a counted loop
-  and `.append()` for exactly this reason.
+* Module 2 comes before `if`.  `.split()`, `sorted()`/`.sort()`, and `.join()`
+  are now taught in module 4, by `lists` (Anagram Finder) - see the history
+  note below.  Nothing earlier than that may use them.
 * Reading an unknown number of lines needs `try/except EOFError`, which is
   never taught.  So challenges take a **count** first, or a sentinel that ends
   the input - see `hangman` and `guessing-game`.

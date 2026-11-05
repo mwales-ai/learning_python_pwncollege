@@ -158,10 +158,11 @@ correctly you get the flag.
     to new grads and new software engineers in job interviews - not because it
     is hard, but because it quickly shows whether someone can turn a
     plain-English rule into working code.  You are doing it in week one.
-* **Lists** - Build a list, index it, slice it, `append()` to it, and take its
-  `len()`.
-  * **Skills:** creating and indexing a list, zero-based and negative indexes,
-                `.append()`, `IndexError`
+* **Anagram Finder** - Given a line of space-separated words, find which of
+  the words after the first are anagrams of it, and print them sorted
+  alphabetically.
+  * **Skills:** creating and indexing a list, `.append()`, `.split()`,
+                `sorted()` vs `.sort()`, `", ".join(...)`
 * **Loop Over a List** - Walk a list to find the biggest item, the total, and
   the average.
   * **Skills:** the accumulator pattern, `for item in list:`,

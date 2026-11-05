@@ -10,7 +10,7 @@ challenges:
   - id: fizzbuzz
     name: FizzBuzz
   - id: lists
-    name: Lists
+    name: Anagram Finder
   - id: loop-over-a-list
     name: Loop Over a List
   - id: secret-decoder-ring

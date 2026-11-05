@@ -31,17 +31,18 @@ if answer.lower() == "yes":
 
 Now `Yes`, `YES` and `yes` all work.
 
-## Taking a line apart: split()
+## split() and join(), one more wrinkle
+
+Anagram Finder already showed you `.split()` with no argument - splits on any
+run of whitespace, discards empty pieces:
 
 ```
 >>> "the cake is a lie".split()
 ['the', 'cake', 'is', 'a', 'lie']
 ```
 
-`.split()` with no argument splits on **any run of whitespace** and discards
-empty pieces.  That is almost always what you want for words.
-
-`.split(",")` splits on one specific character and **keeps** the empties:
+What it did not show you is `.split(",")`, which splits on one specific
+character and **keeps** the empties:
 
 ```
 >>> "a,,c".split(",")
@@ -52,10 +53,8 @@ That difference looks pedantic until the next challenge, where an empty cell
 in a spreadsheet has to stay in its column.  Both behaviours are right - for
 different jobs.
 
-## Putting it back together: join()
-
-`.join()` is backwards from what everyone expects.  **The separator is the
-string you call it on:**
+As a reminder, `.join()` is backwards from what everyone expects: **the
+separator is the string you call it on**, not the list:
 
 ```
 >>> "-".join(["a", "b", "c"])
@@ -63,9 +62,8 @@ string you call it on:**
 >>> ", ".join(words)
 ```
 
-Not `words.join("-")`.  Everybody writes it the wrong way round the first
-time.  (The reason is that it works on any sequence, so it belongs to the
-separator rather than to lists specifically.)
+Not `words.join("-")`.  (The reason is that it works on any sequence, so it
+belongs to the separator rather than to lists specifically.)
 
 ## Searching
 
