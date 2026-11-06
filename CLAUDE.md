@@ -213,6 +213,33 @@ English words and genuinely are or are not anagrams of each other
 always been safe for (flavor and realism when hand-picking test data),
 never as something the judged program touches at runtime.
 
+`loop-over-a-list` was replaced wholesale with Olympic Scorecard
+(2026-11-06), same id and same slot (6th in Loops and Lists, right after
+Anagram Finder and before Secret Decoder Ring), keeping the accumulator
+pattern and the seeding trap (seed a highest/lowest search with the
+first item, not 0) since both are referenced **by name** downstream -
+`stock-tracker`'s "lowest price so far" tracker and
+`secret-decoder-ring`'s string-building section both say "the same
+accumulator pattern from X", so X had to still teach it under whatever
+its new name is. Both of those references were updated from "Loop Over
+a List" to "Olympic Scorecard" as part of this change; nothing else in
+the repo named the old title.
+
+The task itself (drop the lowest and highest judge's score from a list,
+average the rest - the real scoring rule in events like diving and
+gymnastics) is what motivates the new content: `sorted(scores)[1:-1]`
+finds and drops both extremes in one line, which is the **first**
+teaching of list slicing in the dojo (the old Lists challenge's README
+blurb once mentioned "slice it" but its actual DESCRIPTION.md never
+covered slicing, and Anagram Finder deliberately avoided it too - see
+that challenge's own history note - to avoid overloading one challenge
+with both `.split()`/`sorted()`/`.join()` and slicing). The exercise
+itself now permits the `sum()`/`max()`/`min()` built-ins on the
+remaining list rather than demanding another hand-written loop - the
+discipline of writing the search by hand once still happens, in this
+same challenge's teaching content for the seeding trap, so nothing is
+lost by not repeating it a second time against the remaining list.
+
 Tippy Tipper, Why Are We Yelling, and Birthday Banner were moved from
 Getting Started into Talking to the Terminal, and Say My Name and Number
 Cruncher were deleted outright (2026-09-30/10-03): their skills all
@@ -247,8 +274,10 @@ rules out things you would reach for without thinking:
   them, and why `exit-codes` is handed the status to exit with rather than
   deciding it - `if` had not been taught yet either.
 * Module 2 comes before `if`.  `.split()`, `sorted()`/`.sort()`, and `.join()`
-  are now taught in module 4, by `lists` (Anagram Finder) - see the history
-  note below.  Nothing earlier than that may use them.
+  are now taught in module 4, by `lists` (Anagram Finder); list slicing
+  (`[1:-1]`) is taught right after it, by `loop-over-a-list` (Olympic
+  Scorecard) - see the history notes below.  Nothing earlier than either
+  may use them.
 * Reading an unknown number of lines needs `try/except EOFError`, which is
   never taught.  So challenges take a **count** first, or a sentinel that ends
   the input - see `hangman` and `guessing-game`.

@@ -163,10 +163,11 @@ correctly you get the flag.
   alphabetically.
   * **Skills:** creating and indexing a list, `.append()`, `.split()`,
                 `sorted()` vs `.sort()`, `", ".join(...)`
-* **Loop Over a List** - Walk a list to find the biggest item, the total, and
-  the average.
-  * **Skills:** the accumulator pattern, `for item in list:`,
-                `sum()`/`min()`/`max()`
+* **Olympic Scorecard** - Given a panel of judges' scores, drop the lowest
+  and the highest, then average what is left - the real Olympic scoring
+  rule.
+  * **Skills:** the accumulator pattern, the seeding trap, `sum()`/`max()`,
+                `sorted()` on numbers, list slicing (`[1:-1]`)
 * **Secret Decoder Ring** - You are handed the key to a substitution cipher -
   one line of original characters, and underneath it what each was turned into
   - followed by a pile of intercepted messages to decode.  The real lesson is

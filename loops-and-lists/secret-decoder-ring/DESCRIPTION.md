@@ -22,7 +22,7 @@ whole trick, and you already know how to find something's position in Python.
 
 ## A reminder: looping directly over a string
 
-ASCII Values and Loop Over a List both leaned on this, and this challenge
+ASCII Values and Olympic Scorecard both leaned on this, and this challenge
 leans on it hardest of all: `for ch in word:` hands you one character at a
 time, no position needed:
 

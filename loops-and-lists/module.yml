@@ -12,6 +12,6 @@ challenges:
   - id: lists
     name: Anagram Finder
   - id: loop-over-a-list
-    name: Loop Over a List
+    name: Olympic Scorecard
   - id: secret-decoder-ring
     name: Secret Decoder Ring

@@ -1,20 +1,25 @@
-# Loop Over a List
+# Olympic Scorecard
+
+Some Olympic events - diving and gymnastics among them - use a panel of
+judges, and to keep any one judge from swaying the result, the rule is
+simple: **throw out the lowest score and the highest score**, then average
+what is left.
 
 ASCII Values already showed you this, on a string: `for char in word:`
 hands you each item directly, no `range()`, no `len()`, no indexing. The
 exact same syntax works on a real `list`:
 
 ```
-for value in numbers:
-    print(value)
+for score in scores:
+    print(score)
 ```
 
 Compare that to looping by position, which still works but is more
 machinery than you need when you do not actually care *where* you are:
 
 ```
-for i in range(len(numbers)):
-    print(numbers[i])
+for i in range(len(scores)):
+    print(scores[i])
 ```
 
 Use the direct form unless you specifically need the position - and now
@@ -24,23 +29,23 @@ preview of it.**
 
 ## The accumulator pattern
 
-This is the real content of this challenge, and it is one of the half dozen
-patterns you will use for the rest of your life.
+This is one of the half dozen patterns you will use for the rest of your
+life.
 
 **Create a variable before the loop.  Update it once per item.  Use it after
 the loop.**
 
 ```
 total = 0
-for value in numbers:
-    total = total + value
+for score in scores:
+    total = total + score
 print(total)
 ```
 
 `total` has to exist *before* the loop, because you cannot add to something
 that does not exist yet.  And it has to be *outside* the loop, because a
 variable created inside gets reset every time round - that is why a broken
-version reports the last number instead of the sum.
+version reports the last score instead of the sum.
 
 You have already met this shape twice without it being named: the birthday
 banner built up a string, and the guessing game counted guesses.  Same
@@ -53,45 +58,85 @@ pattern, different starting value:
 | list | `[]` |
 | count | `0` |
 
-## Finding the largest: the seeding trap
+## Finding the highest: the seeding trap
 
-Finding the biggest item looks like the same thing:
+Finding the highest score looks like the same thing:
 
 ```
-largest = 0
-for value in numbers:
-    if value > largest:
-        largest = value
+highest = 0
+for score in scores:
+    if score > highest:
+        highest = score
 ```
 
 That is **wrong**, and it is wrong in a way that works fine right up until it
-does not.  Give it `[-5, -10, -1]` and it says the largest is `0` - a number
-that is not even in the list.
+does not.  A score of exactly `0` would never be beaten by anything smaller,
+and a figure skating program that gets every judge's score **negative** -
+deductions can do that in some scoring systems - would report `0` as its
+highest, a number no judge actually gave.
 
 The fix is to start from something that is genuinely a candidate.  The first
 item always is:
 
 ```
-largest = numbers[0]
+highest = scores[0]
 ```
 
 Ask yourself what your accumulator should be before you have seen anything.
-For a sum, "nothing yet" really is 0.  For a maximum, there is no such value,
-so use the first item.
+For a sum, "nothing yet" really is 0.  For a highest-score search, there is
+no such value, so use the first item.
 
 ## You will not write this again
 
 Python already has these:
 
 ```
->>> sum(numbers)
->>> max(numbers)
->>> min(numbers)
+>>> sum(scores)
+>>> max(scores)
+>>> min(scores)
 ```
 
-In real code, use them.  We are writing the loops by hand exactly once, so
-that the pattern is yours - because the moment you need something Python does
-*not* have a built-in for, you will write this loop again from memory.
+In real code, use them.  You just hand-wrote the seeding trap once, so the
+pattern is yours - from here on, reach for the built-ins.
+
+## Dropping the extremes: sort, then slice
+
+`sorted()` already showed up in Anagram Finder, sorting the letters of a
+word.  It works exactly the same way on a list of numbers:
+
+```
+>>> sorted([9.5, 9.3, 9.7, 9.2])
+[9.2, 9.3, 9.5, 9.7]
+```
+
+Once a list is sorted, the lowest score is sitting at index `0` and the
+highest is at index `-1`.  That means you can throw both away with a
+**slice** - a piece cut out of a list:
+
+```
+>>> numbers = [10, 20, 30, 40, 50]
+>>> numbers[1:4]
+[20, 30, 40]
+>>> numbers[1:-1]
+[20, 30, 40]
+```
+
+`list[start:stop]` gives you everything from `start` up to but not
+including `stop` - the same "stops before the end" rule `range()` taught
+you.  `numbers[1:-1]` reads as "everything except the first item and the
+last item", which is exactly "drop the lowest and the highest" once the
+list is sorted:
+
+```
+>>> scores = [9.5, 9.3, 9.7, 9.2, 9.6]
+>>> sorted(scores)[1:-1]
+[9.3, 9.5, 9.6]
+```
+
+Notice this drops **one** instance of the lowest and **one** of the highest,
+even if two judges happened to give the exact same score - which is the
+correct Olympic rule, and you got it for free without writing any `if`
+statement to handle ties.
 
 ## Further Reading
 
@@ -102,57 +147,62 @@ that the pattern is yours - because the moment you need something Python does
 
 # Instructions
 
-Read a list of numbers and print some statistics about them.
+Read a list of judges' scores for one routine.  Drop the lowest score and
+the highest score, print what is left, then print the average of what is
+left.
 
 The input is:
 
 ```
-line 1     N, how many numbers follow
-next N     the numbers, one per line
+line 1     N, how many scores follow
+next N     the scores, one per line
 ```
 
-Print exactly five lines:
+There are always **at least 3** scores, so there is always at least one
+left after dropping the two extremes.
+
+Print:
 
 ```
-count: <how many numbers>
-total: <all of them added up>
-largest: <the biggest>
-smallest: <the smallest>
-average: <the total divided by the count, to two decimal places>
+remaining:
+<the scores that were not dropped, one per line, lowest to highest>
+average: <their average, to exactly two decimal places>
 ```
 
-For this input:
+So for this input:
 
 ```
-4
-7
-3
-9
-1
+5
+9.5
+9.3
+9.7
+9.2
+9.6
 ```
 
 your program prints:
 
 ```
-count: 4
-total: 20
-largest: 9
-smallest: 1
-average: 5.00
+remaining:
+9.3
+9.5
+9.6
+average: 9.47
 ```
 
 Notes:
 
-* The average is printed to **exactly two decimal places**, so 5 comes out as
-  `5.00`.  An f-string does this for you: `f"{average:.2f}"`.
+* Sort the scores, then slice off the first and last with `[1:-1]` - that
+  is both the lowest and highest dropped in one line, ties handled
+  correctly with no extra code.
+* The average is printed to **exactly two decimal places**, so `6` comes out
+  as `6.00`.  An f-string does this for you: `f"{average:.2f}"`.
 * Use `/` for the average, not `//`.  Integer division would throw away the
   fraction you are being asked for.
-* Some of the test cases are **all negative numbers**.  If you seed `largest`
-  with 0, they will catch you.
-
-Write the loops yourself for this one rather than using `sum()`, `max()` and
-`min()` - after this challenge, use the built-ins.
+* `sum()` and `len()` are exactly what the built-ins section above was
+  telling you to reach for - use them on the **remaining** scores, not the
+  original list.
 
 ```
-/challenge/run ./stats.py
+/challenge/run ./scorecard.py
 ```

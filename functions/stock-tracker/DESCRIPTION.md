@@ -75,7 +75,7 @@ This is the actual problem: given one ticker's price on every day in a date
 range, find the single buy day and single (later) sell day that make the
 most profit if you bought on the first and sold on the second.
 
-The trick is the same accumulator pattern from Loop Over a List, just
+The trick is the same accumulator pattern from Olympic Scorecard, just
 tracking two things instead of one as you go: the **lowest price you have
 seen so far**, and the **best profit you could have made so far** if you
 bought at that low and sold today.
