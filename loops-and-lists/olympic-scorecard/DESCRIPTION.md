@@ -190,19 +190,6 @@ remaining:
 average: 9.47
 ```
 
-Notes:
-
-* Sort the scores, then slice off the first and last with `[1:-1]` - that
-  is both the lowest and highest dropped in one line, ties handled
-  correctly with no extra code.
-* The average is printed to **exactly two decimal places**, so `6` comes out
-  as `6.00`.  An f-string does this for you: `f"{average:.2f}"`.
-* Use `/` for the average, not `//`.  Integer division would throw away the
-  fraction you are being asked for.
-* `sum()` and `len()` are exactly what the built-ins section above was
-  telling you to reach for - use them on the **remaining** scores, not the
-  original list.
-
 ```
 /challenge/run ./scorecard.py
 ```
