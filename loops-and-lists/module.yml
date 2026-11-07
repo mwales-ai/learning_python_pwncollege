@@ -11,7 +11,7 @@ challenges:
     name: FizzBuzz
   - id: lists
     name: Anagram Finder
-  - id: loop-over-a-list
+  - id: olympic-scorecard
     name: Olympic Scorecard
   - id: secret-decoder-ring
     name: Secret Decoder Ring
