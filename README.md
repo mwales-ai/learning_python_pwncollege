@@ -225,8 +225,10 @@ correctly you get the flag.
 
 ## Module 6: Files
 
-* **Read a File** - Open a file, `read()` the whole thing, print it.
-  * **Skills:** `open()`, file paths, `FileNotFoundError`
+* **Hex to Binary** - Read a stream of hex digits from standard input and
+  write the raw bytes they represent to a file named on the command line.
+  * **Skills:** `open()`, file paths, `FileNotFoundError`, `sys.stdin` as a
+                file object, `bytes.fromhex()`, binary write mode (`"wb"`)
 * **Write a File** - Write your answer to a file instead of the screen, and
   verify it with `cat`.
   * **Skills:** `"w"` mode, that `"w"` truncates, `with open(...) as f:`

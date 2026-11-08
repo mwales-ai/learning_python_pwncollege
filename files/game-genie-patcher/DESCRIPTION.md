@@ -134,23 +134,22 @@ never meant to be read as text.
 
 ## Binary files are not text files
 
-This challenge is your introduction to reading and writing files that are
-not just text.  We will be opening the file in binary mode, and editing it
-byte by byte.
+Hex to Binary already showed you the `bytes` type and binary mode, writing
+one with `"wb"`.  This challenge needs the other half - **reading** one back
+- and then editing it byte by byte, which is new.
 
-Every file you have opened so far in this dojo has been a text file, opened
-with `"r"`, `"w"`, or `"a"`.  A ROM is not text - it is machine code and raw
-data, and most of its bytes are not valid characters at all.  Open it in
-**binary mode** instead, by adding a `b`:
+A ROM is not text - it is machine code and raw data, and most of its bytes
+are not valid characters at all.  Open it in binary mode by adding a `b`,
+same as writing:
 
 ```python
 with open("game.nes", "rb") as f:
     rom_data = f.read()
 ```
 
-`rom_data` is a `bytes` object, not a `str`.  The biggest difference that
-trips people up: indexing into it gives you a **number**, not a
-one-character string.
+`rom_data` is a `bytes` object, same as before.  The part Hex to Binary did
+not need: indexing into it gives you a **number**, not a one-character
+string.
 
 ```
 >>> data = b"\x00\x01\xFF"

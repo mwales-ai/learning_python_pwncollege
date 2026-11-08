@@ -1,0 +1,8 @@
+/tmp/decoded_output.bin
+END_TEST_CASE
+/tmp/decoded_output.bin
+END_TEST_CASE
+/tmp/decoded_output.bin
+END_TEST_CASE
+/tmp/decoded_output.bin
+END_TEST_CASE

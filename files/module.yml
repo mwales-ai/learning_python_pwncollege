@@ -2,7 +2,7 @@ name: Files
 allow_privileged: true
 challenges:
   - id: read-a-file
-    name: Read a File
+    name: Hex to Binary
   - id: write-a-file
     name: Write a File
   - id: line-by-line

@@ -1,8 +1,19 @@
-/challenge/data/lovelace.txt
+48 65 6c 6c 6f 2c 20 57 6f 72 6c 64 21
 END_TEST_CASE
-/challenge/data/ports.txt
+0x70
+0x77
+0x6E
+0x2E
+0x63
+0x6F
+0x6C
+0x6C
+0x65
+0x67
+0x65
 END_TEST_CASE
-/challenge/data/hosts.txt
+666c61677b6833785f325f62696e7d
 END_TEST_CASE
-/challenge/data/motd.txt
+0X47 6F	20
+0x48 61 63 6b 65 72 73 0X21
 END_TEST_CASE

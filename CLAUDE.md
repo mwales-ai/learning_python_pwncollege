@@ -240,6 +240,42 @@ discipline of writing the search by hand once still happens, in this
 same challenge's teaching content for the seeding trap, so nothing is
 lost by not repeating it a second time against the remaining list.
 
+`files/read-a-file` was replaced wholesale with Hex to Binary
+(2026-11-08), same id and same slot (1st in Files). The old exercise
+read a path from stdin and printed the file plus a character/line
+count; the new one reads hex digits from stdin (any whitespace, any
+case, chunks optionally `0x`/`0X`-prefixed) and writes the decoded
+bytes to a path given as a **command line argument**. The `open()`/
+`with`/`.read()`/`FileNotFoundError` teaching sections were kept
+essentially unchanged, because `write-a-file`'s "the `\"w\"` is the
+only change from reading" line depends on them having already been
+taught here. Added: `sys.stdin` is itself a file object (no `open()`
+needed), `bytes.fromhex()` (ignores whitespace between byte pairs but
+not `0x`, which has to be stripped with `.split()` + slicing first),
+and `open(path, "wb")` for writing the resulting `bytes` object
+directly. The now-unused `data/` directory and its `.init` chmod
+lines were removed - the new exercise has no sample files to read.
+
+This is also the dojo's first exposure to the `bytes` type and binary
+file mode, which used to belong to `game-genie-patcher` (6th in Files,
+the ROM patcher). Its "Binary files are not text files" section was
+rewritten from a first introduction to a recap - reading in binary
+mode (`"rb"`) and indexing into `bytes` to get an int are still new
+there, only "binary mode and the `bytes` type exist" moved earlier.
+
+The judge's output-file check reads the written file in **text**
+mode (`open(out_path, "r")`) to hash it line by line, the same as
+stdout - it was never built to compare raw binary content. So despite
+the "binary" framing, every test case's hex decodes to plain ASCII
+text (`"Hello, World!"`, `"pwn.college"`, etc.) - real non-ASCII bytes
+in a test case would make the judge itself crash trying to read the
+file back. This is a constraint of the shared judge, not something
+worth fixing per-challenge; it was checked at authoring time by trying
+a case-sensitivity bug (`"0x"` only, missing `"0X"`) against the test
+data **before** trusting it, which caught a real gap - the first draft
+of the test cases never happened to use an uppercase `0X` prefix - and
+led to adding one.
+
 Tippy Tipper, Why Are We Yelling, and Birthday Banner were moved from
 Getting Started into Talking to the Terminal, and Say My Name and Number
 Cruncher were deleted outright (2026-09-30/10-03): their skills all
