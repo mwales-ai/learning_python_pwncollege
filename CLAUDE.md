@@ -276,6 +276,47 @@ data **before** trusting it, which caught a real gap - the first draft
 of the test cases never happened to use an uppercase `0X` prefix - and
 led to adding one.
 
+`files/write-a-file` was replaced wholesale with File Decoder Ring
+(2026-11-08), same id and same slot (2nd in Files). The old exercise
+read a path and N lines from stdin and wrote them to that file; the
+new one is Secret Decoder Ring's exact substitution-cipher key and
+algorithm (same stdin format: original line, then substituted line),
+but the encoded message and the decoded result are both now files
+named with `sys.argv[1]`/`sys.argv[2]` instead of typed on stdin and
+printed to stdout. Kept the `"w"` truncation warning, the mode table,
+and the `write()` is not `print()` section essentially unchanged -
+all still exactly as true as before, since the new exercise still
+opens its output with `"w"`. Added a note that this task does not
+need manual `"\n"` insertion, so students do not conclude `write()`
+started adding newlines for them: the whole encoded file is read and
+decoded in one pass with `.read()`/one loop, and since a newline is
+never a key character, it passes through decoding untouched, landing
+in the same place in the output as it was in the input - no line
+splitting, no `.strip()`, no re-adding newlines by hand.
+
+Test data lives in a new `files/write-a-file/data/` directory (one
+static encoded file per cipher, mirroring the pattern the old
+`read-a-file`'s now-deleted `data/` directory used) rather than any
+per-test-case input-file mechanism, because the shared judge has no
+such thing - `output_seeds.txt`/`output_paths.txt`/
+`output_file_hashes.txt` only cover the file the program *writes*.
+`args.txt` (shipped, `/challenge/data/...` paths) and the solutions
+submodule's own `local_args.txt` (authoring-time, real local paths)
+diverge only in that one path - and the golden solution does not
+print the input path, only the output path and a character count,
+specifically so that divergence never reaches judged output (the
+same trap this file already documents under "Never make output
+depend on a path").
+
+As with the original Secret Decoder Ring, the first test case's key
+(`abcde`/`xyzwv`) is deliberately asymmetric; later cases reuse
+rot13, atbash, and a digit-complement cipher, all of which are their
+own inverse and would silently round-trip through a direction bug.
+Verified this by running a decode-in-the-encode-direction bug against
+the suite: it fails only on the first (asymmetric) case, passing the
+other three by coincidence, exactly as that risk predicts - which is
+why the asymmetric case has to be first, not later.
+
 Tippy Tipper, Why Are We Yelling, and Birthday Banner were moved from
 Getting Started into Talking to the Terminal, and Say My Name and Number
 Cruncher were deleted outright (2026-09-30/10-03): their skills all

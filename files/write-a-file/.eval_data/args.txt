@@ -1,0 +1,12 @@
+/challenge/data/message1.txt
+/tmp/decoded_message.txt
+END_TEST_CASE
+/challenge/data/message2.txt
+/tmp/decoded_message.txt
+END_TEST_CASE
+/challenge/data/message3.txt
+/tmp/decoded_message.txt
+END_TEST_CASE
+/challenge/data/message4.txt
+/tmp/decoded_message.txt
+END_TEST_CASE

@@ -229,9 +229,11 @@ correctly you get the flag.
   write the raw bytes they represent to a file named on the command line.
   * **Skills:** `open()`, file paths, `FileNotFoundError`, `sys.stdin` as a
                 file object, `bytes.fromhex()`, binary write mode (`"wb"`)
-* **Write a File** - Write your answer to a file instead of the screen, and
-  verify it with `cat`.
-  * **Skills:** `"w"` mode, that `"w"` truncates, `with open(...) as f:`
+* **File Decoder Ring** - Secret Decoder Ring again, but the encoded message
+  and the decoded output are both files this time, named on the command
+  line.
+  * **Skills:** `"w"` mode, that `"w"` truncates, `with open(...) as f:`,
+                `sys.argv` for file paths, decoding a whole file in one pass
 * **Line by Line** - Loop over a file one line at a time and process each one.
   * **Skills:** `for line in f:`, the trailing `\n`, `.strip()`
 * **Hangman** - Build the actual game.  The secret word is pulled out of a

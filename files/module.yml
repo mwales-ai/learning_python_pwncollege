@@ -4,7 +4,7 @@ challenges:
   - id: read-a-file
     name: Hex to Binary
   - id: write-a-file
-    name: Write a File
+    name: File Decoder Ring
   - id: line-by-line
     name: Line by Line
   - id: hangman
