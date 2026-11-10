@@ -57,14 +57,14 @@ Modules currently built:
 | 1 | `getting-started` | running-interpreter, string-concatenation, hello-hacker, run-it-yourself, variables-and-fstrings, debug-me |
 | 2 | `talking-to-the-terminal` | tippy-tipper, why-are-we-yelling, birthday-banner, hex-to-decimal, two-kinds-of-output, exit-codes, command-line-arguments |
 | 3 | `making-decisions` | if-and-else, elif-ladder, quadratic-formula, true-and-false |
-| 4 | `loops-and-lists` | guessing-game, is-palindrome, counting-loops, fizzbuzz, lists, loop-over-a-list, secret-decoder-ring |
+| 4 | `loops-and-lists` | guessing-game, is-palindrome, counting-loops, fizzbuzz, lists, olympic-scorecard, secret-decoder-ring |
 | 5 | `functions` | define-and-call, is-prime, fibonacci, wps-pin-cracker, stock-tracker |
-| 6 | `files` | read-a-file, write-a-file, line-by-line, hangman, append-and-transform, game-genie-patcher |
+| 6 | `files` | read-a-file, write-a-file, line-by-line, hangman, word-game, append-and-transform, game-genie-patcher |
 | 7 | `unix-filters` | read-from-standard-input, write-your-own-grep, in-the-middle-of-a-pipeline, fizzbuzz-the-filter, count-and-total |
 | 8 | `working-with-text` | slicing-strings-apart, your-own-cut |
 | 9 | `dictionaries` | lookup-tables, capstone-the-report |
 
-**All nine README modules are built** - 44 challenges as of the last
+**All nine README modules are built** - 45 challenges as of the last
 reshuffle (see git log for the running history of additions/moves/removals;
 do not trust this count blindly, recompute from each module.yml if it
 matters). There is also a dojo-level `DESCRIPTION.md` beside `dojo.yml`,
@@ -316,6 +316,68 @@ Verified this by running a decode-in-the-encode-direction bug against
 the suite: it fails only on the first (asymmetric) case, passing the
 other three by coincidence, exactly as that risk predicts - which is
 why the asymmetric case has to be first, not later.
+
+Added `word-game` (2026-11-10), 5th in Files, right after Hangman and
+before Append and Transform - a genuinely new challenge, not a
+replacement, which is why the dojo's count moved from 44 to 45. A
+Wordle-like game: `sys.argv[1]` is a puzzle number, `puzzle_number %
+len(word_bank)` picks the solution deterministically from
+`/challenge/word-bank.txt` (~2,300 common words), guesses are read
+from stdin and checked against the much larger
+`/challenge/valid-words.txt` (~13,000 words, a superset of
+word-bank), and feedback is printed with real ANSI color codes -
+green for right-position, yellow for "elsewhere in the word", no
+color for absent. An invalid guess (not in valid-words) prints to
+stderr and exits 1 immediately rather than consuming one of the six
+tries, which keeps the judge's stdin fixed-length per test case
+without needing `try/except EOFError` (never taught) for a dynamic
+reprompt loop.
+
+Deliberately simpler than real Wordle, by the user's own request: the
+coloring does not track how many of each letter are still available
+to "claim," so a guess with two of the same letter can show yellow
+twice even when the solution only has one of that letter and real
+Wordle would credit just one. The DESCRIPTION.md explains this
+tradeoff explicitly rather than silently shipping a near-miss of the
+real game. Per the user's instruction, the teaching content shows
+exactly one color+reset example (`print("\033[32mHello\033[0m, world!")`)
+and stops - no generic `colorize(text, color)` helper is handed to
+the student, so writing one is left as their own exercise.
+
+Both word lists (`word-bank.txt`, `valid-words.txt`) are the real
+Wordle lists, user-supplied, 5-letter lowercase words one per line,
+shipped at the challenge root (`/challenge/word-bank.txt`, not inside
+a `data/` subdirectory) rather than packaged into a `data/` folder -
+matching `hangman`'s own `words.txt`-at-root precedent, not
+`write-a-file`'s `data/` one, since both precedents already coexist
+in this module and the user had already placed the files that way
+before asking for the challenge itself.
+
+Authoring hit the same hardcoded-absolute-path problem the "Challenges
+that need a data file" section describes, but in a new shape: the
+golden solution hardcodes `/challenge/word-bank.txt` and
+`/challenge/valid-words.txt` directly in the code (not via an
+argument), so there is no `args.txt`-style file to swap for a local
+path. Fixed by generating hashes against a throwaway `sed`-rewritten
+copy of the solution (paths swapped to the real local files, logic
+byte-for-byte otherwise) that is never committed - unlike
+`local_args.txt`/`local_cases.txt`, which stay in the solutions repo
+because they are data, this is a mechanical one-line path swap of the
+code itself, safe to regenerate from the real solution.py any time
+rather than worth maintaining as a tracked file.
+
+Test data design caught two real gaps worth remembering: the first
+draft of every test guess happened to also be a `word-bank.txt` word,
+so a solution that validated guesses against the small solution list
+instead of the large valid-words list passed every case anyway - not
+caught until a guess that is a valid word but NOT a possible solution
+(`wombs`) was deliberately added. And `exit_codes.txt` is **not**
+`END_TEST_CASE`-delimited like every other `.eval_data` file - it is
+one bare integer per line, read by a separate `read_exit_codes()` in
+the judge - which was only discovered after writing it with
+delimiters, watching `gen_hashes.py` silently overwrite it back to
+the bare format, and reading the judge source to confirm that was
+correct rather than fighting it.
 
 Tippy Tipper, Why Are We Yelling, and Birthday Banner were moved from
 Getting Started into Talking to the Terminal, and Say My Name and Number

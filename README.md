@@ -32,7 +32,7 @@ online Python reference books that I would suggest for new students:
 
 # Challenges and Concepts
 
-The dojo is 44 challenges, grouped into 9 modules.  The challenges are
+The dojo is 45 challenges, grouped into 9 modules.  The challenges are
 deliberately *not* numbered - we expect to insert new ones between existing
 ones as the material gets refined - but the order within and between modules is
 meaningful.  That order gets to *useful* things (talking to the terminal,
@@ -249,6 +249,16 @@ correctly you get the flag.
     500 word list the challenge ships was itself mined out of computing
     articles and the two recommended books by counting words - a preview of the
     capstone, and the description walks through how it was done.
+* **Word Game** - A Wordle-like word-guessing game: a puzzle number on the
+  command line picks the solution deterministically, guesses are checked
+  against a big valid-words list, and feedback is printed in color.
+  * **Skills:** ANSI escape codes for colored terminal output, `argv` +
+                modulo to pick deterministically from a list, loading a
+                wordlist file into a list with `.split()`
+  * **Discussion:** Deliberately simpler than real Wordle - a repeated
+    letter in the guess can show yellow more than once even when the real
+    game would only credit it once, since this version does not track how
+    many of each letter are still available to match.
 * **Append and Transform** - Add to a log file with `"a"` mode, then read one
   file, change it, and write the result to a second file.
   * **Skills:** `"a"` mode, reading one file while writing another, not

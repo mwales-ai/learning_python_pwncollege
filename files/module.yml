@@ -9,6 +9,8 @@ challenges:
     name: Line by Line
   - id: hangman
     name: Hangman
+  - id: word-game
+    name: Word Game
   - id: append-and-transform
     name: Append and Transform
   - id: game-genie-patcher
